@@ -1,0 +1,465 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="TTCN_WEB_QLNS.WebForm1" %>
+
+<!DOCTYPE html>
+
+<html lang="vi">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Nhân Sự</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      height: 100%;
+    }
+
+    .stat-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .menu-item {
+      transition: all 0.2s;
+    }
+
+    .menu-item:hover {
+      transform: translateX(4px);
+    }
+
+    .menu-item.active {
+      border-left: 4px solid;
+    }
+
+    .table-row:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease-out;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head> <body>
+  <div id="app" class="flex h-full"><!-- Sidebar -->
+   <aside id="sidebar" class="w-64 shadow-lg flex flex-col">
+    <div class="p-6 border-b">
+     <h1 id="company-name" class="text-xl font-bold"></h1>
+     <p class="text-sm opacity-75 mt-1">Hệ thống quản lý</p>
+    </div>
+    <nav class="flex-1 p-4">
+     <div id="menu-dashboard" class="menu-item active px-4 py-3 rounded-lg mb-2 cursor-pointer flex items-center"><span class="mr-3 text-xl">📊</span> <span class="font-medium"></span>
+     </div>
+     <div id="menu-employees" class="menu-item px-4 py-3 rounded-lg mb-2 cursor-pointer flex items-center"><span class="mr-3 text-xl">👥</span> <span class="font-medium"></span>
+     </div>
+     <div id="menu-departments" class="menu-item px-4 py-3 rounded-lg mb-2 cursor-pointer flex items-center"><span class="mr-3 text-xl">🏢</span> <span class="font-medium"></span>
+     </div>
+     <div id="menu-attendance" class="menu-item px-4 py-3 rounded-lg mb-2 cursor-pointer flex items-center"><span class="mr-3 text-xl">⏰</span> <span class="font-medium"></span>
+     </div>
+     <div id="menu-leave" class="menu-item px-4 py-3 rounded-lg mb-2 cursor-pointer flex items-center"><span class="mr-3 text-xl">📅</span> <span class="font-medium"></span>
+     </div>
+     <div id="menu-payroll" class="menu-item px-4 py-3 rounded-lg mb-2 cursor-pointer flex items-center"><span class="mr-3 text-xl">💰</span> <span class="font-medium"></span>
+     </div>
+    </nav>
+    <div class="p-4 border-t">
+     <div class="flex items-center">
+      <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold mr-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+       AD
+      </div>
+      <div>
+       <p class="font-medium text-sm">Admin User</p>
+       <p class="text-xs opacity-75">Quản trị viên</p>
+      </div>
+     </div>
+    </div>
+   </aside><!-- Main Content -->
+   <main class="flex-1 overflow-auto">
+    <header class="shadow-sm p-6 border-b">
+     <div class="flex justify-between items-center">
+      <div>
+       <h2 id="dashboard-title" class="text-2xl font-bold"></h2>
+       <p class="text-sm opacity-75 mt-1">Chào mừng bạn quay trở lại</p>
+      </div>
+      <div class="flex items-center space-x-4"><button class="relative p-2 rounded-lg hover:bg-gray-100 transition"> <span class="text-2xl">🔔</span> <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span> </button> <button class="px-4 py-2 rounded-lg font-medium transition shadow-sm hover:shadow-md"> + Thêm nhân viên </button>
+      </div>
+     </div>
+    </header>
+    <div class="p-6"><!-- Statistics Cards -->
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 fade-in">
+      <div class="stat-card rounded-xl p-6 shadow-md">
+       <div class="flex items-center justify-between mb-4">
+        <div class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl">
+         👥
+        </div><span class="text-sm font-medium px-3 py-1 rounded-full">+12%</span>
+       </div>
+       <h3 class="text-3xl font-bold mb-1">248</h3>
+       <p class="text-sm opacity-75">Tổng nhân viên</p>
+      </div>
+      <div class="stat-card rounded-xl p-6 shadow-md">
+       <div class="flex items-center justify-between mb-4">
+        <div class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl">
+         ✅
+        </div><span class="text-sm font-medium px-3 py-1 rounded-full">95%</span>
+       </div>
+       <h3 class="text-3xl font-bold mb-1">236</h3>
+       <p class="text-sm opacity-75">Đã chấm công</p>
+      </div>
+      <div class="stat-card rounded-xl p-6 shadow-md">
+       <div class="flex items-center justify-between mb-4">
+        <div class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl">
+         📅
+        </div><span class="text-sm font-medium px-3 py-1 rounded-full">8</span>
+       </div>
+       <h3 class="text-3xl font-bold mb-1">23</h3>
+       <p class="text-sm opacity-75">Đang nghỉ phép</p>
+      </div>
+      <div class="stat-card rounded-xl p-6 shadow-md">
+       <div class="flex items-center justify-between mb-4">
+        <div class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl">
+         🆕
+        </div><span class="text-sm font-medium px-3 py-1 rounded-full">Tháng này</span>
+       </div>
+       <h3 class="text-3xl font-bold mb-1">12</h3>
+       <p class="text-sm opacity-75">Nhân viên mới</p>
+      </div>
+     </div><!-- Recent Employees Table -->
+     <div class="rounded-xl shadow-md overflow-hidden fade-in">
+      <div class="p-6 border-b">
+       <div class="flex justify-between items-center">
+        <h3 class="text-lg font-bold">Danh sách nhân viên gần đây</h3><button class="text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-100 transition"> Xem tất cả → </button>
+       </div>
+      </div>
+      <div class="overflow-x-auto">
+       <table class="w-full">
+        <thead>
+         <tr class="border-b">
+          <th class="text-left p-4 font-semibold text-sm opacity-75">Nhân viên</th>
+          <th class="text-left p-4 font-semibold text-sm opacity-75">Mã NV</th>
+          <th class="text-left p-4 font-semibold text-sm opacity-75">Phòng ban</th>
+          <th class="text-left p-4 font-semibold text-sm opacity-75">Chức vụ</th>
+          <th class="text-left p-4 font-semibold text-sm opacity-75">Trạng thái</th>
+          <th class="text-left p-4 font-semibold text-sm opacity-75">Thao tác</th>
+         </tr>
+        </thead>
+        <tbody id="employee-table">
+         <tr class="table-row border-b">
+          <td class="p-4">
+           <div class="flex items-center">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold mr-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+             NT
+            </div>
+            <div>
+             <p class="font-medium">Nguyễn Văn An</p>
+             <p class="text-sm opacity-75">an.nguyen@company.com</p>
+            </div>
+           </div></td>
+          <td class="p-4 font-medium">#NV001</td>
+          <td class="p-4">Công nghệ</td>
+          <td class="p-4">Senior Developer</td>
+          <td class="p-4"><span class="px-3 py-1 rounded-full text-sm font-medium">Đang làm việc</span></td>
+          <td class="p-4"><button class="px-3 py-1 rounded-lg text-sm font-medium hover:bg-gray-100 transition">Chi tiết</button></td>
+         </tr>
+         <tr class="table-row border-b">
+          <td class="p-4">
+           <div class="flex items-center">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold mr-3" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+             TL
+            </div>
+            <div>
+             <p class="font-medium">Trần Thị Lan</p>
+             <p class="text-sm opacity-75">lan.tran@company.com</p>
+            </div>
+           </div></td>
+          <td class="p-4 font-medium">#NV002</td>
+          <td class="p-4">Nhân sự</td>
+          <td class="p-4">HR Manager</td>
+          <td class="p-4"><span class="px-3 py-1 rounded-full text-sm font-medium">Đang làm việc</span></td>
+          <td class="p-4"><button class="px-3 py-1 rounded-lg text-sm font-medium hover:bg-gray-100 transition">Chi tiết</button></td>
+         </tr>
+         <tr class="table-row border-b">
+          <td class="p-4">
+           <div class="flex items-center">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold mr-3" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+             PH
+            </div>
+            <div>
+             <p class="font-medium">Phạm Minh Hoàng</p>
+             <p class="text-sm opacity-75">hoang.pham@company.com</p>
+            </div>
+           </div></td>
+          <td class="p-4 font-medium">#NV003</td>
+          <td class="p-4">Marketing</td>
+          <td class="p-4">Marketing Lead</td>
+          <td class="p-4"><span class="px-3 py-1 rounded-full text-sm font-medium" style="background-color: #fff3cd; color: #856404;">Nghỉ phép</span></td>
+          <td class="p-4"><button class="px-3 py-1 rounded-lg text-sm font-medium hover:bg-gray-100 transition">Chi tiết</button></td>
+         </tr>
+         <tr class="table-row">
+          <td class="p-4">
+           <div class="flex items-center">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold mr-3" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+             LH
+            </div>
+            <div>
+             <p class="font-medium">Lê Thị Hương</p>
+             <p class="text-sm opacity-75">huong.le@company.com</p>
+            </div>
+           </div></td>
+          <td class="p-4 font-medium">#NV004</td>
+          <td class="p-4">Tài chính</td>
+          <td class="p-4">Accountant</td>
+          <td class="p-4"><span class="px-3 py-1 rounded-full text-sm font-medium">Đang làm việc</span></td>
+          <td class="p-4"><button class="px-3 py-1 rounded-lg text-sm font-medium hover:bg-gray-100 transition">Chi tiết</button></td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </div>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      background_color: '#f8f9fa',
+      sidebar_color: '#ffffff',
+      primary_action_color: '#4f46e5',
+      text_color: '#1f2937',
+      secondary_surface_color: '#ffffff',
+      company_name: 'TechCorp Vietnam',
+      dashboard_title: 'Bảng điều khiển',
+      menu_dashboard: 'Bảng điều khiển',
+      menu_employees: 'Nhân viên',
+      menu_departments: 'Phòng ban',
+      menu_attendance: 'Chấm công',
+      menu_leave: 'Nghỉ phép',
+      menu_payroll: 'Bảng lương',
+      font_family: 'Inter',
+      font_size: 16
+    };
+
+    let config = { ...defaultConfig };
+
+    async function onConfigChange(newConfig) {
+      config = { ...config, ...newConfig };
+
+      const backgroundColor = config.background_color || defaultConfig.background_color;
+      const sidebarColor = config.sidebar_color || defaultConfig.sidebar_color;
+      const primaryActionColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const secondarySurfaceColor = config.secondary_surface_color || defaultConfig.secondary_surface_color;
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const fontSize = config.font_size || defaultConfig.font_size;
+
+      document.body.style.backgroundColor = backgroundColor;
+      document.body.style.color = textColor;
+      document.body.style.fontFamily = `${fontFamily}, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
+      document.body.style.fontSize = `${fontSize}px`;
+
+      const sidebar = document.getElementById('sidebar');
+      sidebar.style.backgroundColor = sidebarColor;
+      sidebar.style.color = textColor;
+
+      const header = document.querySelector('header');
+      header.style.backgroundColor = secondarySurfaceColor;
+      header.style.color = textColor;
+
+      const statCards = document.querySelectorAll('.stat-card');
+      statCards.forEach(card => {
+        card.style.backgroundColor = secondarySurfaceColor;
+        card.style.color = textColor;
+      });
+
+      const table = document.querySelector('.rounded-xl.shadow-md');
+      if (table) {
+        table.style.backgroundColor = secondarySurfaceColor;
+        table.style.color = textColor;
+      }
+
+      const activeMenuItem = document.querySelector('.menu-item.active');
+      if (activeMenuItem) {
+        activeMenuItem.style.backgroundColor = `${primaryActionColor}20`;
+        activeMenuItem.style.color = primaryActionColor;
+        activeMenuItem.style.borderLeftColor = primaryActionColor;
+      }
+
+      const menuItems = document.querySelectorAll('.menu-item:not(.active)');
+      menuItems.forEach(item => {
+        item.style.color = textColor;
+      });
+
+      const addButton = document.querySelector('header button:last-child');
+      if (addButton) {
+        addButton.style.backgroundColor = primaryActionColor;
+        addButton.style.color = '#ffffff';
+      }
+
+      const companyNameEl = document.getElementById('company-name');
+      companyNameEl.textContent = config.company_name || defaultConfig.company_name;
+      companyNameEl.style.color = textColor;
+      companyNameEl.style.fontSize = `${fontSize * 1.25}px`;
+
+      const dashboardTitleEl = document.getElementById('dashboard-title');
+      dashboardTitleEl.textContent = config.dashboard_title || defaultConfig.dashboard_title;
+      dashboardTitleEl.style.color = textColor;
+      dashboardTitleEl.style.fontSize = `${fontSize * 1.5}px`;
+
+      const menuDashboardEl = document.querySelector('#menu-dashboard span:last-child');
+      menuDashboardEl.textContent = config.menu_dashboard || defaultConfig.menu_dashboard;
+      menuDashboardEl.style.fontSize = `${fontSize}px`;
+
+      const menuEmployeesEl = document.querySelector('#menu-employees span:last-child');
+      menuEmployeesEl.textContent = config.menu_employees || defaultConfig.menu_employees;
+      menuEmployeesEl.style.fontSize = `${fontSize}px`;
+
+      const menuDepartmentsEl = document.querySelector('#menu-departments span:last-child');
+      menuDepartmentsEl.textContent = config.menu_departments || defaultConfig.menu_departments;
+      menuDepartmentsEl.style.fontSize = `${fontSize}px`;
+
+      const menuAttendanceEl = document.querySelector('#menu-attendance span:last-child');
+      menuAttendanceEl.textContent = config.menu_attendance || defaultConfig.menu_attendance;
+      menuAttendanceEl.style.fontSize = `${fontSize}px`;
+
+      const menuLeaveEl = document.querySelector('#menu-leave span:last-child');
+      menuLeaveEl.textContent = config.menu_leave || defaultConfig.menu_leave;
+      menuLeaveEl.style.fontSize = `${fontSize}px`;
+
+      const menuPayrollEl = document.querySelector('#menu-payroll span:last-child');
+      menuPayrollEl.textContent = config.menu_payroll || defaultConfig.menu_payroll;
+      menuPayrollEl.style.fontSize = `${fontSize}px`;
+
+      const allText = document.querySelectorAll('p, span, td, th, button');
+      allText.forEach(el => {
+        if (!el.style.fontSize) {
+          el.style.fontSize = `${fontSize}px`;
+        }
+      });
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            }
+          },
+          {
+            get: () => config.secondary_surface_color || defaultConfig.secondary_surface_color,
+            set: (value) => {
+              config.secondary_surface_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ secondary_surface_color: value });
+              }
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            }
+          },
+          {
+            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+            set: (value) => {
+              config.primary_action_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ primary_action_color: value });
+              }
+            }
+          },
+          {
+            get: () => config.sidebar_color || defaultConfig.sidebar_color,
+            set: (value) => {
+              config.sidebar_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ sidebar_color: value });
+              }
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => {
+            config.font_family = value;
+            if (window.elementSdk) {
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (value) => {
+            config.font_size = value;
+            if (window.elementSdk) {
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        }
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['company_name', config.company_name || defaultConfig.company_name],
+        ['dashboard_title', config.dashboard_title || defaultConfig.dashboard_title],
+        ['menu_dashboard', config.menu_dashboard || defaultConfig.menu_dashboard],
+        ['menu_employees', config.menu_employees || defaultConfig.menu_employees],
+        ['menu_departments', config.menu_departments || defaultConfig.menu_departments],
+        ['menu_attendance', config.menu_attendance || defaultConfig.menu_attendance],
+        ['menu_leave', config.menu_leave || defaultConfig.menu_leave],
+        ['menu_payroll', config.menu_payroll || defaultConfig.menu_payroll]
+      ]);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    onConfigChange(defaultConfig);
+  </script>
+ <script>(function () {
+         function c() {
+             var b = a.contentDocument || a.contentWindow.document;
+             if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9a0ebbf186749b41',t:'MTc2MzU0NTEwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) }
+    } if (document.body) {
+        var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a);
+        if ('loading' !== document.readyState) c();
+        else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c);
+        else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } }
+    }
+     })();</script>
+</body>
+</html>
