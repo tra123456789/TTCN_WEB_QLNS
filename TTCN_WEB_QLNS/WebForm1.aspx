@@ -4,60 +4,16 @@
 
 <html lang="vi">
  <head>
+     <link rel="stylesheet" type="text/css" href="css/StyleSheet1.css" />
+
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quản Lý Nhân Sự</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/_sdk/element_sdk.js"></script>
   <style>
-    body {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
     
-    * {
-      box-sizing: border-box;
-    }
-    
-    html, body {
-      height: 100%;
-    }
-
-    .stat-card {
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-    }
-
-    .menu-item {
-      transition: all 0.2s;
-    }
-
-    .menu-item:hover {
-      transform: translateX(4px);
-    }
-
-    .menu-item.active {
-      border-left: 4px solid;
-    }
-
-    .table-row:hover {
-      background-color: rgba(0, 0, 0, 0.02);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade-in {
-      animation: fadeIn 0.4s ease-out;
-    }
   </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
