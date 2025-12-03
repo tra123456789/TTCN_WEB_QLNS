@@ -1,1 +1,142 @@
-hi
+ string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+
+ protected void Page_Load(object sender, EventArgs e)
+ {
+     if (!IsPostBack)
+     {
+         LoadUsers();
+         LoadNhanVien();
+         LoadRole();
+     }
+ }
+
+
+ void LoadUsers() 
+ {
+     using (SqlConnection conn = new SqlConnection(connStr))
+     {
+         string query = @"SELECT u.IDUSER, u.Username, 
+                   nv.HoTen AS NhanVienName,
+                   r.RoleName
+                   FROM [User] u
+                   LEFT JOIN Nhan_vien nv ON u.IDUSER = nv.MaNV 
+                   LEFT JOIN Role r ON u.IDROLE = r.IDROLE"; 
+
+         SqlDataAdapter da = new SqlDataAdapter(query, conn);
+         DataTable dt = new DataTable();
+         da.Fill(dt);
+
+         gvUsers.DataSource = dt;
+         gvUsers.DataBind();
+     }
+ }
+
+
+ void LoadNhanVien()
+ {
+     using (SqlConnection conn = new SqlConnection(connStr))
+     {
+        
+         string query = "SELECT MaNV, HoTen FROM Nhan_vien";
+
+         SqlCommand cmd = new SqlCommand(query, conn);
+         conn.Open();
+
+         ddlNhanVien.DataSource = cmd.ExecuteReader();
+         ddlNhanVien.DataTextField = "HoTen";
+       
+         ddlNhanVien.DataValueField = "MaNV";
+         ddlNhanVien.DataBind();
+     }
+ }
+
+ void LoadRole()
+ {
+     using (SqlConnection conn = new SqlConnection(connStr))
+     {
+         string query = "SELECT IDROLE, RoleName FROM Role";
+
+         SqlCommand cmd = new SqlCommand(query, conn);
+         conn.Open();
+
+         ddlRoleAdd.DataSource = cmd.ExecuteReader();
+         ddlRoleAdd.DataTextField = "RoleName";
+         ddlRoleAdd.DataValueField = "IDROLE";
+         ddlRoleAdd.DataBind();
+     }
+ }
+
+
+ // THÊM USER
+
+ protected void btnAddUser_Click(object sender, EventArgs e)
+ {
+     string username = txtNewUsername.Text.Trim();
+     string password = txtNewPassword.Text.Trim();
+     int nhanvienID = int.Parse(ddlNhanVien.SelectedValue);
+     int roleID = int.Parse(ddlRoleAdd.SelectedValue);
+
+     using (SqlConnection conn = new SqlConnection(connStr))
+     {
+         string query = @"INSERT INTO [User](Username, Password, NhanVienID_Dung, IDROLE)
+                  VALUES(@Username, @Password, @NV, @Role)";
+
+         SqlCommand cmd = new SqlCommand(query, conn);
+
+         cmd.Parameters.AddWithValue("@Username", username);
+         cmd.Parameters.AddWithValue("@Password", password);
+         cmd.Parameters.AddWithValue("@NV", nhanvienID);
+         cmd.Parameters.AddWithValue("@Role", roleID);
+
+         conn.Open();
+         cmd.ExecuteNonQuery();
+     }
+
+     LoadUsers();
+ }
+
+ protected void gvUsers_SelectedIndexChanged(object sender, EventArgs e)
+ {
+
+ }
+ protected void gvUsers_RowEditing(object sender, GridViewEditEventArgs e)
+ {
+     gvUsers.EditIndex = e.NewEditIndex;
+     LoadUsers(); // hàm load lại danh sách user
+ }
+
+ protected void gvUsers_RowUpdating(object sender, GridViewUpdateEventArgs e)
+ {
+     // TODO: Xử lý cập nhật user và role
+ }
+
+ protected void gvUsers_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+ {
+     gvUsers.EditIndex = -1;
+     LoadUsers();
+ }
+
+ protected void gvUsers_RowDeleting(object sender, GridViewDeleteEventArgs e)
+ {
+     // TODO: Xử lý xóa user
+ }
+
+ protected void txtNewUsername_TextChanged(object sender, EventArgs e)
+ {
+
+ }
+
+ protected void txtNewPassword_TextChanged(object sender, EventArgs e)
+ {
+
+ }
+
+ protected void ddlNhanVien_SelectedIndexChanged(object sender, EventArgs e)
+ {
+
+ }
+
+ protected void ddlRoleAdd_SelectedIndexChanged(object sender, EventArgs e)
+ {
+
+ }
