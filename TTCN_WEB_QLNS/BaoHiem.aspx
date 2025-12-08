@@ -1,11 +1,11 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="KhenThuong.aspx.cs" Inherits="TTCN_WEB_QLNS.KhenThuong" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="BaoHiem.aspx.cs" Inherits="TTCN_WEB_QLNS.Quan_Ly_Nhan_Vien" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Khen Thưởng</title>
-    <link href ="Quanlynhanvien.css" rel ="stylesheet" type="text/css"/>
+    <title>Bảo Hiểm</title>
+    <link href ="BaoHiem.css" rel ="stylesheet" type="text/css"/>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -13,7 +13,7 @@
              <!-- Sidebar -->
     <div class="sidebar">
         <h2>Trang quản trị</h2>
-                <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
+               <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
 <a id="menuNhanVien" runat="server" href="QuanLyUser.aspx">Nhân viên</a>
 <a id="menuPhongBan" runat="server" href="PhongBan.aspx">Phòng ban</a>
 <a id="menuChamCong" runat="server" href="QuanLyChamCong.aspx">Chấm công</a>
@@ -26,20 +26,19 @@
 
     <!-- PAGE CONTENT -->
     <div class="content">
-                        <div class ="welcome">         
-                            <asp:Label ID="lblWelcome" runat="server" CssClass="font-medium text-sm"></asp:Label>
-                                        <p class="text-xs opacity-75">Quản trị viên</p>
+         <div class ="welcome">   
+            <p class="text-xs opacity-75">Xin Chào</p>
+  <asp:Label ID="lblWelcome" runat="server" CssClass="font-medium text-sm"></asp:Label>
+   
 
-</div>
-        <h1>Khen thưởng nhân viên</h1>
+ </div>
+        <h1>BẢO HIỂM XÃ HỘI</h1>
 
         <div class="breadcrumb">
-            Tổng quan › Khen thưởng
+            Tổng quan › Bảo Hiểm Xã Hội
         </div>
 
         <br /><br />
-
-        <a href="ThemKhenThuong.aspx" class="btn">Khen Thưởng</a>
 
         <!-- Options -->
         <div class="top-options">
@@ -59,16 +58,20 @@
         </div>
 
         <!-- TABLE -->
-        <asp:GridView ID="gvKhenThuong" runat="server" AutoGenerateColumns="False"
+        <asp:GridView ID="gvBaoHiem" runat="server" AutoGenerateColumns="False"
             CssClass="table" AllowPaging="True"
-            OnPageIndexChanging="gvKhenThuong_PageIndexChanging"
-            PageSize="10" OnSelectedIndexChanged="gvKhenThuong_SelectedIndexChanged">
+            OnPageIndexChanging="gvBaoHiem_PageIndexChanging"
+            PageSize="10" OnSelectedIndexChanged="gvBaoHiem_SelectedIndexChanged">
 
             <Columns>
-                <asp:BoundField DataField="MANV" HeaderText="Mã nhân viên" />
-                <asp:BoundField DataField="Ngay" HeaderText="Tháng thưởng" DataFormatString="{0:dd/MM/yyyy}" />
-                <asp:BoundField DataField="NoiDung" HeaderText="Nội Dung" />
-                <asp:BoundField DataField="SoKTKL" HeaderText="Tiền Thưởng" DataFormatString="{0:N0}" />
+                <asp:BoundField DataField="MaNV" HeaderText="Mã nhân viên" />
+                <asp:BoundField DataField="SoBH" HeaderText="Số Bảo Hiểm"  />
+                <asp:BoundField DataField="TuThang" HeaderText="Từ Tháng" DataFormatString="{0:dd/MM/yyyy}" />
+                <asp:BoundField DataField="DenThang" HeaderText="Đến Tháng" DataFormatString="{0:dd/MM/yyyy}" />
+                <asp:BoundField DataField="DonVi" HeaderText="Đơn Vị" />
+                <asp:BoundField DataField="Chucvu" HeaderText="Chức Vụ" />
+        
+
             </Columns>
 
         </asp:GridView>

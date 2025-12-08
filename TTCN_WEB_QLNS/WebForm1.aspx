@@ -15,7 +15,7 @@
   <style>
     
   </style>
-  <style>@view-transition { navigation: auto; }</style>
+  <!--<style>@view-transition { navigation: auto; }</style>-->
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head> <body>
   <div id="app" class="flex h-full"><!-- Sidebar -->

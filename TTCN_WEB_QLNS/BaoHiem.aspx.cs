@@ -1,20 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
 using System.Data.SqlClient;
+using System.Data;
+using System.Linq;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace TTCN_WEB_QLNS
 {
-    public partial class KhenThuong : System.Web.UI.Page
+    public partial class Quan_Ly_Nhan_Vien : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
 
+            if (!IsPostBack)
+            {
+                LoadDataBaoHiem();
+            }
             //if (Session["UserName"] == null || Session["IDROLE"] == null)
             //{
-            //    Response.Redirect("KhenThuong.aspx");
+            //    Response.Redirect("BaoHiem.aspx");
             //    return;
             //}
 
@@ -33,40 +40,36 @@ namespace TTCN_WEB_QLNS
             //    menuLuong.Visible = false;
             //    menuKhenThuong.Visible = false;
             //}
-            if (!IsPostBack)
-            {
-                LoadDataKhenThuong();
-            }
         }
-
-        private void LoadDataKhenThuong()
+        private void LoadDataBaoHiem()
         {
             string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM KhenThuong_KyLuat", conn);
+                string query = @"
+            SELECT 
+                bh.SoBH,
+                bh.TuThang,
+                bh.DenThang,
+                bh.DonVi,
+                cv.TenCV AS Chucvu,
+                nv.MaNV
+            FROM Bao_hiem bh
+            JOIN Nhan_vien nv ON bh.MaNV = nv.MaNV
+            JOIN Chuc_vu cv ON nv.IDCV = cv.IDCV";
+
+                SqlDataAdapter da = new SqlDataAdapter(query, conn);
 
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
-                gvKhenThuong.DataSource = dt;
-                gvKhenThuong.DataBind();
+                gvBaoHiem.DataSource = dt;
+                gvBaoHiem.DataBind();
             }
         }
 
-        protected void gvKhenThuong_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            gvKhenThuong.PageIndex = e.NewPageIndex;
-            LoadDataKhenThuong();
-        }
-
-        protected void ddlPageSize_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            gvKhenThuong.PageSize = int.Parse(ddlPageSize.SelectedValue);
-            LoadDataKhenThuong();
-        }
 
         protected void txtSearch_TextChanged(object sender, EventArgs e)
         {
@@ -76,7 +79,7 @@ namespace TTCN_WEB_QLNS
             {
                 conn.Open();
                 SqlDataAdapter da = new SqlDataAdapter(
-                    "SELECT * FROM Khen_thuong WHERE MA_NV LIKE @search OR LyDo LIKE @search",
+                    "SELECT * FROM Bao_hiem WHERE MaNV LIKE @search OR SoBH LIKE @search",
                     conn);
 
                 da.SelectCommand.Parameters.AddWithValue("@search", "%" + txtSearch.Text + "%");
@@ -84,14 +87,28 @@ namespace TTCN_WEB_QLNS
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
-                gvKhenThuong.DataSource = dt;
-                gvKhenThuong.DataBind();
+                gvBaoHiem.DataSource = dt;
+                gvBaoHiem.DataBind();
             }
         }
 
-        protected void gvKhenThuong_SelectedIndexChanged(object sender, EventArgs e)
+        protected void gvBaoHiem_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        protected void gvBaoHiem_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
 
+            gvBaoHiem.PageIndex = e.NewPageIndex;
+            LoadDataBaoHiem();
+        }
+
+        protected void ddlPageSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            gvBaoHiem.PageSize = int.Parse(ddlPageSize.SelectedValue);
+            LoadDataBaoHiem();
         }
     }
 }

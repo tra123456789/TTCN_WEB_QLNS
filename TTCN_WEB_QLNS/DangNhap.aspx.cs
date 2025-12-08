@@ -28,44 +28,44 @@ namespace TTCN_WEB_QLNS
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            string Username = txtUsername.Text;
-            string Password = txtPassword.Text;
+            string Username = txtUsername.Text.Trim();
+            string Password = txtPassword.Text.Trim();
 
             if (Username == "" || Password == "")
             {
-                lblMessage.Text = "Vui lòng nhập đầy đủ thông tin ";
+                lblMessage.Text = "Vui lòng nhập đầy đủ thông tin.";
                 return;
             }
 
             string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
-            SqlConnection conn = new SqlConnection(connStr);
+
+            using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
 
+                string sql = "SELECT IDROLE FROM [User] WHERE Username = @u AND Password = @p";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@u", Username);
+                cmd.Parameters.AddWithValue("@p", Password);
+
+                object role = cmd.ExecuteScalar();   // ← LẤY ROLE HOẶC NULL
+
+                if (role != null)
+                {
+                    // Đăng nhập thành công
+                    Session["UserName"] = Username;
+                    Session["IDROLE"] = role.ToString();  // ← LƯU QUYỀN VÀO SESSION
+
+                    Response.Redirect("TongQuan.aspx");
+                }
+                else
+                {
+                    // Sai tài khoản
+                    lblMessage.Text = "Sai tài khoản hoặc mật khẩu.";
+                }
             }
-            string sql = " Select count(*) From User where Username = @u And Password = @p ";
-            SqlCommand cmd = new SqlCommand(sql, conn);
-
-            cmd.Parameters.Add(new SqlParameter("@u", Username));
-            cmd.Parameters.Add(new SqlParameter("@p", Password));
 
 
-            //int result = (int)cmd.ExecuteScalar();
-
-            conn.Close();                                // đóng kết nối
-
-            //if (result > 0)                               // nếu result = 1 tức là đăng nhập đúng
-            //{
-            Session["UserName"] = Username;           // lưu username vào session
-
-            Response.Redirect("KhenThuong.aspx");           // chuyển sang trang chủ
-
-            //else
-            //{
-            lblMessage.Text = "Sai tài khoản hoặc mật khẩu.";  // báo lỗi
-
-
-           // Server.Transfer("QuanLyNhanVien.aspx");
         }
 
         protected void btnDangKy_Click(object sender, EventArgs e)

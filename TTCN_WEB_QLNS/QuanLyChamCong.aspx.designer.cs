@@ -11,7 +11,7 @@ namespace TTCN_WEB_QLNS
 {
 
 
-    public partial class WebForm2
+    public partial class QuanLyChamCong
     {
 
         /// <summary>
@@ -105,76 +105,40 @@ namespace TTCN_WEB_QLNS
         protected global::System.Web.UI.WebControls.Label lblWelcome;
 
         /// <summary>
-        /// btnAddUser control.
+        /// ddlThang control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAddUser;
+        protected global::System.Web.UI.WebControls.DropDownList ddlThang;
 
         /// <summary>
-        /// txtHoTen control.
+        /// ddlNam control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtHoTen;
+        protected global::System.Web.UI.WebControls.DropDownList ddlNam;
 
         /// <summary>
-        /// txtNgaySinh control.
+        /// ddlNhanVien control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNgaySinh;
+        protected global::System.Web.UI.WebControls.DropDownList ddlNhanVien;
 
         /// <summary>
-        /// txtSDT control.
+        /// btnLoad control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSDT;
-
-        /// <summary>
-        /// txtCCCD control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCCCD;
-
-        /// <summary>
-        /// txtDiaChi control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDiaChi;
-
-        /// <summary>
-        /// fileAvatar control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fileAvatar;
-
-        /// <summary>
-        /// btnSave control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSave;
+        protected global::System.Web.UI.WebControls.Button btnLoad;
 
         /// <summary>
         /// ddlPageSize control.

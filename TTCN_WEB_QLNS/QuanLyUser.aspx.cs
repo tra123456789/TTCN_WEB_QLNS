@@ -10,15 +10,40 @@ namespace TTCN_WEB_QLNS
 {
     public partial class WebForm2 : System.Web.UI.Page
     {
+        string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
 
-    protected void Page_Load(object sender, EventArgs e)
+        protected void Page_Load(object sender, EventArgs e)
         {
+            //if (Session["UserName"] == null || Session["IDROLE"] == null)
+            //{
+            //    Response.Redirect("QuanLyUser.aspx");
+            //    return;
+            //}
+
+            // Hiển thị tên
+            //lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
+
+
+            //// Phân quyền
+            //string role = Session["IDROLE"].ToString();
+
+            //if (role == "User")
+            //{
+            //    menuTongQuan.Visible = false;
+            //    menuNhanVien.Visible = false;
+            //    menuPhongBan.Visible = false;
+            //    menuHopDong.Visible = false;
+            //    menuLuong.Visible = false;
+            //    menuKhenThuong.Visible = false;
+            //}
+
             if (!IsPostBack)
             {
                 LoadDataQuanLyUser();
             }
+
         }
-        //Hàm xử lý sửa và xóa
+        //Hàm xử lý Hiển thị lên bảng
         void LoadSingleUser(string maNV)
         {
             string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
@@ -46,14 +71,14 @@ namespace TTCN_WEB_QLNS
                 }
             }
 
-            btnSave.Text = "💾 Cập nhật";
+            //btnSave.Text = "💾 Cập nhật";
         }
+
 
 
         private void LoadDataQuanLyUser()
         {
-            string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
-
+        
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
@@ -81,7 +106,7 @@ namespace TTCN_WEB_QLNS
 
         protected void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+         
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
@@ -129,7 +154,7 @@ namespace TTCN_WEB_QLNS
 
         protected void btnAddUser_Click(object sender, EventArgs e)
         {
-            string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+           
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
@@ -196,7 +221,7 @@ namespace TTCN_WEB_QLNS
             // ❌ XÓA
             if (e.CommandName == "DeleteRow")
             {
-                string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+               
 
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
@@ -230,7 +255,7 @@ namespace TTCN_WEB_QLNS
         {
             string manv = gvQuanLyUser.DataKeys[e.RowIndex].Value.ToString();
 
-            string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+         
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 string sql = "DELETE FROM Nhan_vien WHERE MANV=@id";
@@ -257,7 +282,7 @@ namespace TTCN_WEB_QLNS
             string cccd = ((TextBox)row.Cells[4].Controls[0]).Text;
             string diachi = ((TextBox)row.Cells[5].Controls[0]).Text;
 
-            string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+         
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 string sql = @"UPDATE Nhan_vien 

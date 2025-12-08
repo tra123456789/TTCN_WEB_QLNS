@@ -1,11 +1,12 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="QuanLyUser.aspx.cs" Inherits="TTCN_WEB_QLNS.WebForm2" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="QuanLyChamCong.aspx.cs" Inherits="TTCN_WEB_QLNS.QuanLyChamCong" %>
+
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Khen Thưởng</title>
-    <link href ="Quanlynhanvien.css" rel ="stylesheet" type="text/css"/>
+    <link href ="QLUSER.css" rel ="stylesheet" type="text/css"/>
     </head>
 <body>
     <form id="form1" runat="server">
@@ -13,7 +14,7 @@
              <!-- Sidebar -->
     <div class="sidebar">
         <h2>Trang quản trị</h2>
-        <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
+               <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
 <a id="menuNhanVien" runat="server" href="QuanLyUser.aspx">Nhân viên</a>
 <a id="menuPhongBan" runat="server" href="PhongBan.aspx">Phòng ban</a>
 <a id="menuChamCong" runat="server" href="QuanLyChamCong.aspx">Chấm công</a>
@@ -27,51 +28,38 @@
 
     <!-- PAGE CONTENT -->
          <div class="content">
-         <div class ="welcome">   
-                    <p class="text-xs opacity-75">Xin Chào</p>
+         <div class ="welcome">          
           <asp:Label ID="lblWelcome" runat="server" CssClass="font-medium text-sm"></asp:Label>
-   
+          <p class="text-xs opacity-75">Quản trị viên</p>
 
          </div>
-        <h1> Quản lý nhân viên</h1>
+        <h1> Quản lý Chấm Công</h1>
      
        
         <div class="breadcrumb">
-            Tổng quan › Nhân viên
+            Tổng quan › Chấm công nhân viên
         </div>
 
         <br /><br />
                 <div >
-                  <asp:Button ID="btnAddUser" runat="server" Text="➕ Thêm Nhân Viên" CssClass="btn" OnClick="btnAddUser_Click" />
+                     <div>
+            Tháng:
+            <asp:DropDownList ID="ddlThang" runat="server"></asp:DropDownList>
 
-                <br /><br />
+            Năm:
+            <asp:DropDownList ID="ddlNam" runat="server"></asp:DropDownList>
 
-                Họ Tên:
-                <asp:TextBox ID="txtHoTen" runat="server" OnTextChanged="txtHoTen_TextChanged"></asp:TextBox>
+            Nhân viên:
+            <asp:DropDownList ID="ddlNhanVien" runat="server"></asp:DropDownList>
 
-                Ngày sinh:
-                <asp:TextBox ID="txtNgaySinh" runat="server" TextMode="Date"></asp:TextBox>
+            <asp:Button ID="btnLoad" runat="server" Text="Tải dữ liệu" OnClick="btnLoad_Click" />
+        </div>
 
-                SĐT:
-                <asp:TextBox ID="txtSDT" runat="server"></asp:TextBox>
-
-                CCCD:
-                <asp:TextBox ID="txtCCCD" runat="server"></asp:TextBox>
-
-                Địa chỉ:
-                <asp:TextBox ID="txtDiaChi" runat="server"></asp:TextBox>
-
-                Hình ảnh:
-                <asp:FileUpload ID="fileAvatar" runat="server" />
-
-                <br /><br />
 
    
             
         </div>
-          <!--  <asp:Button ID="btnSave" runat="server" Text="💾 Lưu nhân viên"
-        CssClass="btn" OnClick="btnSave_Click" style="height: 38px" />
-        -->
+     
 
 <br />
 
