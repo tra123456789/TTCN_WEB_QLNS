@@ -11,7 +11,14 @@ namespace TTCN_WEB_QLNS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (Session["UserName"] != null)
+            {
+                lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
+            }
+            else
+            {
+                Response.Redirect("DangNhap.aspx"); // nếu chưa đăng nhập → quay lại login
+            }
             //if (Session["UserName"] == null || Session["IDROLE"] == null)
             //{
             //    Response.Redirect("KhenThuong.aspx");
@@ -92,6 +99,11 @@ namespace TTCN_WEB_QLNS
         protected void gvKhenThuong_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+        protected void lnkLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("DangNhap.aspx");
         }
     }
 }

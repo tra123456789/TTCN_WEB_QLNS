@@ -14,9 +14,30 @@ namespace TTCN_WEB_QLNS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            string role = Session["IDROLE"].ToString();
 
+            if (role == "User")
+            {
+                menuTongQuan.Visible = false;
+                menuNhanVien.Visible = false;
+                menuPhongBan.Visible = false;
+                menuHopDong.Visible = false;
+                menuLuong.Visible = true;
+                menuKhenThuong.Visible = false;
+            }
+
+            if (Session["UserName"] != null)
+            {
+                lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
+            }
+            else
+            {
+                Response.Redirect("DangNhap.aspx"); // nếu chưa đăng nhập → quay lại login
+            }
             if (!IsPostBack)
+            {
                 LoadDataLuong();
+            }
             //if (Session["UserName"] == null || Session["IDROLE"] == null)
             //{
             //    Response.Redirect("QuanLyLuong.aspx");
@@ -26,18 +47,8 @@ namespace TTCN_WEB_QLNS
             //// Hiển thị tên
             //lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
 
-            //// Phân quyền
-            //string role = Session["IDROLE"].ToString();
-
-            //if (role == "User")
-            //{
-            //    menuTongQuan.Visible = false;
-            //    menuNhanVien.Visible = false;
-            //    menuPhongBan.Visible = false;
-            //    menuHopDong.Visible = false;
-            //    menuLuong.Visible = false;
-            //    menuKhenThuong.Visible = false;
-            //}
+            // Phân quyền
+          
         }
 
         private void LoadDataLuong()
@@ -255,6 +266,11 @@ namespace TTCN_WEB_QLNS
             }
 
             LoadDataLuong(); // Load lại grid
+        }
+        protected void lnkLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("DangNhap.aspx");
         }
     }
 }

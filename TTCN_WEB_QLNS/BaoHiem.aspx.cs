@@ -12,9 +12,18 @@ namespace TTCN_WEB_QLNS
 {
     public partial class Quan_Ly_Nhan_Vien : System.Web.UI.Page
     {
+        string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (Session["UserName"] != null)
+            {
+                lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
+            }
+            else
+            {
+                Response.Redirect("DangNhap.aspx"); // nếu chưa đăng nhập → quay lại login
+            }
             if (!IsPostBack)
             {
                 LoadDataBaoHiem();
@@ -73,8 +82,7 @@ namespace TTCN_WEB_QLNS
 
         protected void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
-
+         
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
@@ -108,6 +116,76 @@ namespace TTCN_WEB_QLNS
         {
 
             gvBaoHiem.PageSize = int.Parse(ddlPageSize.SelectedValue);
+            LoadDataBaoHiem();
+        }
+        protected void lnkLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("DangNhap.aspx");
+        }
+
+        protected void txtSoBaoHiem_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void txtTuThang_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void txtDenThang_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void txtNoiDung_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void txtLanKy_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void txtMaNV_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        protected void txtChucVu_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        protected void btnAddBH_Click(object sender, EventArgs e)
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+
+                string manv = txtMaNV.Text.Trim();
+                string tuthang = txtTuThang.Text.Trim();
+                string denthang = txtDenThang.Text.Trim();
+                string donvi = txtDonVi.Text.Trim();
+        
+
+                // 🔥 Câu lệnh INSERT
+                string sql = @"INSERT INTO Bao_hiem(MaNV, TuThang, DenThang, DonVi)
+                       VALUES(@manv,@tuthang,@denthang,@donvi)";
+                
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+
+                cmd.Parameters.AddWithValue("@tuthang",tuthang );
+                cmd.Parameters.AddWithValue("@denthang", denthang);
+                cmd.Parameters.AddWithValue("@donvi", donvi );
+               
+                cmd.Parameters.AddWithValue("@manv", manv);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+
             LoadDataBaoHiem();
         }
     }

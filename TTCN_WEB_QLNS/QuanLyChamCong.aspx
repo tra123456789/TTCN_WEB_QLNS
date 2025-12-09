@@ -5,15 +5,15 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Khen Thưởng</title>
-    <link href ="QLUSER.css" rel ="stylesheet" type="text/css"/>
+    <title>Quản lý chấm công</title>
+    <link href ="Quanlynhanvien.css" rel ="stylesheet" type="text/css"/>
     </head>
 <body>
     <form id="form1" runat="server">
         <div>
              <!-- Sidebar -->
     <div class="sidebar">
-        <h2>Trang quản trị</h2>
+        <h2>Menu</h2>
                <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
 <a id="menuNhanVien" runat="server" href="QuanLyUser.aspx">Nhân viên</a>
 <a id="menuPhongBan" runat="server" href="PhongBan.aspx">Phòng ban</a>
@@ -23,16 +23,19 @@
 <a id="menuLuong" runat="server" href="QuanLyLuong.aspx">Lương nhân viên</a>
 <a id="menuKhenThuong" runat="server" href="KhenThuong.aspx">Khen thưởng</a>
 
-
+         <!-- THÊM Ô ĐĂNG XUẤT VÀO ĐÂY -->
+        <asp:LinkButton ID="lnkLogout" runat="server" CssClass="logout-link" OnClick="lnkLogout_Click">Đăng xuất</asp:LinkButton>
+        
     </div>
 
     <!-- PAGE CONTENT -->
          <div class="content">
-         <div class ="welcome">          
-          <asp:Label ID="lblWelcome" runat="server" CssClass="font-medium text-sm"></asp:Label>
-          <p class="text-xs opacity-75">Quản trị viên</p>
+        <div class ="welcome">   
+           <p class="text-xs opacity-75">Chào mừng bạn quay trở lại</p>
+ <asp:Label ID="lblWelcome" runat="server" CssClass="font-medium text-sm"></asp:Label>
+   
 
-         </div>
+</div>
         <h1> Quản lý Chấm Công</h1>
      
        
@@ -44,13 +47,13 @@
                 <div >
                      <div>
             Tháng:
-            <asp:DropDownList ID="ddlThang" runat="server"></asp:DropDownList>
+            <asp:DropDownList ID="ddlThang" runat="server" OnSelectedIndexChanged="ddlThang_SelectedIndexChanged"></asp:DropDownList>
 
             Năm:
-            <asp:DropDownList ID="ddlNam" runat="server"></asp:DropDownList>
+            <asp:DropDownList ID="ddlNam" runat="server" OnSelectedIndexChanged="ddlNam_SelectedIndexChanged"></asp:DropDownList>
 
             Nhân viên:
-            <asp:DropDownList ID="ddlNhanVien" runat="server"></asp:DropDownList>
+            <asp:DropDownList ID="ddlNhanVien" runat="server" OnSelectedIndexChanged="ddlNhanVien_SelectedIndexChanged"></asp:DropDownList>
 
             <asp:Button ID="btnLoad" runat="server" Text="Tải dữ liệu" OnClick="btnLoad_Click" />
         </div>
@@ -81,53 +84,39 @@
         </div>
 
         <!-- TABLE -->
-        <asp:GridView ID="gvQuanLyUser" runat="server" AutoGenerateColumns="False"
-            CssClass="table" AllowPaging="True"
-             DataKeyNames="MANV"
-            OnPageIndexChanging="gvQuanLyUser_PageIndexChanging"
-            OnSelectedIndexChanged="gvQuanLyUser_SelectedIndexChanged"
-            OnRowEditing="gvQuanLyUser_RowEditing"
-            OnRowCancelingEdit="gvQuanLyUser_RowCancelingEdit"
-            OnRowDeleting="gvQuanLyUser_RowDeleting"
-            OnRowUpdating="gvQuanLyUser_RowUpdating">
-
+       <!-- GridView chấm công -->
+        <asp:GridView ID="gvChamCong" runat="server" AutoGenerateColumns="False" CssClass="tbl" OnSelectedIndexChanged="gvChamCong_SelectedIndexChanged">
             <Columns>
-                <asp:BoundField DataField="MANV" HeaderText="Mã nhân viên" ReadOnly="True" />
-                <asp:BoundField DataField="HoTen" HeaderText="Tên Nhân Viên" />
-                <asp:BoundField DataField="NgaySinh" HeaderText="Ngày Sinh" DataFormatString="{0:dd/MM/yyyy}" />
-                <asp:BoundField DataField="SDT" HeaderText="SDT" />
-                <asp:BoundField DataField="CCCD" HeaderText="Số Căn Cước"  />
-             <asp:BoundField DataField="DiaChi" HeaderText="Địa Chỉ" />
-             <asp:TemplateField HeaderText="Hình Ảnh">
-                <ItemTemplate>
-                    <asp:Image ID="imgAvatar" runat="server" 
-                        ImageUrl='<%# Eval("HinhAnh") %>'  CssClass="avatar"/>
-                </ItemTemplate>
-            </asp:TemplateField>
-          <asp:TemplateField HeaderText="Thao tác">
-            <ItemTemplate>
-                <%-- Nút Sửa (Edit) --%>
-                <asp:LinkButton ID="LinkButtonEdit" runat="server" CommandName="Edit" Text="Sửa" CssClass="btn btn-sm btn-info" />
-        
-                <%-- Nút Xóa (Delete) có thêm OnClientClick xác nhận --%>
-                <asp:LinkButton ID="LinkButtonDelete" runat="server" CommandName="Delete" Text="Xóa" CssClass="btn btn-sm btn-danger"
-                    OnClientClick="return confirm('Bạn chắc chắn muốn xóa nhân viên này không?');" />
-            </ItemTemplate>
-            <EditItemTemplate>
-                <%-- Nút Cập nhật (Update) --%>
-                <asp:LinkButton ID="LinkButtonUpdate" runat="server" CommandName="Update" Text="Cập nhật" CssClass="btn btn-sm btn-success" />
-        
-                <%-- Nút Bỏ qua (Cancel) --%>
-                <asp:LinkButton ID="LinkButtonCancel" runat="server" CommandName="Cancel" Text="Bỏ Qua" CssClass="btn btn-sm btn-secondary" />
-            </EditItemTemplate>
-        </asp:TemplateField>  
+                <asp:BoundField DataField="Ngay" HeaderText="Ngày" ReadOnly="true" />
+                <asp:BoundField DataField="Thu" HeaderText="Thứ" ReadOnly="true" />
 
+                <asp:TemplateField HeaderText="Giờ vào">
+                    <ItemTemplate>
+                        <asp:TextBox ID="txtGioVao" runat="server" CssClass="time-input"
+                            Text='<%# Bind("GioVao") %>' />
+                    </ItemTemplate>
+                </asp:TemplateField>
 
-    
-                 
+                <asp:TemplateField HeaderText="Giờ ra">
+                    <ItemTemplate>
+                        <asp:TextBox ID="txtGioRa" runat="server" CssClass="time-input"
+                            Text='<%# Bind("GioRa") %>' />
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+                <asp:BoundField DataField="CongNgay" HeaderText="Công " ReadOnly="true" />
+
+                <asp:TemplateField HeaderText="Ghi chú">
+                    <ItemTemplate>
+                        <asp:TextBox ID="txtGhiChu" runat="server" CssClass="note-input"
+                            Text='<%# Bind("GhiChu") %>' />
+                    </ItemTemplate>
+                </asp:TemplateField>
             </Columns>
-
         </asp:GridView>
+             
+        <asp:Button ID="btnTinhCong" runat="server" Text="Tính công" OnClick="btnTinhCong_Click" />
+        <asp:Button ID="btnSave" runat="server" Text="Lưu dữ liệu" OnClick="btnSave_Click" />
 
     </div>
 

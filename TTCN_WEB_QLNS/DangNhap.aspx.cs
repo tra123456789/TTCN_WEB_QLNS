@@ -48,22 +48,28 @@ namespace TTCN_WEB_QLNS
                 cmd.Parameters.AddWithValue("@u", Username);
                 cmd.Parameters.AddWithValue("@p", Password);
 
-                object role = cmd.ExecuteScalar();   // ← LẤY ROLE HOẶC NULL
+                object role = cmd.ExecuteScalar();   // lấy quyền hoặc null
 
                 if (role != null)
                 {
-                    // Đăng nhập thành công
+                    // Lưu thông tin đăng nhập
                     Session["UserName"] = Username;
-                    Session["IDROLE"] = role.ToString();  // ← LƯU QUYỀN VÀO SESSION
+                    Session["IDROLE"] = role.ToString();
 
-                    Response.Redirect("TongQuan.aspx");
+                    // Điều hướng theo IDROLE
+                    if (role.ToString() == "1" || role.ToString() == "12")
+                        Response.Redirect("TongQuan.aspx");
+                    else if (role.ToString() == "10")
+                        Response.Redirect("UserHome.aspx");
+                    else
+                        lblMessage.Text = "Role không hợp lệ!";
                 }
                 else
                 {
-                    // Sai tài khoản
                     lblMessage.Text = "Sai tài khoản hoặc mật khẩu.";
                 }
             }
+
 
 
         }

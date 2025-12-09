@@ -13,32 +13,36 @@ namespace TTCN_WEB_QLNS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //if (Session["UserName"] == null || Session["IDROLE"] == null)
-            //{
-            //    Response.Redirect("DangNhap.aspx");
-            //    return;
-            //}
+            if (Session["UserName"] == null || Session["IDROLE"] == null)
+            {
+                Response.Redirect("DangNhap.aspx");
+                return;
+            }
 
-            // Hiển thị tên
-            //lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
+            // Nếu ROLE khác User 
+            if (Session["IDROLE"].ToString() != "1")
+            {
+                Response.Redirect("UserHome.aspx");
+                return;
+            }
 
-            //// Phân quyền
-            //string role = Session["IDROLE"].ToString();
+            // Nếu ROLE đúng là User → cho vào trang
+            lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
 
-            //if (role == "User")
-            //{
-
-            //    menuNhanVien.Visible = false;
-            //    menuPhongBan.Visible = false;
-            //    menuHopDong.Visible = false;
-            //    menuLuong.Visible = false;
-            //    menuKhenThuong.Visible = false;
-            //}
 
             if (!IsPostBack)
             {
                 LoadDashboard();
+                
             }
+            //if (Session["UserName"] != null)
+            //{
+            //    lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
+            //}
+            //else
+            //{
+            //    Response.Redirect("DangNhap.aspx"); // nếu chưa đăng nhập → quay lại login
+            //}
         }
         void LoadDashboard()
         {
@@ -98,6 +102,10 @@ namespace TTCN_WEB_QLNS
             Response.Redirect("BaoHiem.aspx");
         }
 
-
+        protected void lnkLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("DangNhap.aspx");
+        }
     }
 }

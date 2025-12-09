@@ -12,7 +12,7 @@
         <div>
              <!-- Sidebar -->
     <div class="sidebar">
-        <h2>Trang quản trị</h2>
+        <h2>Menu</h2>
         <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
 <a id="menuNhanVien" runat="server" href="QuanLyUser.aspx">Nhân viên</a>
 <a id="menuPhongBan" runat="server" href="PhongBan.aspx">Phòng ban</a>
@@ -22,13 +22,15 @@
 <a id="menuLuong" runat="server" href="QuanLyLuong.aspx">Lương nhân viên</a>
 <a id="menuKhenThuong" runat="server" href="KhenThuong.aspx">Khen thưởng</a>
 
-
+         <!-- THÊM Ô ĐĂNG XUẤT VÀO ĐÂY -->
+        <asp:LinkButton ID="lnkLogout" runat="server" CssClass="logout-link" OnClick="lnkLogout_Click">Đăng xuất</asp:LinkButton>
+        
     </div>
 
     <!-- PAGE CONTENT -->
          <div class="content">
          <div class ="welcome">   
-                    <p class="text-xs opacity-75">Xin Chào</p>
+                    <p class="text-xs opacity-75">Chào mừng bạn quay trở lại</p>
           <asp:Label ID="lblWelcome" runat="server" CssClass="font-medium text-sm"></asp:Label>
    
 

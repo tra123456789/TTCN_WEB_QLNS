@@ -15,6 +15,14 @@ namespace TTCN_WEB_QLNS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["UserName"] != null)
+            {
+                lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
+            }
+            else
+            {
+                Response.Redirect("DangNhap.aspx"); // nếu chưa đăng nhập → quay lại login
+            }
             //if (Session["UserName"] == null || Session["IDROLE"] == null)
             //{
             //    Response.Redirect("QuanLyHopDong.aspx");
@@ -238,6 +246,11 @@ namespace TTCN_WEB_QLNS
         {
             gvQuanLyHD.EditIndex = -1;
             LoadDataQuanLyHD();
+        }
+        protected void lnkLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("DangNhap.aspx");
         }
     }
 }

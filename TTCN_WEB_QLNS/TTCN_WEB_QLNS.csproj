@@ -132,6 +132,7 @@
     <Content Include="QuanLyHopDong.aspx" />
     <Content Include="QuanLyLuong.aspx" />
     <Content Include="BaoHiem.aspx" />
+    <Content Include="QuenMatKhau.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -160,8 +161,11 @@
     <Content Include="Content\bootstrap-grid.rtl.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="StyleSheet1.css" />
+    <Content Include="ThongTinCaNhan.aspx" />
     <Content Include="TongQuan.aspx" />
     <Content Include="TongQuan.css" />
+    <Content Include="UserHome.aspx" />
     <Content Include="WebForm1.aspx" />
     <Content Include="QuanLyUser.aspx" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
@@ -281,6 +285,13 @@
     <Compile Include="BaoHiem.aspx.designer.cs">
       <DependentUpon>BaoHiem.aspx</DependentUpon>
     </Compile>
+    <Compile Include="QuenMatKhau.aspx.cs">
+      <DependentUpon>QuenMatKhau.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="QuenMatKhau.aspx.designer.cs">
+      <DependentUpon>QuenMatKhau.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -295,12 +306,26 @@
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
     </Compile>
+    <Compile Include="ThongTinCaNhan.aspx.cs">
+      <DependentUpon>ThongTinCaNhan.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ThongTinCaNhan.aspx.designer.cs">
+      <DependentUpon>ThongTinCaNhan.aspx</DependentUpon>
+    </Compile>
     <Compile Include="TongQuan.aspx.cs">
       <DependentUpon>TongQuan.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="TongQuan.aspx.designer.cs">
       <DependentUpon>TongQuan.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserHome.aspx.cs">
+      <DependentUpon>UserHome.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserHome.aspx.designer.cs">
+      <DependentUpon>UserHome.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>

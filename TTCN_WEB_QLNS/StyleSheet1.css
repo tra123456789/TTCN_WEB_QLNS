@@ -1,4 +1,4 @@
-﻿body {
+﻿﻿body {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -136,6 +136,7 @@ input, .textbox {
     margin-top: 10px;
     font-size: 14px;
 }
+
 .cssbtnDN {
     border-style: none;
     border-color: inherit;
@@ -148,6 +149,7 @@ input, .textbox {
     border-radius: 8px;
     cursor: pointer;
 }
+
 .cssbtnDK {
     border-style: none;
     border-color: inherit;
@@ -212,9 +214,9 @@ label {
     }
 
 
-    .btn:hover {
-        background: #1c5fdb;
-    }
+.btn:hover {
+    background: #1c5fdb;
+}
 
 .messageDK {
     display: block;

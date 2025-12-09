@@ -14,6 +14,14 @@ namespace TTCN_WEB_QLNS
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["UserName"] != null)
+            {
+                lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
+            }
+            else
+            {
+                Response.Redirect("DangNhap.aspx"); // nếu chưa đăng nhập → quay lại login
+            }
             //if (Session["UserName"] == null || Session["IDROLE"] == null)
             //{
             //    Response.Redirect("QuanLyUser.aspx");
@@ -50,7 +58,7 @@ namespace TTCN_WEB_QLNS
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string sql = "SELECT * FROM Nhan_vien WHERE MANV = @ma";
+                string sql = "SELECT * FROM Nhan_vien WHERE MaNV = @ma";
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@ma", maNV);
@@ -67,7 +75,7 @@ namespace TTCN_WEB_QLNS
                     txtDiaChi.Text = r["DiaChi"].ToString();
 
                     // lưu để biết đang sửa
-                    ViewState["EditingMANV"] = maNV;
+                    ViewState["EditingMaNV"] = maNV;
                 }
             }
 
@@ -112,7 +120,7 @@ namespace TTCN_WEB_QLNS
             {
                 conn.Open();
                 SqlDataAdapter da = new SqlDataAdapter(
-                    "SELECT * FROM Nhan_vien WHERE MANV LIKE @search OR HoTen LIKE @search",
+                    "SELECT * FROM Nhan_vien WHERE MaNV LIKE @search OR HoTen LIKE @search",
                     conn);
 
                 da.SelectCommand.Parameters.AddWithValue("@search", "%" + txtSearch.Text + "%");
@@ -154,54 +162,75 @@ namespace TTCN_WEB_QLNS
 
         protected void btnAddUser_Click(object sender, EventArgs e)
         {
-           
 
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                string hoten = txtHoTen.Text;
-                string ngaysinh = txtNgaySinh.Text;
+                   string hoten = txtHoTen.Text.Trim();
+                string ngaysinh = txtNgaySinh.Text.Trim();
                 string sdt = txtSDT.Text.Trim();
                 string cccd = txtCCCD.Text.Trim();
                 string diachi = txtDiaChi.Text.Trim();
                 string imgPath = "";
 
-                // 🔥 Tạo thư mục Images nếu chưa có
+                string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+
+                // Tạo thư mục Images nếu chưa có
                 string folderPath = Server.MapPath("~/Images/");
                 if (!Directory.Exists(folderPath))
-                {
                     Directory.CreateDirectory(folderPath);
-                }
 
-                // 🔥 Lưu file ảnh
+                // Lưu ảnh nếu có
                 if (fileAvatar.HasFile)
                 {
                     string filename = Path.GetFileName(fileAvatar.FileName);
                     imgPath = "~/Images/" + filename;
-
                     fileAvatar.SaveAs(Path.Combine(folderPath, filename));
                 }
 
-                // 🔥 Câu lệnh INSERT
-                string sql = @"INSERT INTO Nhan_vien(HoTen,NgaySinh, SDT, CCCD, DiaChi, HinhAnh)
-                       VALUES(@ten,@ngay, @sdt, @cccd, @diachi, @img)";
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    conn.Open();
 
-                SqlCommand cmd = new SqlCommand(sql, conn);
+                    // 1️⃣ INSERT nhân viên
+                    string sqlNV = @"INSERT INTO Nhan_vien(HoTen, NgaySinh, SDT, CCCD, DiaChi, HinhAnh)
+                         VALUES(@ten, @ngay, @sdt, @cccd, @diachi, @img);
+                         SELECT SCOPE_IDENTITY();";
 
-                cmd.Parameters.AddWithValue("@ten", hoten);
-                cmd.Parameters.AddWithValue("@ngay", ngaysinh);
-                cmd.Parameters.AddWithValue("@sdt", sdt);
-                cmd.Parameters.AddWithValue("@cccd", cccd);
-                cmd.Parameters.AddWithValue("@diachi", diachi);
-                cmd.Parameters.AddWithValue("@img", imgPath);
+                    SqlCommand cmdNV = new SqlCommand(sqlNV, conn);
+                    cmdNV.Parameters.AddWithValue("@ten", hoten);
+                    cmdNV.Parameters.AddWithValue("@ngay", ngaysinh);
+                    cmdNV.Parameters.AddWithValue("@sdt", sdt);
+                    cmdNV.Parameters.AddWithValue("@cccd", cccd);
+                    cmdNV.Parameters.AddWithValue("@diachi", diachi);
+                    cmdNV.Parameters.AddWithValue("@img", imgPath);
 
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                conn.Close();
-            }
+                    // 👉 Lấy mã nhân viên sau khi insert
+                    int maNV = Convert.ToInt32(cmdNV.ExecuteScalar());
 
-            LoadDataQuanLyUser(); // load lại GridView sau khi thêm
+                    // 2️⃣ Tạo tài khoản User mặc định
+                    string username = sdt;      // có thể dùng email hoặc CCCD
+                    string password = "123";    // mật khẩu mặc định
+                    int role = 10;               // User
 
-        
+                    string sqlUser = @"INSERT INTO [User](Username, Password, MaNV, IDROLE)
+                           VALUES(@u, @p, @manv, @role)";
+
+                    SqlCommand cmdUser = new SqlCommand(sqlUser, conn);
+                    cmdUser.Parameters.AddWithValue("@u", username);
+                    cmdUser.Parameters.AddWithValue("@p", password);
+                    cmdUser.Parameters.AddWithValue("@manv", maNV);
+                    cmdUser.Parameters.AddWithValue("@role", role);
+
+                    cmdUser.ExecuteNonQuery();
+
+                    conn.Close();
+                }
+
+                LoadDataQuanLyUser();
+
+                ScriptManager.RegisterStartupScript(this, GetType(), "ok",
+                    "alert('✔ Thêm nhân viên + tạo tài khoản User thành công!');", true);
+            
+
+
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -225,7 +254,7 @@ namespace TTCN_WEB_QLNS
 
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    string sql = "DELETE FROM Nhan_vien WHERE MANV = @ma";
+                    string sql = "DELETE FROM Nhan_vien WHERE MaNV = @ma";
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@ma", maNV);
 
@@ -258,7 +287,7 @@ namespace TTCN_WEB_QLNS
          
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string sql = "DELETE FROM Nhan_vien WHERE MANV=@id";
+                string sql = "DELETE FROM Nhan_vien WHERE MaNV=@id";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@id", manv);
@@ -288,7 +317,7 @@ namespace TTCN_WEB_QLNS
                 string sql = @"UPDATE Nhan_vien 
                                SET HoTen=@ten, NgaySinh=@ngay, SDT=@sdt, 
                                    CCCD=@cccd, DiaChi=@diachi 
-                               WHERE MANV=@id";
+                               WHERE MaNV=@id";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@ten", hoten);
@@ -310,6 +339,11 @@ namespace TTCN_WEB_QLNS
         {
             gvQuanLyUser.EditIndex = -1;
             LoadDataQuanLyUser();
+        }
+        protected void lnkLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("DangNhap.aspx");
         }
     }
 }

@@ -34,7 +34,8 @@
         <asp:Button ID="btnDangKy" runat="server" CssClass="cssbtnDK" Text="Đăng Ký" OnClick="btnDangKy_Click" Width="151px" />
               
        </div>
-               <asp:HyperLink ID="HLQMK" runat="server">Quên mật khẩu</asp:HyperLink>
+            <asp:HyperLink ID="HLQMK" runat="server" NavigateUrl="~/QuenMatKhau.aspx">Quên mật khẩu</asp:HyperLink>
+
             </div>
       
     </form>

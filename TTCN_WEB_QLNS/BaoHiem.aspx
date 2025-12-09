@@ -12,7 +12,7 @@
         <div>
              <!-- Sidebar -->
     <div class="sidebar">
-        <h2>Trang quản trị</h2>
+        <h2>Menu</h2>
                <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
 <a id="menuNhanVien" runat="server" href="QuanLyUser.aspx">Nhân viên</a>
 <a id="menuPhongBan" runat="server" href="PhongBan.aspx">Phòng ban</a>
@@ -21,17 +21,19 @@
 <a id="menuBaoHiem" runat="server" href="BaoHiem.aspx">Bảo hiểm xã hội</a>
 <a id="menuLuong" runat="server" href="QuanLyLuong.aspx">Lương nhân viên</a>
 <a id="menuKhenThuong" runat="server" href="KhenThuong.aspx">Khen thưởng</a>
-
+         <!-- THÊM Ô ĐĂNG XUẤT VÀO ĐÂY -->
+        <asp:LinkButton ID="lnkLogout" runat="server" CssClass="logout-link" OnClick="lnkLogout_Click">Đăng xuất</asp:LinkButton>
+        
     </div>
 
     <!-- PAGE CONTENT -->
     <div class="content">
-         <div class ="welcome">   
-            <p class="text-xs opacity-75">Xin Chào</p>
-  <asp:Label ID="lblWelcome" runat="server" CssClass="font-medium text-sm"></asp:Label>
+    <div class ="welcome">   
+           <p class="text-xs opacity-75">Chào mừng bạn quay trở lại</p>
+ <asp:Label ID="lblWelcome" runat="server" CssClass="font-medium text-sm"></asp:Label>
    
 
- </div>
+</div>
         <h1>BẢO HIỂM XÃ HỘI</h1>
 
         <div class="breadcrumb">
@@ -39,6 +41,32 @@
         </div>
 
         <br /><br />
+                <div >
+          <asp:Button ID="btnAddHD" runat="server" Text="➕ Thêm Bảo Hiểm " CssClass="btn" OnClick="btnAddBH_Click" />
+
+       <br /><br />
+        <div class ="cssadd">
+         Mã Nhân Viên :
+        <asp:TextBox ID="txtMaNV" runat="server" OnTextChanged="txtMaNV_TextChanged"></asp:TextBox>
+
+        Số Bảo Hiểm :
+        <asp:TextBox ID="txtSoBaoHiem" runat="server"  OnTextChanged="txtSoBaoHiem_TextChanged"></asp:TextBox>
+
+        Từ Tháng:
+        <asp:TextBox ID="txtTuThang" runat="server" TextMode="Date"  OnTextChanged="txtTuThang_TextChanged"></asp:TextBox>
+
+        Đến Tháng:
+        <asp:TextBox ID="txtDenThang" runat="server" TextMode="Date"  OnTextChanged="txtDenThang_TextChanged"></asp:TextBox>
+
+        Đơn vị :
+        <asp:TextBox ID="txtDonVi" runat="server" OnTextChanged="txtNoiDung_TextChanged"></asp:TextBox>
+
+            </div>
+        <br /><br />
+
+   
+    
+</div>
 
         <!-- Options -->
         <div class="top-options">
@@ -59,6 +87,7 @@
 
         <!-- TABLE -->
         <asp:GridView ID="gvBaoHiem" runat="server" AutoGenerateColumns="False"
+            DataKeyNames="MaNV"
             CssClass="table" AllowPaging="True"
             OnPageIndexChanging="gvBaoHiem_PageIndexChanging"
             PageSize="10" OnSelectedIndexChanged="gvBaoHiem_SelectedIndexChanged">
@@ -70,10 +99,11 @@
                 <asp:BoundField DataField="DenThang" HeaderText="Đến Tháng" DataFormatString="{0:dd/MM/yyyy}" />
                 <asp:BoundField DataField="DonVi" HeaderText="Đơn Vị" />
                 <asp:BoundField DataField="Chucvu" HeaderText="Chức Vụ" />
-        
+       
 
             </Columns>
 
+       
         </asp:GridView>
 
     </div>

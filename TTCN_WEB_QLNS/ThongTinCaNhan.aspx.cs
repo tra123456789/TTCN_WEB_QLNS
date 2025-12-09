@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace TTCN_WEB_QLNS
 {
-    public partial class QuanLyNhanVien : System.Web.UI.Page
+    public partial class ThongTinCaNhan : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
