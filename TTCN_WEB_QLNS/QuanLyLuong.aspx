@@ -13,8 +13,9 @@
           
           <!-- Sidebar -->
  <div class="sidebar">
-     <h2>Trang quản trị</h2>
+     <h2>Menu</h2>
      <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
+      <a id="menuThongTinNV" runat="server" href="ThongTinCaNhan.aspx">Thông tin cá nhân</a>
 <a id="menuNhanVien" runat="server" href="QuanLyUser.aspx">Nhân viên</a>
 <a id="menuPhongBan" runat="server" href="PhongBan.aspx">Phòng ban</a>
 <a id="menuChamCong" runat="server" href="QuanLyChamCong.aspx">Chấm công</a>
@@ -76,7 +77,7 @@
     OnRowCancelingEdit="gvLuong_RowCancelingEdit"
     OnRowDeleting="gvLuong_RowDeleting"
     OnRowEditing="gvLuong_RowEditing"
-    OnRowUpdating="gvLuong_RowUpdating">
+    OnRowUpdating="gvLuong_RowUpdating" OnRowDataBound="gvLuong_RowDataBound">
 
     <Columns>
         <asp:TemplateField HeaderText="Mã Nhân Viên">
@@ -161,18 +162,18 @@
 
 
         <%-- Nút Sửa (Edit) --%>
-        <asp:LinkButton ID="LinkButtonEdit" runat="server" CommandName="Edit" Text="Sửa" CssClass="btn btn-sm btn-info" />
+        <asp:LinkButton ID="BtnEdit" runat="server" CommandName="Edit" Text="Sửa" CssClass="btn btn-sm btn-info" />
 
         <%-- Nút Xóa (Delete) có thêm OnClientClick xác nhận --%>
-        <asp:LinkButton ID="LinkButtonDelete" runat="server" CommandName="Delete" Text="Xóa" CssClass="btn btn-sm btn-danger"
+        <asp:LinkButton ID="BtnDelete" runat="server" CommandName="Delete" Text="Xóa" CssClass="btn btn-sm btn-danger"
             OnClientClick="return confirm('Bạn chắc chắn muốn xóa nhân viên này không?');" />
     </ItemTemplate>
     <EditItemTemplate>
         <%-- Nút Cập nhật (Update) --%>
-        <asp:LinkButton ID="LinkButtonUpdate" runat="server" CommandName="Update" Text="Cập nhật" CssClass="btn btn-sm btn-success" />
+        <asp:LinkButton ID="btnUpdate" runat="server" CommandName="Update" Text="Cập nhật" CssClass="btn btn-sm btn-success" />
 
         <%-- Nút Bỏ qua (Cancel) --%>
-        <asp:LinkButton ID="LinkButtonCancel" runat="server" CommandName="Cancel" Text="Bỏ Qua" CssClass="btn btn-sm btn-secondary" />
+        <asp:LinkButton ID="BtnCancel" runat="server" CommandName="Cancel" Text="Bỏ Qua" CssClass="btn btn-sm btn-secondary" />
 
     </EditItemTemplate>
 </asp:TemplateField> 

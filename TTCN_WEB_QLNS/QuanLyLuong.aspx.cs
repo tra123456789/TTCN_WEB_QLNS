@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -14,28 +15,43 @@ namespace TTCN_WEB_QLNS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            if (Session["UserName"] == null || Session["IDROLE"] == null )
+            {
+                Response.Redirect("DangNhap.aspx");
+                return;
+            }
+
             string role = Session["IDROLE"].ToString();
+            if (role == "10" && Session["MaNV"] == null)
+            {
+                Response.Redirect("DangNhap.aspx");
+                return;
+            }
+            // Hiển thị tên
+            lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
 
-            if (role == "User")
-            {
-                menuTongQuan.Visible = false;
-                menuNhanVien.Visible = false;
-                menuPhongBan.Visible = false;
-                menuHopDong.Visible = false;
-                menuLuong.Visible = true;
-                menuKhenThuong.Visible = false;
-            }
-
-            if (Session["UserName"] != null)
-            {
-                lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
-            }
-            else
-            {
-                Response.Redirect("DangNhap.aspx"); // nếu chưa đăng nhập → quay lại login
-            }
             if (!IsPostBack)
             {
+             
+
+                if (role == "10" )
+                {
+                    menuThongTinNV.Visible = true;
+                    menuTongQuan.Visible = false;
+                    menuNhanVien.Visible = false;
+                    menuPhongBan.Visible = false;
+                    menuHopDong.Visible = false;
+                    menuLuong.Visible = true;
+                    menuBaoHiem.Visible = true;
+                    menuChamCong.Visible = true;
+                    menuKhenThuong.Visible = false;
+
+                }
+                else
+                {
+                    menuThongTinNV.Visible = false;
+                }
                 LoadDataLuong();
             }
             //if (Session["UserName"] == null || Session["IDROLE"] == null)
@@ -58,8 +74,30 @@ namespace TTCN_WEB_QLNS
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Bang_luong", conn);
 
+                string role = Session["IDROLE"]?.ToString();
+                string sql = "";
+
+                // Nếu là Admin → lấy toàn bộ
+                if (role == "1" || role == "12")
+                {
+                    sql = "SELECT * FROM Bang_luong";
+                }
+                else
+                {
+                    // Nếu là User → chỉ lấy dòng lương của chính nhân viên đó
+                    sql = "SELECT * FROM Bang_luong WHERE MaNV = @MaNV";
+                }
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                if (role != "1" && role != "12")
+                {
+                    cmd.Parameters.AddWithValue("@MaNV", Session["MaNV"].ToString());
+
+                }
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
@@ -68,8 +106,18 @@ namespace TTCN_WEB_QLNS
             }
         }
 
+
         protected void btnExportExcel_Click(object sender, EventArgs e)
         {
+            string role = Session["IDROLE"].ToString();
+
+            if (role == "10")
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "noPermission",
+              "alert('Bạn không có quyền xuất danh sách lương!');", true);
+                return;
+            }
+
             // Tải lại dữ liệu để xuất (nếu cần có filter thì dùng filter)
             LoadDataLuong(); 
 
@@ -209,9 +257,24 @@ namespace TTCN_WEB_QLNS
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                SqlDataAdapter da = new SqlDataAdapter(
-                    "SELECT * FROM Bang_luong WHERE MANV LIKE @search OR HoTen LIKE @search",
-                    conn);
+
+                string role = Session["IDROLE"].ToString();
+                SqlDataAdapter da;
+
+                if (role == "1" || role == "12")   // ADMIN
+                {
+                    da = new SqlDataAdapter(
+                        "SELECT * FROM Bang_luong WHERE MANV LIKE @search OR HoTen LIKE @search",
+                        conn);
+                }
+                else   // USER → Chỉ search chính mình
+                {
+                    da = new SqlDataAdapter(
+                        "SELECT * FROM Bang_luong WHERE MaNV = @MaNV AND (HoTen LIKE @search)",
+                        conn);
+
+                    da.SelectCommand.Parameters.AddWithValue("@MaNV", Session["MaNV"].ToString());
+                }
 
                 da.SelectCommand.Parameters.AddWithValue("@search", "%" + txtSearch.Text + "%");
 
@@ -249,6 +312,14 @@ namespace TTCN_WEB_QLNS
 
         protected void btncaculator_Click(object sender, EventArgs e)
         {
+
+            if (Session["IDROLE"].ToString() == "10")
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "noPermission",
+              "alert('Bạn không có quyền tính lương!');", true);
+
+                return;
+            }
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString))
             {
                 conn.Open();
@@ -272,5 +343,31 @@ namespace TTCN_WEB_QLNS
             Session.Clear();
             Response.Redirect("DangNhap.aspx");
         }
+
+        protected void gvLuong_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                string role = Session["IDROLE"]?.ToString();
+
+                // Lấy từng nút trong dòng
+                Button btnExport = e.Row.FindControl("btnExportExcel") as Button;
+                LinkButton btnEdit = e.Row.FindControl("BtnEdit") as LinkButton;
+                LinkButton btnDelete = e.Row.FindControl("BtnDelete") as LinkButton;
+                LinkButton btnUpdate = e.Row.FindControl("btnUpdate") as LinkButton;
+                LinkButton btnCancel = e.Row.FindControl("BtnCancel") as LinkButton;
+
+                if (role == "10")
+                {
+                    // User không được phép sửa / xóa / cập nhật / hủy / export
+                    if (btnExport != null) btnExport.Visible = false;
+                    if (btnEdit != null) btnEdit.Visible = false;
+                    if (btnDelete != null) btnDelete.Visible = false;
+                    if (btnUpdate != null) btnUpdate.Visible = false;
+                    if (btnCancel != null) btnCancel.Visible = false;
+                }
+            }
+        }
+
     }
 }

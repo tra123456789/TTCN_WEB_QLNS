@@ -47,6 +47,11 @@ namespace TTCN_WEB_QLNS
             if (!IsPostBack)
             {
                 LoadDataQuanLyHD();
+                string role = Session["IDROLE"].ToString();
+                if (role == "1")
+                {
+                    menuThongTinNV.Visible = false;
+                }
             }
         }
         string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
@@ -216,8 +221,20 @@ namespace TTCN_WEB_QLNS
 
         protected void gvQuanLyHD_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
+            int soHD = Convert.ToInt32(gvQuanLyHD.DataKeys[e.RowIndex].Value);
 
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(
+                    "DELETE FROM Hop_dong WHERE SoHD = @soHD", conn);
+                cmd.Parameters.AddWithValue("@soHD", soHD);
+                cmd.ExecuteNonQuery();
+            }
+
+            LoadDataQuanLyHD();
         }
+
 
         protected void gvQuanLyHD_RowEditing(object sender, GridViewEditEventArgs e)
         {
@@ -227,8 +244,51 @@ namespace TTCN_WEB_QLNS
 
         protected void gvQuanLyHD_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
+            int soHD = Convert.ToInt32(gvQuanLyHD.DataKeys[e.RowIndex].Value);
 
+            GridViewRow row = gvQuanLyHD.Rows[e.RowIndex];
+
+            string manv = ((TextBox)row.FindControl("txtGV_MaNV")).Text.Trim();
+            string nbd = ((TextBox)row.FindControl("txtGV_NgayBatDau")).Text.Trim();
+            string nkt = ((TextBox)row.FindControl("txtGV_NgayKetThuc")).Text.Trim();
+            string nki = ((TextBox)row.FindControl("txtGV_NgayKi")).Text.Trim();
+            string noidung = ((TextBox)row.FindControl("txtGV_NoiDung")).Text.Trim();
+            string lanky = ((TextBox)row.FindControl("txtGV_LanKy")).Text.Trim();
+            string thoihan = ((TextBox)row.FindControl("txtGV_ThoiHan")).Text.Trim();
+            string hesoluong = ((TextBox)row.FindControl("txtGV_HeSoLuong")).Text.Trim();
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                string sql = @"UPDATE Hop_dong SET
+                        MaNV=@manv,
+                        NgayBatDau=@nbd,
+                        NgayKetThuc=@nkt,
+                        NgayKi=@nki,
+                        NoiDung=@noidung,
+                        LanKy=@lanky,
+                        ThoiHan=@thoihan,
+                        HeSoLuong=@hesoluong
+                       WHERE SoHD=@soHD";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@manv", manv);
+                cmd.Parameters.AddWithValue("@nbd", nbd);
+                cmd.Parameters.AddWithValue("@nkt", nkt);
+                cmd.Parameters.AddWithValue("@nki", nki);
+                cmd.Parameters.AddWithValue("@noidung", noidung);
+                cmd.Parameters.AddWithValue("@lanky", lanky);
+                cmd.Parameters.AddWithValue("@thoihan", thoihan);
+                cmd.Parameters.AddWithValue("@hesoluong", hesoluong);
+                cmd.Parameters.AddWithValue("@soHD", soHD);
+
+                cmd.ExecuteNonQuery();
+            }
+
+            gvQuanLyHD.EditIndex = -1;
+            LoadDataQuanLyHD();
         }
+
 
         protected void gvQuanLyHD_SelectedIndexChanged(object sender, EventArgs e)
         {

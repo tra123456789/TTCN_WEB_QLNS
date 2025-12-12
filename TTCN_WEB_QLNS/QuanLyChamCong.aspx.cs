@@ -15,20 +15,38 @@ namespace TTCN_WEB_QLNS
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["UserName"] != null)
+            if (Session["UserName"] == null || Session["IDROLE"] == null || Session["MaNV"] == null)
             {
-                lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
-            }
-            else
-            {
-                Response.Redirect("DangNhap.aspx"); // nếu chưa đăng nhập → quay lại login
+                Response.Redirect("DangNhap.aspx");
+                return;
             }
             if (!IsPostBack)
             {
                 LoadDropdown();
+                string role = Session["IDROLE"].ToString();
+
+                if (role == "10")
+                {
+
+                    menuThongTinNV.Visible = true;
+                    menuTongQuan.Visible = false;
+                    menuNhanVien.Visible = false;
+                    menuPhongBan.Visible = false;
+                    menuHopDong.Visible = false;
+                    menuLuong.Visible = true;
+                    menuBaoHiem.Visible = true;
+                    menuChamCong.Visible = true;
+                    menuKhenThuong.Visible = false;
+
+
+                }
+                else
+                {
+                    menuThongTinNV.Visible = false;
+                }    
+
             }
         }
-
         // ====================================
         // LOAD DROPDOWN (Tháng, năm, nhân viên)
         // ====================================

@@ -186,6 +186,8 @@ input[type=text], input[type=date], select {
     .table td {
         padding: 12px;
         border-bottom: 1px solid #e2e8f0;
+        white-space: nowrap; /* giữ các nút trên 1 dòng */
+        vertical-align: middle;
     }
 
     .table tr:nth-child(even) {

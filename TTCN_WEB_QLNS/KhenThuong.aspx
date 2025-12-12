@@ -14,6 +14,7 @@
     <div class="sidebar">
         <h2>Menu</h2>
                 <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
+         <a id="menuThongTinNV" runat="server" href="ThongTinCaNhan.aspx">Thông tin cá nhân</a>
 <a id="menuNhanVien" runat="server" href="QuanLyUser.aspx">Nhân viên</a>
 <a id="menuPhongBan" runat="server" href="PhongBan.aspx">Phòng ban</a>
 <a id="menuChamCong" runat="server" href="QuanLyChamCong.aspx">Chấm công</a>

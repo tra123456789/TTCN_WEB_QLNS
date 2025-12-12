@@ -14,6 +14,7 @@
     <div class="sidebar">
         <h2>Menu</h2> 
               <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
+         <a id="menuThongTinNV" runat="server" href="ThongTinCaNhan.aspx">Thông tin cá nhân</a>
 <a id="menuNhanVien" runat="server" href="QuanLyUser.aspx">Nhân viên</a>
 <a id="menuPhongBan" runat="server" href="PhongBan.aspx">Phòng ban</a>
 <a id="menuChamCong" runat="server" href="QuanLyChamCong.aspx">Chấm công</a>
@@ -101,7 +102,7 @@
         <!-- TABLE -->
         <asp:GridView ID="gvQuanLyHD" runat="server" AutoGenerateColumns="False"
             CssClass="table" AllowPaging="True"
-             DataKeyNames="MaNV"
+             DataKeyNames="SoHD"
             OnPageIndexChanging="gvQuanLyHD_PageIndexChanging"
             OnSelectedIndexChanged="gvQuanLyHD_SelectedIndexChanged"
             OnRowEditing="gvQuanLyHD_RowEditing"
@@ -116,7 +117,7 @@
           <%# Eval("MaNV") %>
       </ItemTemplate>
       <EditItemTemplate>
-          <asp:TextBox ID="txtMaNV" runat="server" Text='<%# Bind("MaNV") %>' />
+          <asp:TextBox ID="txtGV_MaNV" runat="server" Text='<%# Bind("MaNV") %>' />
       </EditItemTemplate>
   </asp:TemplateField>
 
@@ -125,7 +126,7 @@
           <%# Eval("SoHD") %>
       </ItemTemplate>
       <EditItemTemplate>
-          <asp:TextBox ID="txtSDT" runat="server" Text='<%# Bind("SoHD") %>' />
+          <asp:TextBox ID="txtGV_SoHD" runat="server" Text='<%# Bind("SoHD") %>' />
       </EditItemTemplate>
   </asp:TemplateField>
 
@@ -134,7 +135,7 @@
           <%# Eval("NgayBatDau") %>
       </ItemTemplate>
       <EditItemTemplate>
-          <asp:TextBox ID="txtNgayBatDau" runat="server" Text='<%# Bind("NgayBatDau") %>' />
+          <asp:TextBox ID="txtGV_NgayBatDau" runat="server" Text='<%# Bind("NgayBatDau") %>' />
       </EditItemTemplate>
   </asp:TemplateField>
                   
@@ -143,7 +144,7 @@
           <%# Eval("NgayKetThuc") %>
       </ItemTemplate>
       <EditItemTemplate>
-          <asp:TextBox ID="txtNgayKetThuc" runat="server" Text='<%# Bind("NgayKetThuc") %>' />
+          <asp:TextBox ID="txtGV_NgayKetThuc" runat="server" Text='<%# Bind("NgayKetThuc") %>' />
       </EditItemTemplate>
   </asp:TemplateField>
 
@@ -152,7 +153,7 @@
           <%# Eval("NgayKi") %>
       </ItemTemplate>
       <EditItemTemplate>
-          <asp:TextBox ID="txtNgayKi" runat="server" Text='<%# Bind("NgayKi") %>' />
+          <asp:TextBox ID="txtGV_NgayKi" runat="server" Text='<%# Bind("NgayKi") %>' />
       </EditItemTemplate>
   </asp:TemplateField>
 
@@ -161,7 +162,7 @@
           <%# Eval("NoiDung") %>
       </ItemTemplate>
       <EditItemTemplate>
-          <asp:TextBox ID="txtNoiDung" runat="server" Text='<%# Bind("NoiDung") %>' />
+          <asp:TextBox ID="txtGV_NoiDung" runat="server" Text='<%# Bind("NoiDung") %>' />
       </EditItemTemplate>
   </asp:TemplateField>
 
@@ -170,7 +171,7 @@
          <%# Eval("LanKy") %>
      </ItemTemplate>
      <EditItemTemplate>
-         <asp:TextBox ID="txtLanKy" runat="server" Text='<%# Bind("LanKy") %>' />
+         <asp:TextBox ID="txtGV_LanKy" runat="server" Text='<%# Bind("LanKy") %>' />
      </EditItemTemplate>
  </asp:TemplateField>
                   <asp:TemplateField HeaderText="Thời Hạn ">
@@ -178,7 +179,7 @@
         <%# Eval("ThoiHan") %>
     </ItemTemplate>
     <EditItemTemplate>
-        <asp:TextBox ID="txtThoiHan" runat="server" Text='<%# Bind("ThoiHan") %>' />
+        <asp:TextBox ID="txtGV_ThoiHan" runat="server" Text='<%# Bind("ThoiHan") %>' />
     </EditItemTemplate>
 </asp:TemplateField>
 
@@ -187,7 +188,7 @@
           <%# Eval("HeSoLuong") %>
       </ItemTemplate>
       <EditItemTemplate>
-          <asp:TextBox ID="txtHeSoLuong" runat="server" Text='<%# Bind("HeSoLuong") %>' />
+          <asp:TextBox ID="txtGV_HeSoLuong" runat="server" Text='<%# Bind("HeSoLuong") %>' />
       </EditItemTemplate>
   </asp:TemplateField>
 

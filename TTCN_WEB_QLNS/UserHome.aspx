@@ -19,7 +19,7 @@
     <div class="sidebar">
         <h2>Menu</h2>
             
-   <a id="menuThongTinNV" runat="server" href="ThongTinCaNhan.aspx">Thông Tin cá nhân</a>
+   <a id="menuThongTinNV" runat="server" href="ThongTinCaNhan.aspx">Thông tin cá nhân</a>
    <a id="menuChamCong" runat="server" href="QuanLyChamCong.aspx">Chấm công</a>
    <a id="menuBaoHiem" runat="server" href="BaoHiem.aspx">Bảo hiểm xã hội</a>
    <a id="menuLuong" runat="server" href="QuanLyLuong.aspx">Lương nhân viên</a>
@@ -43,7 +43,7 @@
 
         <br /><br />
                 <div  >
-               
+               </div>
             </div>
              </div>
          </form>

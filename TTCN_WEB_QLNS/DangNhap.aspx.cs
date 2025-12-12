@@ -43,38 +43,40 @@ namespace TTCN_WEB_QLNS
             {
                 conn.Open();
 
-                string sql = "SELECT IDROLE FROM [User] WHERE Username = @u AND Password = @p";
+                string sql = "SELECT MaNV, IDROLE FROM [User] WHERE Username = @u AND Password = @p";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@u", Username);
                 cmd.Parameters.AddWithValue("@p", Password);
 
-                object role = cmd.ExecuteScalar();   // lấy quyền hoặc null
+                SqlDataReader rd = cmd.ExecuteReader();
 
-                if (role != null)
+                if (rd.Read())
                 {
-                    // Lưu thông tin đăng nhập
-                    Session["UserName"] = Username;
-                    Session["IDROLE"] = role.ToString();
+                    Session["UserName"] = Username;              // tên đăng nhập
+                    Session["IDROLE"] = rd["IDROLE"].ToString(); // quyền
+                    Session["MaNV"] = rd["MaNV"].ToString();     // ★ QUAN TRỌNG
+                    //Session["HoTen"] = rd["HoTen"].ToString();   // optional
 
-                    // Điều hướng theo IDROLE
-                    if (role.ToString() == "1" || role.ToString() == "12")
+                    string role = rd["IDROLE"].ToString();
+
+                    if (role == "1" || role == "12")
                         Response.Redirect("TongQuan.aspx");
-                    else if (role.ToString() == "10")
+                    else if (role == "10")
                         Response.Redirect("UserHome.aspx");
-                    else
-                        lblMessage.Text = "Role không hợp lệ!";
                 }
                 else
                 {
                     lblMessage.Text = "Sai tài khoản hoặc mật khẩu.";
                 }
+
+
+
+
             }
 
-
-
         }
-
-        protected void btnDangKy_Click(object sender, EventArgs e)
+            protected void btnDangKy_Click(object sender, EventArgs e)
         {
             Response.Redirect("DangKy.aspx");
         }

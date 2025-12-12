@@ -11,23 +11,23 @@ namespace TTCN_WEB_QLNS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Nếu chưa đăng nhập → quay về login
-            if (Session["UserName"] == null || Session["IDROLE"] == null)
+            if (!IsPostBack)
             {
-                Response.Redirect("DangNhap.aspx");
-                return;
+                if (Session["UserName"] == null || Session["IDROLE"] == null)
+                {
+                    Response.Redirect("DangNhap.aspx");
+                    return;
+                }
+
+                if (Session["IDROLE"].ToString() != "10")
+                {
+                    Response.Redirect("TongQuan.aspx");
+                    return;
+                }
+
+                lblWelcome.Text = "Xin chào: " + Server.HtmlEncode(Session["UserName"].ToString());
+
             }
-
-            // Nếu ROLE khác User 
-            if (Session["IDROLE"].ToString() != "10")
-            {
-                Response.Redirect("TongQuan.aspx");
-                return;
-            }
-
-            // Nếu ROLE đúng là User → cho vào trang
-            lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
-
         }
 
         protected void lnkLogout_Click(object sender, EventArgs e)

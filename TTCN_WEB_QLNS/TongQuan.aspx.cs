@@ -22,6 +22,7 @@ namespace TTCN_WEB_QLNS
             // Nếu ROLE khác User 
             if (Session["IDROLE"].ToString() != "1")
             {
+               
                 Response.Redirect("UserHome.aspx");
                 return;
             }
@@ -33,7 +34,12 @@ namespace TTCN_WEB_QLNS
             if (!IsPostBack)
             {
                 LoadDashboard();
-                
+
+                string role = Session["IDROLE"].ToString();
+                if (role == "1")
+                {
+                    menuThongTinNV.Visible = false;
+                }
             }
             //if (Session["UserName"] != null)
             //{

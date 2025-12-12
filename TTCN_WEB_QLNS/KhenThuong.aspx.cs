@@ -43,6 +43,11 @@ namespace TTCN_WEB_QLNS
             if (!IsPostBack)
             {
                 LoadDataKhenThuong();
+                string role = Session["IDROLE"].ToString();
+                if (role == "1")
+                {
+                    menuThongTinNV.Visible = false;
+                }
             }
         }
 

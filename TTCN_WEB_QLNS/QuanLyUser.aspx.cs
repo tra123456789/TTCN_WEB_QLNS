@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -48,8 +49,12 @@ namespace TTCN_WEB_QLNS
             if (!IsPostBack)
             {
                 LoadDataQuanLyUser();
+                string role = Session["IDROLE"].ToString();
+                if (role == "1")
+                {
+                    menuThongTinNV.Visible = false;
+                }
             }
-
         }
         //Hàm xử lý Hiển thị lên bảng
         void LoadSingleUser(string maNV)
@@ -206,7 +211,7 @@ namespace TTCN_WEB_QLNS
                     int maNV = Convert.ToInt32(cmdNV.ExecuteScalar());
 
                     // 2️⃣ Tạo tài khoản User mặc định
-                    string username = sdt;      // có thể dùng email hoặc CCCD
+                    string username = hoten;      // có thể dùng email hoặc CCCD
                     string password = "123";    // mật khẩu mặc định
                     int role = 10;               // User
 
