@@ -29,7 +29,7 @@ namespace TTCN_WEB_QLNS
                 return;
             }
             // Hiển thị tên
-            lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
+            lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
 
             if (!IsPostBack)
             {
@@ -46,7 +46,7 @@ namespace TTCN_WEB_QLNS
                     menuBaoHiem.Visible = true;
                     menuChamCong.Visible = true;
                     menuKhenThuong.Visible = false;
-
+                    gvLuong.Columns[gvLuong.Columns.Count - 1].Visible = false;
                 }
                 else
                 {
@@ -325,12 +325,26 @@ namespace TTCN_WEB_QLNS
                 conn.Open();
 
                 string sql = @"
-                             UPDATE Bang_luong
-                SET ThucLanh =
-                    (ISNULL(TongNgayCong,0) * 300000)
-                  + (ISNULL(NgayLe,0) * 300000 * 3)
-                  + (ISNULL(NgayPhep,0) * 300000)
-                  - (ISNULL(KhongPhep,0) * 300000)              ";
+                            
+        UPDATE Bang_luong
+        SET ThucLanh =
+            (ISNULL(TongNgayCong,0) * 300000)
+          + (ISNULL(NgayLe,0) * 300000 * 3)
+          + (ISNULL(NgayPhep,0) * 300000)
+          - (ISNULL(KhongPhep,0) * 300000)
+          + (
+                SELECT ISNULL(SUM(SoKTKL),0)
+                FROM KhenThuong_KyLuat kt
+                WHERE kt.MaNV = Bang_luong.MaNV
+                  AND kt.Loai = 1
+            )
+          - (
+                SELECT ISNULL(SUM(SoKTKL),0)
+                FROM KhenThuong_KyLuat kt
+                WHERE kt.MaNV = Bang_luong.MaNV
+                  AND kt.Loai = 0
+            ),
+            Update_date = GETDATE()           ";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.ExecuteNonQuery();

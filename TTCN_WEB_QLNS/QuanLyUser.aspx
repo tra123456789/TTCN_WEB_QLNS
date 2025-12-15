@@ -94,6 +94,13 @@
                     OnTextChanged="txtSearch_TextChanged"></asp:TextBox>
             </div>
         </div>
+                <div class="filter-box">
+        <asp:CheckBox ID="chkNhanVienNghi" runat="server"
+            Text="Hiển thị nhân viên đã nghỉ"
+            AutoPostBack="true"
+            OnCheckedChanged="chkNhanVienNghi_CheckedChanged" />
+         
+    </div>
 
         <!-- TABLE -->
         <asp:GridView ID="gvQuanLyUser" runat="server" AutoGenerateColumns="False"
@@ -104,7 +111,8 @@
             OnRowEditing="gvQuanLyUser_RowEditing"
             OnRowCancelingEdit="gvQuanLyUser_RowCancelingEdit"
             OnRowDeleting="gvQuanLyUser_RowDeleting"
-            OnRowUpdating="gvQuanLyUser_RowUpdating">
+            OnRowUpdating="gvQuanLyUser_RowUpdating" OnRowDataBound="gvQuanLyUser_RowDataBound">
+
 
             <Columns>
                 <asp:BoundField DataField="MANV" HeaderText="Mã nhân viên" ReadOnly="True" />
@@ -119,23 +127,56 @@
                         ImageUrl='<%# Eval("HinhAnh") %>'  CssClass="avatar"/>
                 </ItemTemplate>
             </asp:TemplateField>
-          <asp:TemplateField HeaderText="Thao tác">
-            <ItemTemplate>
-                <%-- Nút Sửa (Edit) --%>
-                <asp:LinkButton ID="LinkButtonEdit" runat="server" CommandName="Edit" Text="Sửa" CssClass="btn btn-sm btn-info" />
-        
-                <%-- Nút Xóa (Delete) có thêm OnClientClick xác nhận --%>
-                <asp:LinkButton ID="LinkButtonDelete" runat="server" CommandName="Delete" Text="Xóa" CssClass="btn btn-sm btn-danger"
-                    OnClientClick="return confirm('Bạn chắc chắn muốn xóa nhân viên này không?');" />
-            </ItemTemplate>
-            <EditItemTemplate>
-                <%-- Nút Cập nhật (Update) --%>
-                <asp:LinkButton ID="LinkButtonUpdate" runat="server" CommandName="Update" Text="Cập nhật" CssClass="btn btn-sm btn-success" />
-        
-                <%-- Nút Bỏ qua (Cancel) --%>
-                <asp:LinkButton ID="LinkButtonCancel" runat="server" CommandName="Cancel" Text="Bỏ Qua" CssClass="btn btn-sm btn-secondary" />
-            </EditItemTemplate>
-        </asp:TemplateField>  
+                <asp:TemplateField HeaderText="Phòng ban">
+    <ItemTemplate>
+        <%# Eval("TenPB") %>
+    </ItemTemplate>
+    <EditItemTemplate>
+        <asp:DropDownList ID="ddlPB_Grid" runat="server"></asp:DropDownList>
+    </EditItemTemplate>
+</asp:TemplateField>
+
+         <asp:TemplateField HeaderText="Thao tác">
+    <ItemTemplate>
+
+        <asp:LinkButton ID="LinkButtonEdit"
+            runat="server"
+            CommandName="Edit"
+            Text="Sửa"
+            CssClass="btn btn-sm btn-info" />
+
+        <asp:LinkButton ID="LinkButtonDelete"
+            runat="server"
+            CommandName="Delete"
+            Text="Xóa"
+            CssClass="btn btn-sm btn-danger"
+            OnClientClick="return confirm('Cho nhân viên này nghỉ việc?');" />
+
+        <asp:LinkButton ID="LinkButtonRestore"
+            runat="server"
+            Text="Khôi phục"
+            CommandName="Restore"
+            CommandArgument='<%# Eval("MaNV") %>'
+            CssClass="btn btn-sm btn-warning"
+            Visible="false"
+            OnClientClick="return confirm('Khôi phục nhân viên này?');" />
+
+    </ItemTemplate>
+
+    <EditItemTemplate>
+        <asp:LinkButton ID="LinkButtonUpdate"
+            runat="server"
+            CommandName="Update"
+            Text="Cập nhật"
+            CssClass="btn btn-sm btn-success" />
+
+        <asp:LinkButton ID="LinkButtonCancel"
+            runat="server"
+            CommandName="Cancel"
+            Text="Bỏ qua"
+            CssClass="btn btn-sm btn-secondary" />
+    </EditItemTemplate>
+</asp:TemplateField>
 
 
     

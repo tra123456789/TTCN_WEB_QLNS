@@ -29,6 +29,8 @@ namespace TTCN_WEB_QLNS
                 Response.Redirect("DangNhap.aspx");
                 return;
             }
+            lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
+
             if (!IsPostBack)
             {
                 LoadDataBaoHiem();
@@ -55,12 +57,13 @@ namespace TTCN_WEB_QLNS
                     menuBaoHiem.Visible = true;
                     menuChamCong.Visible = true;
                     menuKhenThuong.Visible = false;
-
+                    gvBaoHiem.Columns[gvBaoHiem.Columns.Count - 1].Visible = false;
                 }
                 else
                 {
                     menuThongTinNV.Visible = false;
                 }
+            
             }
                 //if (Session["UserName"] == null || Session["IDROLE"] == null)
                 //{

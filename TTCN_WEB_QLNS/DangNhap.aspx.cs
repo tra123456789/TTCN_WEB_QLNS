@@ -43,7 +43,18 @@ namespace TTCN_WEB_QLNS
             {
                 conn.Open();
 
-                string sql = "SELECT MaNV, IDROLE FROM [User] WHERE Username = @u AND Password = @p";
+                            string sql = @"
+            SELECT u.MaNV, u.IDROLE
+            FROM [User] u
+            LEFT JOIN Nhan_vien nv ON u.MaNV = nv.MaNV
+            WHERE u.Username = @u
+              AND u.Password = @p
+              AND u.IsActive = 1
+              AND (
+                    u.IDROLE IN (1, 12)
+                    OR (u.IDROLE = 10 AND nv.TrangThai = 1)
+                  )";
+
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@u", Username);
@@ -53,10 +64,9 @@ namespace TTCN_WEB_QLNS
 
                 if (rd.Read())
                 {
-                    Session["UserName"] = Username;              // tên đăng nhập
-                    Session["IDROLE"] = rd["IDROLE"].ToString(); // quyền
-                    Session["MaNV"] = rd["MaNV"].ToString();     // ★ QUAN TRỌNG
-                    //Session["HoTen"] = rd["HoTen"].ToString();   // optional
+                    Session["UserName"] = Username;
+                    Session["IDROLE"] = rd["IDROLE"].ToString();
+                    Session["MaNV"] = rd["MaNV"].ToString();
 
                     string role = rd["IDROLE"].ToString();
 
@@ -67,16 +77,14 @@ namespace TTCN_WEB_QLNS
                 }
                 else
                 {
-                    lblMessage.Text = "Sai tài khoản hoặc mật khẩu.";
+                    lblMessage.Text = "Tài khoản không tồn tại hoặc đã bị khóa.";
                 }
-
-
-
-
             }
+        
 
-        }
-            protected void btnDangKy_Click(object sender, EventArgs e)
+
+    }
+    protected void btnDangKy_Click(object sender, EventArgs e)
         {
             Response.Redirect("DangKy.aspx");
         }

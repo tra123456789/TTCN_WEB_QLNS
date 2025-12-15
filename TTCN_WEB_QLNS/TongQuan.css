@@ -132,3 +132,15 @@ h1 {
 .welcome{
     float : right;
 }
+.bg-gray {
+    background: #f8fafc;
+}
+
+.card-config {
+    background: #f8fafc;
+    color: #111;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+

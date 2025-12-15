@@ -20,6 +20,8 @@ namespace TTCN_WEB_QLNS
                 Response.Redirect("DangNhap.aspx");
                 return;
             }
+            lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
+
             if (!IsPostBack)
             {
                 LoadDropdown();

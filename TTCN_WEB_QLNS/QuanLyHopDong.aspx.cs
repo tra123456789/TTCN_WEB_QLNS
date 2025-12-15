@@ -1,13 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.IO;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Configuration;
-using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+
+
 
 namespace TTCN_WEB_QLNS
 {
@@ -17,7 +19,7 @@ namespace TTCN_WEB_QLNS
         {
             if (Session["UserName"] != null)
             {
-                lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
+                lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
             }
             else
             {
@@ -91,6 +93,7 @@ namespace TTCN_WEB_QLNS
             //btnSave.Text = "💾 Cập nhật";
         }
 
+     
 
         private void LoadDataQuanLyHD()
     {
@@ -312,5 +315,93 @@ namespace TTCN_WEB_QLNS
             Session.Clear();
             Response.Redirect("DangNhap.aspx");
         }
+        private void ExportHopDongPDF(string soHD)
+        {
+            string hoTen = "", maNV = "", noiDung = "", heSoLuong = "";
+            DateTime ngayBatDau = DateTime.MinValue;
+            DateTime ngayKetThuc = DateTime.MinValue;
+            DateTime ngayKy = DateTime.MinValue;
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString))
+            {
+                string sql = @"
+        SELECT hd.SoHD, hd.NgayBatDau, hd.NgayKetThuc, hd.NgayKi,
+               hd.NoiDung, hd.HeSoLuong, nv.HoTen, nv.MaNV
+        FROM Hop_dong hd
+        JOIN Nhan_vien nv ON hd.MaNV = nv.MaNV
+        WHERE hd.SoHD = @soHD";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@soHD", soHD);
+
+                conn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.Read())
+                {
+                    hoTen = dr["HoTen"].ToString();
+                    maNV = dr["MaNV"].ToString();
+                    noiDung = dr["NoiDung"].ToString();
+                    heSoLuong = dr["HeSoLuong"].ToString();
+
+                    if (dr["NgayBatDau"] != DBNull.Value)
+                        ngayBatDau = Convert.ToDateTime(dr["NgayBatDau"]);
+                    if (dr["NgayKetThuc"] != DBNull.Value)
+                        ngayKetThuc = Convert.ToDateTime(dr["NgayKetThuc"]);
+                    if (dr["NgayKi"] != DBNull.Value)
+                        ngayKy = Convert.ToDateTime(dr["NgayKi"]);
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "err",
+                        "alert('Không tìm thấy hợp đồng');", true);
+                    return;
+                }
+            }
+
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("content-disposition", $"attachment;filename=HopDong_{soHD}.pdf");
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+
+            Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
+            PdfWriter.GetInstance(doc, Response.OutputStream);
+            doc.Open();
+
+            string fontPath = Server.MapPath("~/fonts/TIMES.ttf");
+            BaseFont bf = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            Font titleFont = new Font(bf, 16, Font.BOLD);
+            Font normalFont = new Font(bf, 12);
+
+            Paragraph title = new Paragraph("HỢP ĐỒNG LAO ĐỘNG\n\n", titleFont);
+            title.Alignment = Element.ALIGN_CENTER;
+            doc.Add(title);
+
+            doc.Add(new Paragraph($"Số hợp đồng: {soHD}", normalFont));
+            doc.Add(new Paragraph($"Họ tên nhân viên: {hoTen}", normalFont));
+            doc.Add(new Paragraph($"Mã nhân viên: {maNV}", normalFont));
+            doc.Add(new Paragraph($"Ngày ký: {ngayKy:dd/MM/yyyy}", normalFont));
+            doc.Add(new Paragraph($"Thời hạn: {ngayBatDau:dd/MM/yyyy} - {ngayKetThuc:dd/MM/yyyy}", normalFont));
+            doc.Add(new Paragraph($"Hệ số lương: {heSoLuong}", normalFont));
+
+            doc.Add(new Paragraph("\nNội dung hợp đồng:\n", normalFont));
+            doc.Add(new Paragraph(noiDung, normalFont));
+
+            doc.Add(new Paragraph("\n\nĐẠI DIỆN CÔNG TY", normalFont));
+            doc.Add(new Paragraph("(Ký và ghi rõ họ tên)", normalFont));
+
+            doc.Close();
+            Response.End();
+        }
+
+        protected void gvQuanLyHD_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "ExportPDF")
+            {
+                string soHD = e.CommandArgument.ToString();
+                ExportHopDongPDF(soHD);
+            }
+        }
+
     }
 }

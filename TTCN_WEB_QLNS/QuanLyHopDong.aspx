@@ -108,7 +108,7 @@
             OnRowEditing="gvQuanLyHD_RowEditing"
             OnRowCancelingEdit="gvQuanLyHD_RowCancelingEdit"
             OnRowDeleting="gvQuanLyHD_RowDeleting"
-            OnRowUpdating="gvQuanLyHD_RowUpdating">
+            OnRowUpdating="gvQuanLyHD_RowUpdating" OnRowCommand="gvQuanLyHD_RowCommand">
 
             <Columns>
                   
@@ -121,14 +121,11 @@
       </EditItemTemplate>
   </asp:TemplateField>
 
-  <asp:TemplateField HeaderText="Số Hợp Đồng">
-      <ItemTemplate>
-          <%# Eval("SoHD") %>
-      </ItemTemplate>
-      <EditItemTemplate>
-          <asp:TextBox ID="txtGV_SoHD" runat="server" Text='<%# Bind("SoHD") %>' />
-      </EditItemTemplate>
-  </asp:TemplateField>
+<asp:TemplateField HeaderText="Số Hợp Đồng">
+    <ItemTemplate>
+        <%# Eval("SoHD") %>
+    </ItemTemplate>
+</asp:TemplateField>
 
   <asp:TemplateField HeaderText="Ngày Bắt Đầu">
       <ItemTemplate>
@@ -192,7 +189,18 @@
       </EditItemTemplate>
   </asp:TemplateField>
 
-           
+      <asp:TemplateField HeaderText="PDF">
+    <ItemTemplate>
+        <asp:LinkButton 
+            ID="btnExportPDF"
+            runat="server"
+            Text="📄 PDF"
+            CommandName="ExportPDF"
+            CommandArgument='<%# Eval("SoHD") %>' />
+    </ItemTemplate>
+</asp:TemplateField>
+
+
              
           <asp:TemplateField HeaderText="Thao tác">
             <ItemTemplate>

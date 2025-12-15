@@ -197,6 +197,14 @@ input[type=text], input[type=date], select {
     .table tr:hover {
         background: #e2e8f0;
     }
+    .table select {
+        width: 100%;
+        min-width: 160px;
+        padding: 6px 8px;
+        border-radius: 4px;
+        border: 1px solid #cbd5e1;
+        font-size: 14px;
+    }
 
 /* Avatar */
 .avatar {

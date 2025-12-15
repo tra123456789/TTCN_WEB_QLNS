@@ -70,9 +70,16 @@
 
             <Columns>
                 <asp:BoundField DataField="MANV" HeaderText="Mã nhân viên" />
+                <asp:BoundField DataField ="HoTen" HeaderText ="Họ và tên "/>
                 <asp:BoundField DataField="Ngay" HeaderText="Tháng thưởng" DataFormatString="{0:dd/MM/yyyy}" />
                 <asp:BoundField DataField="NoiDung" HeaderText="Nội Dung" />
                 <asp:BoundField DataField="SoKTKL" HeaderText="Tiền Thưởng" DataFormatString="{0:N0}" />
+               <asp:TemplateField HeaderText="Loại">
+    <ItemTemplate>
+        <%# Convert.ToInt32(Eval("Loai")) == 1 ? "Khen thưởng" : "Kỷ luật" %>
+    </ItemTemplate>
+</asp:TemplateField>
+
             </Columns>
 
         </asp:GridView>

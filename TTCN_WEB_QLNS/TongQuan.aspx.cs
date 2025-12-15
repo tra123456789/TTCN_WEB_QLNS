@@ -113,5 +113,34 @@ namespace TTCN_WEB_QLNS
             Session.Clear();
             Response.Redirect("DangNhap.aspx");
         }
+        protected void btnLuuCauHinh_Click(object sender, EventArgs e)
+        {
+            DateTime mo = DateTime.Parse(txtMoTu.Text);
+            DateTime dong = DateTime.Parse(txtDongDen.Text);
+
+            using (SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString))
+            {
+                string sql = @"
+                IF EXISTS (SELECT 1 FROM CauHinhSuaThongTin)
+                    UPDATE CauHinhSuaThongTin
+                    SET ThoiGianMo = @mo, ThoiGianDong = @dong
+                ELSE
+                    INSERT INTO CauHinhSuaThongTin (ThoiGianMo, ThoiGianDong)
+                    VALUES (@mo, @dong)";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@mo", mo);
+                cmd.Parameters.AddWithValue("@dong", dong);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            ScriptManager.RegisterStartupScript(this, GetType(),
+                "ok", "alert('✔ Đã cập nhật thời gian cho phép chỉnh sửa');", true);
+        }
+
+
     }
 }

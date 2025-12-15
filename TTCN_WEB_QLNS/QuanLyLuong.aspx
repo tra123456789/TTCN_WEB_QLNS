@@ -136,23 +136,12 @@
    </EditItemTemplate>
         </asp:TemplateField>
 
-        <asp:TemplateField HeaderText="Ngày Thường">
-            <ItemTemplate>
-                <%# Eval("NgayThuong") %>
-            </ItemTemplate>
-               <EditItemTemplate>
-       <asp:TextBox ID="txtNgayThuong" runat="server" Text='<%# Eval("NgayThuong") %>' />
-   </EditItemTemplate>
-        </asp:TemplateField>
+      <asp:TemplateField HeaderText="Thực Lãnh">
+    <ItemTemplate>
+        <%# Eval("ThucLanh", "{0:N0}") %>
+    </ItemTemplate>
+</asp:TemplateField>
 
-        <asp:TemplateField HeaderText="Thực Lãnh">
-            <ItemTemplate>
-                <%# Eval("ThucLanh") %>
-            </ItemTemplate>
-               <EditItemTemplate>
-       <asp:TextBox ID="txtThucLanh" runat="server" Text='<%# Eval("ThucLanh") %>' />
-   </EditItemTemplate>
-        </asp:TemplateField>
           <asp:TemplateField HeaderText="Thao tác">
     <ItemTemplate>
         <asp:Button ID="btnExportExcel" runat="server" 

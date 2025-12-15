@@ -17,7 +17,7 @@ namespace TTCN_WEB_QLNS
         {
             if (Session["UserName"] != null)
             {
-                lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
+                lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
             }
             else
             {
@@ -48,7 +48,7 @@ namespace TTCN_WEB_QLNS
 
             if (!IsPostBack)
             {
-                LoadDataQuanLyUser();
+                LoadDataQuanLyUser(false);
                 string role = Session["IDROLE"].ToString();
                 if (role == "1")
                 {
@@ -89,14 +89,24 @@ namespace TTCN_WEB_QLNS
 
 
 
-        private void LoadDataQuanLyUser()
+        private void LoadDataQuanLyUser(bool hienNghi = false)
         {
-        
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Nhan_vien", conn);
 
+                string sql = @"
+            SELECT nv.MaNV, nv.HoTen, nv.NgaySinh, nv.SDT, nv.CCCD, nv.DiaChi,
+                   nv.HinhAnh, nv.TrangThai,
+                   nv.IDPB, pb.TenPB
+            FROM Nhan_vien nv
+            LEFT JOIN Phong_ban pb ON nv.IDPB = pb.IDPB
+            WHERE nv.TrangThai = @trangthai";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@trangthai", hienNghi ? 0 : 1);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
@@ -104,6 +114,9 @@ namespace TTCN_WEB_QLNS
                 gvQuanLyUser.DataBind();
             }
         }
+
+
+
 
         protected void gvQuanLyUser_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
@@ -195,8 +208,8 @@ namespace TTCN_WEB_QLNS
                     conn.Open();
 
                     // 1️⃣ INSERT nhân viên
-                    string sqlNV = @"INSERT INTO Nhan_vien(HoTen, NgaySinh, SDT, CCCD, DiaChi, HinhAnh)
-                         VALUES(@ten, @ngay, @sdt, @cccd, @diachi, @img);
+                    string sqlNV = @"INSERT INTO Nhan_vien(HoTen, NgaySinh, SDT, CCCD, DiaChi, HinhAnh,TrangThai)
+                         VALUES(@ten, @ngay, @sdt, @cccd, @diachi, @img,1);
                          SELECT SCOPE_IDENTITY();";
 
                     SqlCommand cmdNV = new SqlCommand(sqlNV, conn);
@@ -215,16 +228,17 @@ namespace TTCN_WEB_QLNS
                     string password = "123";    // mật khẩu mặc định
                     int role = 10;               // User
 
-                    string sqlUser = @"INSERT INTO [User](Username, Password, MaNV, IDROLE)
-                           VALUES(@u, @p, @manv, @role)";
+                    string sqlUser = @"INSERT INTO [User](Username, Password, MaNV, IDROLE, TrangThai, IsActive)
+                           VALUES(@u, @p, @manv, @role, 1, 1)";
 
                     SqlCommand cmdUser = new SqlCommand(sqlUser, conn);
                     cmdUser.Parameters.AddWithValue("@u", username);
                     cmdUser.Parameters.AddWithValue("@p", password);
                     cmdUser.Parameters.AddWithValue("@manv", maNV);
                     cmdUser.Parameters.AddWithValue("@role", role);
+                   
 
-                    cmdUser.ExecuteNonQuery();
+                cmdUser.ExecuteNonQuery();
 
                     conn.Close();
                 }
@@ -250,32 +264,27 @@ namespace TTCN_WEB_QLNS
 
         protected void gvQuanLyUser_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            string maNV = e.CommandArgument.ToString();
-
-            // ❌ XÓA
-            if (e.CommandName == "DeleteRow")
+            if (e.CommandName == "Restore")
             {
-               
+                string manv = e.CommandArgument.ToString();
 
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    string sql = "DELETE FROM Nhan_vien WHERE MaNV = @ma";
+                    string sql = "UPDATE Nhan_vien SET TrangThai = 1 WHERE MaNV = @id";
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@ma", maNV);
+                    cmd.Parameters.AddWithValue("@id", manv);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
 
-                LoadDataQuanLyUser();
-            }
+                LoadDataQuanLyUser(chkNhanVienNghi.Checked);
 
-            // ✏ SỬA
-            if (e.CommandName == "EditRow")
-            {
-                LoadSingleUser(maNV);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ok",
+                    "alert('✔ Đã khôi phục nhân viên!');", true);
             }
         }
+
 
         protected void gvQuanLyUser_RowEditing(object sender, GridViewEditEventArgs e)
         {
@@ -283,17 +292,15 @@ namespace TTCN_WEB_QLNS
             LoadDataQuanLyUser();
         }
 
-       
+
 
         protected void gvQuanLyUser_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             string manv = gvQuanLyUser.DataKeys[e.RowIndex].Value.ToString();
 
-         
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string sql = "DELETE FROM Nhan_vien WHERE MaNV=@id";
-
+                string sql = "UPDATE Nhan_vien SET TrangThai = 0 WHERE MaNV = @id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@id", manv);
 
@@ -302,12 +309,14 @@ namespace TTCN_WEB_QLNS
             }
 
             LoadDataQuanLyUser();
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "ok",
+                "alert('✔ Nhân viên đã được cho nghỉ việc (xóa mềm)!');", true);
         }
 
         protected void gvQuanLyUser_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
             string manv = gvQuanLyUser.DataKeys[e.RowIndex].Value.ToString();
-
             GridViewRow row = gvQuanLyUser.Rows[e.RowIndex];
 
             string hoten = ((TextBox)row.Cells[1].Controls[0]).Text;
@@ -316,13 +325,25 @@ namespace TTCN_WEB_QLNS
             string cccd = ((TextBox)row.Cells[4].Controls[0]).Text;
             string diachi = ((TextBox)row.Cells[5].Controls[0]).Text;
 
-         
+            // ============================
+            // LẤY PHÒNG BAN
+            // ============================
+            string idpb = null;
+            DropDownList ddlPB = row.FindControl("ddlPB_Grid") as DropDownList;
+            if (ddlPB != null)
+                idpb = ddlPB.SelectedValue;
+
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string sql = @"UPDATE Nhan_vien 
-                               SET HoTen=@ten, NgaySinh=@ngay, SDT=@sdt, 
-                                   CCCD=@cccd, DiaChi=@diachi 
-                               WHERE MaNV=@id";
+                string sql = @"
+            UPDATE Nhan_vien
+            SET HoTen=@ten,
+                NgaySinh=@ngay,
+                SDT=@sdt,
+                CCCD=@cccd,
+                DiaChi=@diachi,
+                IDPB=@idpb
+            WHERE MaNV=@id";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@ten", hoten);
@@ -331,6 +352,7 @@ namespace TTCN_WEB_QLNS
                 cmd.Parameters.AddWithValue("@cccd", cccd);
                 cmd.Parameters.AddWithValue("@diachi", diachi);
                 cmd.Parameters.AddWithValue("@id", manv);
+                cmd.Parameters.AddWithValue("@idpb", (object)idpb ?? DBNull.Value);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -339,6 +361,7 @@ namespace TTCN_WEB_QLNS
             gvQuanLyUser.EditIndex = -1;
             LoadDataQuanLyUser();
         }
+
 
         protected void gvQuanLyUser_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
@@ -350,5 +373,68 @@ namespace TTCN_WEB_QLNS
             Session.Clear();
             Response.Redirect("DangNhap.aspx");
         }
+        protected void chkNhanVienNghi_CheckedChanged(object sender, EventArgs e)
+        {
+            LoadDataQuanLyUser(chkNhanVienNghi.Checked);
+        }
+
+        protected void gvQuanLyUser_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // =========================
+                // PHÂN QUYỀN + TRẠNG THÁI
+                // =========================
+                int trangThai = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "TrangThai"));
+                bool dangXemNghi = chkNhanVienNghi.Checked;
+
+                var btnEdit = e.Row.FindControl("LinkButtonEdit") as LinkButton;
+                var btnDelete = e.Row.FindControl("LinkButtonDelete") as LinkButton;
+                var btnRestore = e.Row.FindControl("LinkButtonRestore") as LinkButton;
+
+                if (dangXemNghi && trangThai == 0)
+                {
+                    if (btnEdit != null) btnEdit.Visible = false;
+                    if (btnDelete != null) btnDelete.Visible = false;
+                    if (btnRestore != null) btnRestore.Visible = true;
+                    e.Row.ForeColor = System.Drawing.Color.Gray;
+                }
+                else
+                {
+                    if (btnRestore != null) btnRestore.Visible = false;
+                }
+
+                // =========================
+                // 🔥 BIND DROPDOWN PHÒNG BAN
+                // =========================
+                if ((e.Row.RowState & DataControlRowState.Edit) > 0)
+                {
+                    DropDownList ddlPB = e.Row.FindControl("ddlPB_Grid") as DropDownList;
+                    if (ddlPB != null)
+                    {
+                        using (SqlConnection conn = new SqlConnection(connStr))
+                        {
+                            SqlDataAdapter da = new SqlDataAdapter(
+                                "SELECT IDPB, TenPB FROM Phong_ban", conn);
+                            DataTable dt = new DataTable();
+                            da.Fill(dt);
+
+                            ddlPB.DataSource = dt;
+                            ddlPB.DataTextField = "TenPB";
+                            ddlPB.DataValueField = "IDPB";
+                            ddlPB.DataBind();
+                        }
+
+                        // chọn sẵn phòng ban hiện tại
+                        object idpb = DataBinder.Eval(e.Row.DataItem, "IDPB");
+                        if (idpb != DBNull.Value)
+                            ddlPB.SelectedValue = idpb.ToString();
+                    }
+                }
+            }
+        }
+
+
+
     }
 }

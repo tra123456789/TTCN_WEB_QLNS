@@ -107,11 +107,63 @@
                     <td><asp:Label ID="lblSoBH" runat="server" Text="-" /></td>
                 </tr>
             </table>
+              <asp:Panel ID="pnlEdit" runat="server" Visible="false">
+    <hr />
+    <h3>Chỉnh sửa thông tin cá nhân</h3>
+    <p class="note">Bạn chỉ có thể chỉnh sửa trong thời gian được phép</p>
+
+    <table class="info">
+        <tr>
+            <td class="label">Họ và tên:</td>
+            <td>
+                <asp:TextBox ID="txtEditHoTen" runat="server" Width="100%" />
+            </td>
+        </tr>
+
+        <tr>
+            <td class="label">Ngày sinh:</td>
+            <td>
+                <asp:TextBox ID="txtEditNgaySinh" runat="server" TextMode="Date" />
+            </td>
+        </tr>
+
+        <tr>
+            <td class="label">Giới tính:</td>
+            <td>
+                <asp:DropDownList ID="ddlEditGioiTinh" runat="server">
+                    <asp:ListItem Value="true">Nam</asp:ListItem>
+                    <asp:ListItem Value="false">Nữ</asp:ListItem>
+                </asp:DropDownList>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="label">Địa chỉ:</td>
+            <td>
+                <asp:TextBox ID="txtEditDiaChi" runat="server" Width="100%" />
+            </td>
+        </tr>
+    </table>
+
+    <div class="actions">
+        <asp:Button ID="btnSaveEdit" runat="server"
+            Text="💾 Lưu thay đổi"
+            CssClass="btn btn-back"
+            OnClick="btnSaveEdit_Click" />
+    </div>
+</asp:Panel>
+
 
             <div class="actions">
-                <asp:HyperLink ID="hlBack" runat="server" NavigateUrl="UserHome.aspx" CssClass="btn btn-back">← Quay về Trang Chủ</asp:HyperLink>
+               <asp:Button ID="btnEdit" runat="server"
+    Text="✏ Chỉnh sửa thông tin"
+    CssClass="btn btn-back"
+    OnClick="btnEdit_Click"
+    Visible="false" />
+
+                <asp:HyperLink ID="hlBack" runat="server" NavigateUrl="UserHome.aspx" CssClass="btn btn-back" Height="22px">← Quay về Trang Chủ</asp:HyperLink>
             </div>
-        </div>
+            </div>
     </form>
   </body>
 </html>

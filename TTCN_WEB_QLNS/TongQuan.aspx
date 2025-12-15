@@ -119,11 +119,29 @@
         </div>
      
 
-<br />
+ <br /><br />
+              <div class="card-config">
+
+    <h4>Cho phép nhân viên chỉnh sửa thông tin</h4>
+
+    <p>Từ ngày:</p>
+    <asp:TextBox ID="txtMoTu" runat="server" TextMode="DateTimeLocal"></asp:TextBox>
+
+    <p>Đến ngày:</p>
+    <asp:TextBox ID="txtDongDen" runat="server" TextMode="DateTimeLocal"></asp:TextBox>
+
+    <br /><br />
+    <asp:Button ID="btnLuuCauHinh" runat="server"
+        Text="Lưu cấu hình"
+        CssClass="btn"
+        OnClick="btnLuuCauHinh_Click" />
+</div>
+
             
               </div>
              
             </div>
+
              </form>
 </body>
 </html>

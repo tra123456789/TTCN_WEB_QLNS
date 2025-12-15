@@ -17,7 +17,7 @@ namespace TTCN_WEB_QLNS
         {
             if (Session["UserName"] != null)
             {
-                lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
+                lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
             }
             else
             {
@@ -30,8 +30,7 @@ namespace TTCN_WEB_QLNS
             //}
 
             // Hiển thị tên
-            //lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
-
+       
             //// Phân quyền
             //string role = Session["IDROLE"].ToString();
 

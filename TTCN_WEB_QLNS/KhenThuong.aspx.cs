@@ -13,7 +13,7 @@ namespace TTCN_WEB_QLNS
         {
             if (Session["UserName"] != null)
             {
-                lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
+                lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
             }
             else
             {
@@ -58,7 +58,19 @@ namespace TTCN_WEB_QLNS
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM KhenThuong_KyLuat", conn);
+                SqlDataAdapter da = new SqlDataAdapter(@"SELECT 
+    kt.ID,
+    kt.MaNV,
+    nv.HoTen,
+    kt.Loai,
+    kt.SoKTKL,
+    kt.NoiDung,
+    kt.Ngay
+FROM KhenThuong_KyLuat kt
+JOIN Nhan_vien nv ON kt.MaNV = nv.MaNV
+
+", conn);
+
 
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -88,7 +100,7 @@ namespace TTCN_WEB_QLNS
             {
                 conn.Open();
                 SqlDataAdapter da = new SqlDataAdapter(
-                    "SELECT * FROM Khen_thuong WHERE MA_NV LIKE @search OR LyDo LIKE @search",
+                    "SELECT * FROM KhenThuong_KyLuat WHERE MA_NV LIKE @search OR LyDo LIKE @search",
                     conn);
 
                 da.SelectCommand.Parameters.AddWithValue("@search", "%" + txtSearch.Text + "%");
