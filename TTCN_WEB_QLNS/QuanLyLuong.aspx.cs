@@ -16,7 +16,7 @@ namespace TTCN_WEB_QLNS
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            if (Session["UserName"] == null || Session["IDROLE"] == null )
+            if (Session["UserName"] == null || Session["IDROLE"] == null)
             {
                 Response.Redirect("DangNhap.aspx");
                 return;
@@ -29,44 +29,24 @@ namespace TTCN_WEB_QLNS
                 return;
             }
             // Hiển thị tên
-            lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
 
             if (!IsPostBack)
             {
-             
-
-                if (role == "10" )
-                {
-                    menuThongTinNV.Visible = true;
-                    menuTongQuan.Visible = false;
-                    menuNhanVien.Visible = false;
-                    menuPhongBan.Visible = false;
-                    menuHopDong.Visible = false;
-                    menuLuong.Visible = true;
-                    menuBaoHiem.Visible = true;
-                    menuChamCong.Visible = true;
-                    menuKhenThuong.Visible = false;
-                    gvLuong.Columns[gvLuong.Columns.Count - 1].Visible = false;
-                    btncaculator.Visible = false;
-                    btnDS.Visible = false;
-                }
-                else
-                {
-                    menuThongTinNV.Visible = false;
-                }
+                //LoadNhanVien();
                 LoadDataLuong();
+               
+                if (role == "10")
+                {
+                    
+                    btnDS.Visible = false;
+                    btncaculator.Visible = false;
+                }
+                if (Session["IDROLE"].ToString() == "10") 
+                {
+                    gvLuong.Columns[gvLuong.Columns.Count - 1].Visible = false;
+                }
             }
-            //if (Session["UserName"] == null || Session["IDROLE"] == null)
-            //{
-            //    Response.Redirect("QuanLyLuong.aspx");
-            //    return;
-            //}
-
-            //// Hiển thị tên
-            //lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
-
-            // Phân quyền
-          
+         
         }
 
         private void LoadDataLuong()
@@ -80,15 +60,39 @@ namespace TTCN_WEB_QLNS
                 string role = Session["IDROLE"]?.ToString();
                 string sql = "";
 
-                // Nếu là Admin → lấy toàn bộ
+                // ADMIN
                 if (role == "1" || role == "12")
                 {
-                    sql = "SELECT * FROM Bang_luong";
+                    sql = @"
+                SELECT 
+                    bl.ID,
+                    bl.MaNV,
+                    nv.HoTen,
+                    bl.TongNgayCong,
+                    bl.KhongPhep,
+                    bl.NgayLe,
+                    bl.NgayCN,
+                    bl.ThucLanh
+                FROM Bang_luong bl
+                JOIN Nhan_vien nv ON bl.MaNV = nv.MaNV
+            ";
                 }
-                else
+                else // USER
                 {
-                    // Nếu là User → chỉ lấy dòng lương của chính nhân viên đó
-                    sql = "SELECT * FROM Bang_luong WHERE MaNV = @MaNV";
+                    sql = @"
+                SELECT 
+                    bl.ID,
+                    bl.MaNV,
+                    nv.HoTen,
+                    bl.TongNgayCong,
+                    bl.KhongPhep,
+                    bl.NgayLe,
+                    bl.NgayCN,
+                    bl.ThucLanh
+                FROM Bang_luong bl
+                JOIN Nhan_vien nv ON bl.MaNV = nv.MaNV
+                WHERE bl.MaNV = @MaNV
+            ";
                 }
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
@@ -96,7 +100,6 @@ namespace TTCN_WEB_QLNS
                 if (role != "1" && role != "12")
                 {
                     cmd.Parameters.AddWithValue("@MaNV", Session["MaNV"].ToString());
-
                 }
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -107,6 +110,26 @@ namespace TTCN_WEB_QLNS
                 gvLuong.DataBind();
             }
         }
+
+        //private void LoadNhanVien()
+        //{
+        //    string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+
+        //    using (SqlConnection conn = new SqlConnection(connStr))
+        //    {
+        //        string sql = "SELECT MaNV, HoTen FROM NhanVien WHERE TrangThai = 1";
+        //        SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+        //        DataTable dt = new DataTable();
+        //        da.Fill(dt);
+
+        //        ddlNhanVien.DataSource = dt;
+        //        ddlNhanVien.DataTextField = "HoTen";   // hiển thị tên
+        //        ddlNhanVien.DataValueField = "MaNV";   // giá trị thật
+        //        ddlNhanVien.DataBind();
+
+        //        ddlNhanVien.Items.Insert(0, new ListItem("-- Chọn nhân viên --", ""));
+        //    }
+        //}
 
 
         protected void btnExportExcel_Click(object sender, EventArgs e)
@@ -149,7 +172,44 @@ namespace TTCN_WEB_QLNS
             Response.End();
         }
 
-       
+        protected void btnAddLuong_Click(object sender, EventArgs e)
+        {
+            // Chỉ Admin được thêm
+            if (Session["IDROLE"].ToString() == "10")
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(),
+                    "no", "alert('Bạn không có quyền thêm lương!');", true);
+                return;
+            }
+            //string maNV = ddlNhanVien.SelectedValue;
+            string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string sql = @"
+            INSERT INTO Bang_luong
+            (MaNV, TongNgayCong, KhongPhep, NgayLe, NgayCN, ThucLanh, Create_date)
+            VALUES
+            (@MaNV, @TongNgayCong, @KhongPhep, @NgayLe, @NgayCN, 0, GETDATE())
+        ";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@MaNV", txtMaNV.Text);
+                cmd.Parameters.AddWithValue("@TongNgayCong", txtNgayCong.Text);
+                cmd.Parameters.AddWithValue("@KhongPhep", txtKhongPhep.Text);
+                cmd.Parameters.AddWithValue("@NgayLe", txtNgayLe.Text);
+                cmd.Parameters.AddWithValue("@NgayCN", txtNgayCN.Text);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            LoadDataLuong();
+
+            ScriptManager.RegisterStartupScript(this, GetType(),
+                "ok", "alert('Thêm lương thành công!');", true);
+        }
+
         public override void VerifyRenderingInServerForm(Control control)
         {
             // bắt buộc để tránh lỗi "Control must be placed inside form"
@@ -170,8 +230,8 @@ namespace TTCN_WEB_QLNS
             string khongPhep = ((TextBox)row.FindControl("txtKhongPhep")).Text;
             string ngayLe = ((TextBox)row.FindControl("txtNgayLe")).Text;
             string ngaycn = ((TextBox)row.FindControl("txtNgayCN")).Text;
-            string ngayThuong = ((TextBox)row.FindControl("txtNgayThuong")).Text;
-            string thucLanh = ((TextBox)row.FindControl("txtThucLanh")).Text;
+            //string ngayThuong = ((TextBox)row.FindControl("txtNgayThuong")).Text;
+            //string thucLanh = ((TextBox)row.FindControl("txtThucLanh")).Text;
 
             string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
 
@@ -182,8 +242,8 @@ namespace TTCN_WEB_QLNS
                         KhongPhep = @khongPhep,
                         NgayLe = @ngayLe,
                         NgayCN = @ngaycn,
-                        NgayThuong = @ngayThuong,
-                        ThucLanh = @thucLanh,
+                      
+                       
                         Update_date = GETDATE()
                        WHERE ID = @id";
 
@@ -193,8 +253,8 @@ namespace TTCN_WEB_QLNS
                 cmd.Parameters.AddWithValue("@khongPhep", khongPhep);
                 cmd.Parameters.AddWithValue("@ngayLe", ngayLe);
                 cmd.Parameters.AddWithValue("@ngayCN", ngaycn);
-                cmd.Parameters.AddWithValue("@ngayThuong", ngayThuong);
-                cmd.Parameters.AddWithValue("@thucLanh", thucLanh);
+                //cmd.Parameters.AddWithValue("@ngayThuong", ngayThuong);
+                //cmd.Parameters.AddWithValue("@thucLanh", thucLanh);
                 cmd.Parameters.AddWithValue("@id", ID);
 
                 conn.Open();

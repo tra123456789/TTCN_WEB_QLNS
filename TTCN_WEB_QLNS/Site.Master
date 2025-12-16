@@ -1,7 +1,7 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="TTCN_WEB_QLNS.SiteMaster" %>
 
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head runat="server">
     <title>
         <asp:ContentPlaceHolder ID="TitleContent" runat="server" />
@@ -9,39 +9,43 @@
 
     <link href="Quanlynhanvien.css" rel="stylesheet" />
 </head>
+
 <body>
-    <form runat="server">
+<form runat="server">
 
-        <!-- SIDEBAR -->
-        <div class="sidebar">
-            <h2>Menu</h2>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2>Menu</h2>
 
-            <a runat="server" href="TongQuan.aspx">Tổng quan</a>
-            <a runat="server" href="ThongTinCaNhan.aspx">Thông tin cá nhân</a>
-            <a runat="server" href="QuanLyUser.aspx">Nhân viên</a>
-            <a runat="server" href="PhongBan.aspx">Phòng ban</a>
-            <a runat="server" href="QuanLyChamCong.aspx">Chấm công</a>
-            <a runat="server" href="QuanLyLuong.aspx">Lương</a>
-            <a runat="server" href="BaoHiem.aspx">Bảo hiểm</a>
-            <a runat="server" href="KhenThuong.aspx">Khen thưởng</a>
+        <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
+        <a id="menuThongTinNV" runat="server" href="ThongTinCaNhan.aspx">Thông tin cá nhân</a>
+        <a id="menuNhanVien" runat="server" href="QuanLyUser.aspx">Nhân viên</a>
+        <a id="menuPhongBan" runat="server" href="PhongBan.aspx">Phòng ban</a>
+        <a id="menuChamCong" runat="server" href="QuanLyChamCong.aspx">Chấm công</a>
+        <a id="menuHopDong" runat="server" href="QuanLyHopDong.aspx">Hợp đồng</a>
+        <a id="menuBaoHiem" runat="server" href="BaoHiem.aspx">Bảo hiểm xã hội</a>
+        <a id="menuLuong" runat="server" href="QuanLyLuong.aspx">Lương nhân viên</a>
+        <a id="menuKhenThuong" runat="server" href="KhenThuong.aspx">Khen thưởng</a>
 
-            <asp:LinkButton ID="lnkLogout" runat="server"
-                CssClass="logout-link"
-                OnClick="lnkLogout_Click">
-                Đăng xuất
-            </asp:LinkButton>
+        <asp:LinkButton ID="lnkLogout"
+            runat="server"
+            CssClass="logout-link"
+            OnClick="lnkLogout_Click">
+            Đăng xuất
+        </asp:LinkButton>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+
+        <div class="welcome">
+            <asp:Label ID="lblWelcome" runat="server" />
         </div>
 
-        <!-- CONTENT -->
-        <div class="content">
-            <div class="welcome">
-                <asp:Label ID="lblWelcome" runat="server"></asp:Label>
-            </div>
+        <asp:ContentPlaceHolder ID="MainContent" runat="server" />
 
-            <!-- CHỖ TRANG CON ĐỔ NỘI DUNG -->
-            <asp:ContentPlaceHolder ID="MainContent" runat="server" />
-        </div>
+    </div>
 
-    </form>
+</form>
 </body>
 </html>

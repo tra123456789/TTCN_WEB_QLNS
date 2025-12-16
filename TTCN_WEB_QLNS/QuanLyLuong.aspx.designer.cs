@@ -15,112 +15,67 @@ namespace TTCN_WEB_QLNS
     {
 
         /// <summary>
-        /// form1 control.
+        /// ddlNhanVien control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::System.Web.UI.WebControls.DropDownList ddlNhanVien;
 
         /// <summary>
-        /// menuTongQuan control.
+        /// txtMaNV control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor menuTongQuan;
+        protected global::System.Web.UI.WebControls.TextBox txtMaNV;
 
         /// <summary>
-        /// menuThongTinNV control.
+        /// txtNgayCong control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor menuThongTinNV;
+        protected global::System.Web.UI.WebControls.TextBox txtNgayCong;
 
         /// <summary>
-        /// menuNhanVien control.
+        /// txtKhongPhep control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor menuNhanVien;
+        protected global::System.Web.UI.WebControls.TextBox txtKhongPhep;
 
         /// <summary>
-        /// menuPhongBan control.
+        /// txtNgayLe control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor menuPhongBan;
+        protected global::System.Web.UI.WebControls.TextBox txtNgayLe;
 
         /// <summary>
-        /// menuChamCong control.
+        /// txtNgayCN control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor menuChamCong;
+        protected global::System.Web.UI.WebControls.TextBox txtNgayCN;
 
         /// <summary>
-        /// menuHopDong control.
+        /// Button1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor menuHopDong;
-
-        /// <summary>
-        /// menuBaoHiem control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor menuBaoHiem;
-
-        /// <summary>
-        /// menuLuong control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor menuLuong;
-
-        /// <summary>
-        /// menuKhenThuong control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor menuKhenThuong;
-
-        /// <summary>
-        /// lnkLogout control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkLogout;
-
-        /// <summary>
-        /// lblWelcome control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblWelcome;
+        protected global::System.Web.UI.WebControls.Button Button1;
 
         /// <summary>
         /// btnDS control.

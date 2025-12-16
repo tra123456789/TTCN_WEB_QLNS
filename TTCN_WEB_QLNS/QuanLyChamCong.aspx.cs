@@ -20,7 +20,7 @@ namespace TTCN_WEB_QLNS
                 Response.Redirect("DangNhap.aspx");
                 return;
             }
-            lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
+            //lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
 
             if (!IsPostBack)
             {
@@ -30,22 +30,11 @@ namespace TTCN_WEB_QLNS
                 if (role == "10")
                 {
 
-                    menuThongTinNV.Visible = true;
-                    menuTongQuan.Visible = false;
-                    menuNhanVien.Visible = false;
-                    menuPhongBan.Visible = false;
-                    menuHopDong.Visible = false;
-                    menuLuong.Visible = true;
-                    menuBaoHiem.Visible = true;
-                    menuChamCong.Visible = true;
-                    menuKhenThuong.Visible = false;
-
-
                 }
-                else
-                {
-                    menuThongTinNV.Visible = false;
-                }    
+                //else
+                //{
+                //    menuThongTinNV.Visible = false;
+                //}    
 
             }
         }

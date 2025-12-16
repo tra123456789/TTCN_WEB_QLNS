@@ -1,42 +1,8 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="QuanLyChamCong.aspx.cs" Inherits="TTCN_WEB_QLNS.QuanLyChamCong" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeBehind="QuanLyChamCong.aspx.cs" Inherits="TTCN_WEB_QLNS.QuanLyChamCong" %>
 
+    <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title>Quản lý chấm công</title>
-    <link href ="Quanlynhanvien.css" rel ="stylesheet" type="text/css"/>
-    </head>
-<body>
-    <form id="form1" runat="server">
-        <div>
-             <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>Menu</h2>
-               <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
-         <a id="menuThongTinNV" runat="server" href="ThongTinCaNhan.aspx">Thông tin cá nhân</a>
-<a id="menuNhanVien" runat="server" href="QuanLyUser.aspx">Nhân viên</a>
-<a id="menuPhongBan" runat="server" href="PhongBan.aspx">Phòng ban</a>
-<a id="menuChamCong" runat="server" href="QuanLyChamCong.aspx">Chấm công</a>
-<a id="menuHopDong" runat="server" href="QuanLyHopDong.aspx">Hợp đồng</a>
-<a id="menuBaoHiem" runat="server" href="BaoHiem.aspx">Bảo hiểm xã hội</a>
-<a id="menuLuong" runat="server" href="QuanLyLuong.aspx">Lương nhân viên</a>
-<a id="menuKhenThuong" runat="server" href="KhenThuong.aspx">Khen thưởng</a>
-
-         <!-- THÊM Ô ĐĂNG XUẤT VÀO ĐÂY -->
-        <asp:LinkButton ID="lnkLogout" runat="server" CssClass="logout-link" OnClick="lnkLogout_Click">Đăng xuất</asp:LinkButton>
-        
-    </div>
-
-    <!-- PAGE CONTENT -->
          <div class="content">
-        <div class ="welcome">   
-           <p class="text-xs opacity-75">Chào mừng bạn quay trở lại</p>
- <asp:Label ID="lblWelcome" runat="server" CssClass="font-medium text-sm"></asp:Label>
-   
-
-</div>
         <h1> Quản lý Chấm Công</h1>
      
        
@@ -121,7 +87,4 @@
 
     </div>
 
-        </div>
-    </form>
-</body>
-</html>
+ </asp:Content>

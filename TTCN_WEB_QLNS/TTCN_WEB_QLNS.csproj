@@ -103,7 +103,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
-    <Content Include="BaoHiem.css" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
@@ -128,13 +127,10 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="KhenThuong.aspx" />
-    <Content Include="KhenThuong.css" />
-    <Content Include="Luong.css" />
+    <Content Include="Login.css" />
     <Content Include="PhongBan.aspx" />
-    <Content Include="Phongban.css" />
     <Content Include="Quanlynhanvien.css" />
     <Content Include="QuanLyChamCong.aspx" />
-    <Content Include="Quanlyhd.css" />
     <Content Include="QuanLyHopDong.aspx" />
     <Content Include="QuanLyLuong.aspx" />
     <Content Include="BaoHiem.aspx" />
@@ -167,12 +163,10 @@
     <Content Include="Content\bootstrap-grid.rtl.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
-    <Content Include="StyleSheet1.css" />
     <Content Include="ThemKhenThuong.aspx" />
     <Content Include="Themkhenthuong.css" />
     <Content Include="ThongTinCaNhan.aspx" />
     <Content Include="TongQuan.aspx" />
-    <Content Include="TongQuan.css" />
     <Content Include="UserHome.aspx" />
     <Content Include="WebForm1.aspx" />
     <Content Include="QuanLyUser.aspx" />

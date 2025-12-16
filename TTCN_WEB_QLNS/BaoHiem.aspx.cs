@@ -24,12 +24,7 @@ namespace TTCN_WEB_QLNS
             //{
             //    Response.Redirect("DangNhap.aspx"); // nếu chưa đăng nhập → quay lại login
             //}
-            if (Session["UserName"] == null || Session["IDROLE"] == null || Session["MaNV"] == null)
-            {
-                Response.Redirect("DangNhap.aspx");
-                return;
-            }
-            lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
+          
 
             if (!IsPostBack)
             {
@@ -48,46 +43,38 @@ namespace TTCN_WEB_QLNS
 
                 if (role == "10")
                 {
-                    menuThongTinNV.Visible = true;
-                    menuTongQuan.Visible = false;
-                    menuNhanVien.Visible = false;
-                    menuPhongBan.Visible = false;
-                    menuHopDong.Visible = false;
-                    menuLuong.Visible = true;
-                    menuBaoHiem.Visible = true;
-                    menuChamCong.Visible = true;
-                    menuKhenThuong.Visible = false;
+                   
                     gvBaoHiem.Columns[gvBaoHiem.Columns.Count - 1].Visible = false;
                     pnlAddBaoHiem.Visible = false;
                 }
-                else
-                {
-                    menuThongTinNV.Visible = false;
-                }
-            
-            }
-                //if (Session["UserName"] == null || Session["IDROLE"] == null)
+                //else
                 //{
-                //    Response.Redirect("BaoHiem.aspx");
-                //    return;
+                //    menuThongTinNV.Visible = false;
                 //}
 
-                // Hiển thị tên
-                //lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
-
-                //// Phân quyền
-                //string role = Session["IDROLE"].ToString();
-
-                //if (role == "User")
-                //{
-
-                //    menuNhanVien.Visible = false;
-                //    menuPhongBan.Visible = false;
-                //    menuHopDong.Visible = false;
-                //    menuLuong.Visible = false;
-                //    menuKhenThuong.Visible = false;
-                //}
             }
+            //if (Session["UserName"] == null || Session["IDROLE"] == null)
+            //{
+            //    Response.Redirect("BaoHiem.aspx");
+            //    return;
+            //}
+
+            // Hiển thị tên
+            //lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
+
+            //// Phân quyền
+            //string role = Session["IDROLE"].ToString();
+
+            //if (role == "User")
+            //{
+
+            //    menuNhanVien.Visible = false;
+            //    menuPhongBan.Visible = false;
+            //    menuHopDong.Visible = false;
+            //    menuLuong.Visible = false;
+            //    menuKhenThuong.Visible = false;
+            //}
+        }
         private void LoadDataBaoHiem()
         {
             string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;

@@ -1,118 +1,85 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="QuanLyUser.aspx.cs" Inherits="TTCN_WEB_QLNS.WebForm2" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="QuanLyUser.aspx.cs" Inherits="TTCN_WEB_QLNS.WebForm2" %>
 
-<!DOCTYPE html>
+<asp:Content ContentPlaceHolderID="TitleContent" runat="server">
+    Quản lý nhân viên
+</asp:Content>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title>Khen Thưởng</title>
-    <link href ="Quanlynhanvien.css" rel ="stylesheet" type="text/css"/>
-    </head>
-<body>
-    <form id="form1" runat="server">
-        <div>
-             <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>Menu</h2>
-        <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
-         <a id="menuThongTinNV" runat="server" href="ThongTinCaNhan.aspx">Thông tin cá nhân</a>
-<a id="menuNhanVien" runat="server" href="QuanLyUser.aspx">Nhân viên</a>
-<a id="menuPhongBan" runat="server" href="PhongBan.aspx">Phòng ban</a>
-<a id="menuChamCong" runat="server" href="QuanLyChamCong.aspx">Chấm công</a>
-<a id="menuHopDong" runat="server" href="QuanLyHopDong.aspx">Hợp đồng</a>
-<a id="menuBaoHiem" runat="server" href="BaoHiem.aspx">Bảo hiểm xã hội</a>
-<a id="menuLuong" runat="server" href="QuanLyLuong.aspx">Lương nhân viên</a>
-<a id="menuKhenThuong" runat="server" href="KhenThuong.aspx">Khen thưởng</a>
+<asp:Content ContentPlaceHolderID="MainContent" runat="server">
 
-         <!-- THÊM Ô ĐĂNG XUẤT VÀO ĐÂY -->
-        <asp:LinkButton ID="lnkLogout" runat="server" CssClass="logout-link" OnClick="lnkLogout_Click">Đăng xuất</asp:LinkButton>
-        
-    </div>
+    <!-- NỘI DUNG QUẢN LÝ NHÂN VIÊN -->
+    <h1>Quản lý nhân viên</h1>
 
-    <!-- PAGE CONTENT -->
-         <div class="content">
-         <div class ="welcome">   
-                    <p class="text-xs opacity-75">Chào mừng bạn quay trở lại</p>
-          <asp:Label ID="lblWelcome" runat="server" CssClass="font-medium text-sm"></asp:Label>
-   
 
-         </div>
-        <h1> Quản lý nhân viên</h1>
-     
-       
-        <div class="breadcrumb">
-            Menu › Nhân viên
-        </div>
+    <br />
 
-        <br /><br />
-                <div >
-                  <asp:Button ID="btnAddUser" runat="server" Text="➕ Thêm Nhân Viên" CssClass="btn" OnClick="btnAddUser_Click" />
+    <!-- FORM THÊM NHÂN VIÊN -->
+    <asp:Button ID="btnAddUser" runat="server"
+        Text="➕ Thêm Nhân Viên"
+        CssClass="btn"
+        OnClick="btnAddUser_Click" />
 
-                <br /><br />
+    <br /><br />
 
-                Họ Tên:
-                <asp:TextBox ID="txtHoTen" runat="server" OnTextChanged="txtHoTen_TextChanged"></asp:TextBox>
+    Họ Tên:
+    <asp:TextBox ID="txtHoTen" runat="server" />
 
-                Ngày sinh:
-                <asp:TextBox ID="txtNgaySinh" runat="server" TextMode="Date"></asp:TextBox>
+    Ngày sinh:
+    <asp:TextBox ID="txtNgaySinh" runat="server" TextMode="Date" />
 
-                SĐT:
-                <asp:TextBox ID="txtSDT" runat="server"></asp:TextBox>
+    SĐT:
+    <asp:TextBox ID="txtSDT" runat="server" />
 
-                CCCD:
-                <asp:TextBox ID="txtCCCD" runat="server"></asp:TextBox>
+    CCCD:
+    <asp:TextBox ID="txtCCCD" runat="server" />
 
-                Địa chỉ:
-                <asp:TextBox ID="txtDiaChi" runat="server"></asp:TextBox>
+    Địa chỉ:
+    <asp:TextBox ID="txtDiaChi" runat="server" />
 
-                Hình ảnh:
-                <asp:FileUpload ID="fileAvatar" runat="server" />
+    Hình ảnh:
+    <asp:FileUpload ID="fileAvatar" runat="server" />
 
-                <br /><br />
+    <br /><br />
 
-   
-            
-        </div>
-          <!--  <asp:Button ID="btnSave" runat="server" Text="💾 Lưu nhân viên"
-        CssClass="btn" OnClick="btnSave_Click" style="height: 38px" />
-        -->
-
-<br />
-
-        <!-- Options -->
-        <div class="top-options">
-            Hiển thị
-            <asp:DropDownList ID="ddlPageSize" runat="server" AutoPostBack="true"
-                OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
-                <asp:ListItem>5</asp:ListItem>
-                <asp:ListItem Selected="True">10</asp:ListItem>
-                <asp:ListItem>20</asp:ListItem>
-            </asp:DropDownList>
-
-            <div class="search-box">
-                Tìm kiếm:
-                <asp:TextBox ID="txtSearch" runat="server" AutoPostBack="true"
-                    OnTextChanged="txtSearch_TextChanged"></asp:TextBox>
-            </div>
-        </div>
-                <div class="filter-box">
-        <asp:CheckBox ID="chkNhanVienNghi" runat="server"
-            Text="Hiển thị nhân viên đã nghỉ"
+    <!-- OPTIONS -->
+    <div class="top-options">
+        Hiển thị
+        <asp:DropDownList ID="ddlPageSize" runat="server"
             AutoPostBack="true"
-            OnCheckedChanged="chkNhanVienNghi_CheckedChanged" />
-         
+            OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
+            <asp:ListItem>5</asp:ListItem>
+            <asp:ListItem Selected="True">10</asp:ListItem>
+            <asp:ListItem>20</asp:ListItem>
+        </asp:DropDownList>
+
+        <div class="search-box">
+            Tìm kiếm:
+            <asp:TextBox ID="txtSearch" runat="server"
+                AutoPostBack="true"
+                OnTextChanged="txtSearch_TextChanged" />
+        </div>
     </div>
 
-        <!-- TABLE -->
-        <asp:GridView ID="gvQuanLyUser" runat="server" AutoGenerateColumns="False"
-            CssClass="table" AllowPaging="True"
-             DataKeyNames="MANV"
-            OnPageIndexChanging="gvQuanLyUser_PageIndexChanging"
-            OnSelectedIndexChanged="gvQuanLyUser_SelectedIndexChanged"
-            OnRowEditing="gvQuanLyUser_RowEditing"
-            OnRowCancelingEdit="gvQuanLyUser_RowCancelingEdit"
-            OnRowDeleting="gvQuanLyUser_RowDeleting"
-            OnRowCommand="gvQuanLyUser_RowCommand"
-            OnRowUpdating="gvQuanLyUser_RowUpdating" OnRowDataBound="gvQuanLyUser_RowDataBound">
+    <asp:CheckBox ID="chkNhanVienNghi" runat="server"
+        Text="Hiển thị nhân viên đã nghỉ"
+        AutoPostBack="true"
+        OnCheckedChanged="chkNhanVienNghi_CheckedChanged" />
+
+   
+    <!-- GRIDVIEW -->
+         <br />
+ <div class="table-wrapper">
+    <asp:GridView ID="gvQuanLyUser" runat="server"
+        CssClass="table"
+        AutoGenerateColumns="False"
+        DataKeyNames="MANV"
+        AllowPaging="True"
+        OnPageIndexChanging="gvQuanLyUser_PageIndexChanging"
+        OnRowEditing="gvQuanLyUser_RowEditing"
+        OnRowCancelingEdit="gvQuanLyUser_RowCancelingEdit"
+        OnRowUpdating="gvQuanLyUser_RowUpdating"
+        OnRowDeleting="gvQuanLyUser_RowDeleting"
+        OnRowCommand="gvQuanLyUser_RowCommand"
+        OnRowDataBound="gvQuanLyUser_RowDataBound">
 
 
             <Columns>
@@ -146,8 +113,7 @@
         <asp:DropDownList ID="ddlPB_Grid" runat="server"></asp:DropDownList>
     </EditItemTemplate>
 </asp:TemplateField>
-
-         <asp:TemplateField HeaderText="Thao tác">
+  <asp:TemplateField HeaderText="Thao tác">
     <ItemTemplate>
 
         <asp:LinkButton ID="LinkButtonEdit"
@@ -189,16 +155,11 @@
     </EditItemTemplate>
 </asp:TemplateField>
 
-
     
                  
             </Columns>
 
         </asp:GridView>
-
-    </div>
-
-        </div>
-    </form>
-</body>
-</html>
+   </div>
+  
+    </asp:Content>

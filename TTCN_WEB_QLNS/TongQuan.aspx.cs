@@ -39,7 +39,7 @@ namespace TTCN_WEB_QLNS
                 string role = Session["IDROLE"].ToString();
                 if (role == "1")
                 {
-                    menuThongTinNV.Visible = false;
+                    //menuThongTinNV.Visible = false;
                 }
             }
             //if (Session["UserName"] != null)

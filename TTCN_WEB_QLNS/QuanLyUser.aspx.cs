@@ -15,14 +15,14 @@ namespace TTCN_WEB_QLNS
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["UserName"] != null)
-            {
-                lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
-            }
-            else
-            {
-                Response.Redirect("DangNhap.aspx"); // nếu chưa đăng nhập → quay lại login
-            }
+            //if (Session["UserName"] != null)
+            //{
+            //    lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
+            //}
+            //else
+            //{
+            //    Response.Redirect("DangNhap.aspx"); // nếu chưa đăng nhập → quay lại login
+            //}
             //if (Session["UserName"] == null || Session["IDROLE"] == null)
             //{
             //    Response.Redirect("QuanLyUser.aspx");
@@ -49,11 +49,11 @@ namespace TTCN_WEB_QLNS
             if (!IsPostBack)
             {
                 LoadDataQuanLyUser(false);
-                string role = Session["IDROLE"].ToString();
-                if (role == "1")
-                {
-                    menuThongTinNV.Visible = false;
-                }
+                //string role = Session["IDROLE"].ToString();
+                //if (role == "1")
+                //{
+                //    //menuThongTinNV.Visible = false;
+                //}
             }
         }
         //Hàm xử lý Hiển thị lên bảng

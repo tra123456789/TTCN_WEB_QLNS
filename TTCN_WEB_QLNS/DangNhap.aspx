@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Đăng Nhập</title>
-    <link href ="StyleSheet1.css" rel ="stylesheet" type ="text/css"/>
+    <link href ="Login.css" rel ="stylesheet" type ="text/css"/>
     <style type="text/css">
         .auto-style1 {
             width: 350px;

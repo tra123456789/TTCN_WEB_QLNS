@@ -25,7 +25,7 @@ namespace TTCN_WEB_QLNS
                     return;
                 }
 
-                lblWelcome.Text = "Xin chào: " + Server.HtmlEncode(Session["UserName"].ToString());
+                //lblWelcome.Text = "Xin chào: " + Server.HtmlEncode(Session["UserName"].ToString());
 
             }
         }
