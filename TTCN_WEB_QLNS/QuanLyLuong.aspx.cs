@@ -47,6 +47,8 @@ namespace TTCN_WEB_QLNS
                     menuChamCong.Visible = true;
                     menuKhenThuong.Visible = false;
                     gvLuong.Columns[gvLuong.Columns.Count - 1].Visible = false;
+                    btncaculator.Visible = false;
+                    btnDS.Visible = false;
                 }
                 else
                 {

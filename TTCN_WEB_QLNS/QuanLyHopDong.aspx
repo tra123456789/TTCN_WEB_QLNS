@@ -40,7 +40,7 @@
      
        
         <div class="breadcrumb">
-            Tổng quan › Hợp Đồng
+            Menu › Hợp Đồng
         </div>
 
         <br /><br />
@@ -49,6 +49,9 @@
 
                <br /><br />
                 <div class ="cssadd">
+                       Mã Nhân Viên:
+                   <asp:TextBox ID="txtMaNV" runat="server" OnTextChanged="txtMaNV_TextChanged" ></asp:TextBox>
+
                 Ngày Bắt Đầu:
                 <asp:TextBox ID="txtNgayBatDau" runat="server" TextMode="Date" OnTextChanged="txtNgayBatDau_TextChanged"></asp:TextBox>
 
@@ -70,9 +73,7 @@
                  Hệ Số Lương :
                  <asp:TextBox ID="txtHeSoLuong" runat="server" OnTextChanged="txtHeSoLuong_TextChanged"></asp:TextBox>
 
-                 Mã Nhân Viên:
-                 <asp:TextBox ID="txtMaNV" runat="server" OnTextChanged="txtMaNV_TextChanged" ></asp:TextBox>
-
+              
                     </div>
                 <br /><br />
 
@@ -111,7 +112,12 @@
             OnRowUpdating="gvQuanLyHD_RowUpdating" OnRowCommand="gvQuanLyHD_RowCommand">
 
             <Columns>
-                  
+                <asp:TemplateField HeaderText="Số Hợp Đồng">
+    <ItemTemplate>
+        <%# Eval("SoHD") %>
+    </ItemTemplate>
+</asp:TemplateField>
+
   <asp:TemplateField HeaderText="Mã Nhân Viên">
       <ItemTemplate>
           <%# Eval("MaNV") %>
@@ -120,12 +126,6 @@
           <asp:TextBox ID="txtGV_MaNV" runat="server" Text='<%# Bind("MaNV") %>' />
       </EditItemTemplate>
   </asp:TemplateField>
-
-<asp:TemplateField HeaderText="Số Hợp Đồng">
-    <ItemTemplate>
-        <%# Eval("SoHD") %>
-    </ItemTemplate>
-</asp:TemplateField>
 
   <asp:TemplateField HeaderText="Ngày Bắt Đầu">
       <ItemTemplate>

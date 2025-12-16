@@ -132,6 +132,15 @@ namespace TTCN_WEB_QLNS
         protected global::System.Web.UI.WebControls.Button btnAddHD;
 
         /// <summary>
+        /// txtMaNV control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMaNV;
+
+        /// <summary>
         /// txtNgayBatDau control.
         /// </summary>
         /// <remarks>
@@ -193,15 +202,6 @@ namespace TTCN_WEB_QLNS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtHeSoLuong;
-
-        /// <summary>
-        /// txtMaNV control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMaNV;
 
         /// <summary>
         /// ddlPageSize control.

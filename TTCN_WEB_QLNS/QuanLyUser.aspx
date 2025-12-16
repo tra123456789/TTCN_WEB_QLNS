@@ -40,7 +40,7 @@
      
        
         <div class="breadcrumb">
-            Tổng quan › Nhân viên
+            Menu › Nhân viên
         </div>
 
         <br /><br />
@@ -111,6 +111,7 @@
             OnRowEditing="gvQuanLyUser_RowEditing"
             OnRowCancelingEdit="gvQuanLyUser_RowCancelingEdit"
             OnRowDeleting="gvQuanLyUser_RowDeleting"
+            OnRowCommand="gvQuanLyUser_RowCommand"
             OnRowUpdating="gvQuanLyUser_RowUpdating" OnRowDataBound="gvQuanLyUser_RowDataBound">
 
 
@@ -121,12 +122,22 @@
                 <asp:BoundField DataField="SDT" HeaderText="SDT" />
                 <asp:BoundField DataField="CCCD" HeaderText="Số Căn Cước"  />
              <asp:BoundField DataField="DiaChi" HeaderText="Địa Chỉ" />
-             <asp:TemplateField HeaderText="Hình Ảnh">
-                <ItemTemplate>
-                    <asp:Image ID="imgAvatar" runat="server" 
-                        ImageUrl='<%# Eval("HinhAnh") %>'  CssClass="avatar"/>
-                </ItemTemplate>
-            </asp:TemplateField>
+           <asp:TemplateField HeaderText="Hình Ảnh">
+    <ItemTemplate>
+        <asp:Image ID="imgAvatar" runat="server"
+            ImageUrl='<%# Eval("HinhAnh") %>'
+            CssClass="avatar" />
+    </ItemTemplate>
+
+    <EditItemTemplate>
+        <asp:Image ID="imgOld" runat="server"
+            ImageUrl='<%# Eval("HinhAnh") %>'
+            CssClass="avatar" /><br />
+
+        <asp:FileUpload ID="fuEditAvatar" runat="server" />
+    </EditItemTemplate>
+</asp:TemplateField>
+
                 <asp:TemplateField HeaderText="Phòng ban">
     <ItemTemplate>
         <%# Eval("TenPB") %>

@@ -38,7 +38,7 @@
         <h1>Phòng ban nhân viên</h1>
 
         <div class="breadcrumb">
-            Tổng quan › Phòng Ban
+            Menu › Phòng Ban
         </div>
 
         <br /><br />

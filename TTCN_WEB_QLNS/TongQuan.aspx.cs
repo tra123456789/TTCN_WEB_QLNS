@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -115,23 +116,49 @@ namespace TTCN_WEB_QLNS
         }
         protected void btnLuuCauHinh_Click(object sender, EventArgs e)
         {
-            DateTime mo = DateTime.Parse(txtMoTu.Text);
-            DateTime dong = DateTime.Parse(txtDongDen.Text);
+            // 1️⃣ Kiểm tra rỗng
+            if (string.IsNullOrWhiteSpace(txtMoTu.Text) ||
+                string.IsNullOrWhiteSpace(txtDongDen.Text))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(),
+                    "err", "alert('❌ Vui lòng nhập đầy đủ thời gian mở và đóng');", true);
+                return;
+            }
 
+            DateTime mo, dong;
+
+            // 2️⃣ Kiểm tra đúng định dạng ngày
+            if (!DateTime.TryParse(txtMoTu.Text, out mo) ||
+                !DateTime.TryParse(txtDongDen.Text, out dong))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(),
+                    "err2", "alert('❌ Thời gian không hợp lệ');", true);
+                return;
+            }
+
+            // 3️⃣ Kiểm tra logic thời gian
+            if (mo >= dong)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(),
+                    "err3", "alert('❌ Thời gian mở phải nhỏ hơn thời gian đóng');", true);
+                return;
+            }
+
+            // 4️⃣ Lưu DB
             using (SqlConnection conn = new SqlConnection(
                 ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString))
             {
                 string sql = @"
-                IF EXISTS (SELECT 1 FROM CauHinhSuaThongTin)
-                    UPDATE CauHinhSuaThongTin
-                    SET ThoiGianMo = @mo, ThoiGianDong = @dong
-                ELSE
-                    INSERT INTO CauHinhSuaThongTin (ThoiGianMo, ThoiGianDong)
-                    VALUES (@mo, @dong)";
+        IF EXISTS (SELECT 1 FROM CauHinhSuaThongTin)
+            UPDATE CauHinhSuaThongTin
+            SET ThoiGianMo = @mo, ThoiGianDong = @dong
+        ELSE
+            INSERT INTO CauHinhSuaThongTin (ThoiGianMo, ThoiGianDong)
+            VALUES (@mo, @dong)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@mo", mo);
-                cmd.Parameters.AddWithValue("@dong", dong);
+                cmd.Parameters.Add("@mo", SqlDbType.DateTime).Value = mo;
+                cmd.Parameters.Add("@dong", SqlDbType.DateTime).Value = dong;
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -140,6 +167,7 @@ namespace TTCN_WEB_QLNS
             ScriptManager.RegisterStartupScript(this, GetType(),
                 "ok", "alert('✔ Đã cập nhật thời gian cho phép chỉnh sửa');", true);
         }
+
 
 
     }

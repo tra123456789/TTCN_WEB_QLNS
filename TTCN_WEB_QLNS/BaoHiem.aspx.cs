@@ -58,6 +58,7 @@ namespace TTCN_WEB_QLNS
                     menuChamCong.Visible = true;
                     menuKhenThuong.Visible = false;
                     gvBaoHiem.Columns[gvBaoHiem.Columns.Count - 1].Visible = false;
+                    pnlAddBaoHiem.Visible = false;
                 }
                 else
                 {

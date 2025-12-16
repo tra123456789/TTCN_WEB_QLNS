@@ -41,7 +41,7 @@
      
        
         <div class="breadcrumb">
-            Tổng quan › Chấm công nhân viên
+            Menu › Chấm công nhân viên
         </div>
 
         <br /><br />

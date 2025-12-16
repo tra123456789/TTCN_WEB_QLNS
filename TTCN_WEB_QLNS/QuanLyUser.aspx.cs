@@ -180,13 +180,69 @@ namespace TTCN_WEB_QLNS
 
         protected void btnAddUser_Click(object sender, EventArgs e)
         {
+            // ============================
+            // VALIDATE RỖNG
+            // ============================
+            if (string.IsNullOrWhiteSpace(txtHoTen.Text) ||
+                string.IsNullOrWhiteSpace(txtNgaySinh.Text) ||
+                string.IsNullOrWhiteSpace(txtSDT.Text) ||
+                string.IsNullOrWhiteSpace(txtCCCD.Text) ||
+                string.IsNullOrWhiteSpace(txtDiaChi.Text))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "err",
+                    "alert('❌ Vui lòng nhập đầy đủ thông tin nhân viên!');", true);
+                return;
+            }
 
-                   string hoten = txtHoTen.Text.Trim();
-                string ngaysinh = txtNgaySinh.Text.Trim();
-                string sdt = txtSDT.Text.Trim();
-                string cccd = txtCCCD.Text.Trim();
-                string diachi = txtDiaChi.Text.Trim();
-                string imgPath = "";
+            string hoten = txtHoTen.Text.Trim();
+            string ngaysinh = txtNgaySinh.Text.Trim();
+            string sdt = txtSDT.Text.Trim();
+            string cccd = txtCCCD.Text.Trim();
+            string diachi = txtDiaChi.Text.Trim();
+            string imgPath = "";
+
+            // ============================
+            // VALIDATE SĐT
+            // ============================
+
+            if (!System.Text.RegularExpressions.Regex.IsMatch(sdt, @"^\d{10}$"))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "sdt",
+                    "alert('❌ Số điện thoại phải gồm đúng 10 chữ số!');", true);
+                return;
+            }
+
+            // ============================
+            // VALIDATE CCCD
+            // ============================
+        
+            if (!System.Text.RegularExpressions.Regex.IsMatch(cccd, @"^\d{12}$"))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "cccd",
+                    "alert('❌ CCCD phải gồm đúng 12 chữ số!');", true);
+                return;
+            }
+
+            // ============================
+            // VALIDATE TUỔI >= 18
+            // ============================
+            DateTime ngaySinh;
+            if (!DateTime.TryParse(txtNgaySinh.Text, out ngaySinh))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "ngay",
+                    "alert('❌ Ngày sinh không hợp lệ!');", true);
+                return;
+            }
+
+            int tuoi = DateTime.Now.Year - ngaySinh.Year;
+            if (ngaySinh > DateTime.Now.AddYears(-tuoi)) tuoi--;
+
+            if (tuoi < 18)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "tuoi",
+                    "alert('❌ Nhân viên phải đủ 18 tuổi trở lên!');", true);
+                return;
+            }
 
                 string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
 
@@ -224,12 +280,12 @@ namespace TTCN_WEB_QLNS
                     int maNV = Convert.ToInt32(cmdNV.ExecuteScalar());
 
                     // 2️⃣ Tạo tài khoản User mặc định
-                    string username = hoten;      // có thể dùng email hoặc CCCD
+                    string username = sdt;      // có thể dùng email hoặc CCCD
                     string password = "123";    // mật khẩu mặc định
                     int role = 10;               // User
 
-                    string sqlUser = @"INSERT INTO [User](Username, Password, MaNV, IDROLE, TrangThai, IsActive)
-                           VALUES(@u, @p, @manv, @role, 1, 1)";
+                    string sqlUser = @"INSERT INTO [User](Username, Password, MaNV, IDROLE, IsActive)
+                           VALUES(@u, @p, @manv, @role, 1)";
 
                     SqlCommand cmdUser = new SqlCommand(sqlUser, conn);
                     cmdUser.Parameters.AddWithValue("@u", username);
@@ -326,24 +382,42 @@ namespace TTCN_WEB_QLNS
             string diachi = ((TextBox)row.Cells[5].Controls[0]).Text;
 
             // ============================
-            // LẤY PHÒNG BAN
+            // PHÒNG BAN
             // ============================
             string idpb = null;
             DropDownList ddlPB = row.FindControl("ddlPB_Grid") as DropDownList;
             if (ddlPB != null)
                 idpb = ddlPB.SelectedValue;
 
+            // ============================
+            // XỬ LÝ ẢNH
+            // ============================
+            string imgPath = null;
+            FileUpload fu = row.FindControl("fuEditAvatar") as FileUpload;
+
+            if (fu != null && fu.HasFile)
+            {
+                string folder = Server.MapPath("~/Images/");
+                if (!Directory.Exists(folder))
+                    Directory.CreateDirectory(folder);
+
+                string fileName = Path.GetFileName(fu.FileName);
+                imgPath = "~/Images/" + fileName;
+                fu.SaveAs(Path.Combine(folder, fileName));
+            }
+
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 string sql = @"
-            UPDATE Nhan_vien
-            SET HoTen=@ten,
-                NgaySinh=@ngay,
-                SDT=@sdt,
-                CCCD=@cccd,
-                DiaChi=@diachi,
-                IDPB=@idpb
-            WHERE MaNV=@id";
+        UPDATE Nhan_vien
+        SET HoTen=@ten,
+            NgaySinh=@ngay,
+            SDT=@sdt,
+            CCCD=@cccd,
+            DiaChi=@diachi,
+            IDPB=@idpb"
+                    + (imgPath != null ? ", HinhAnh=@img" : "") +
+                @" WHERE MaNV=@id";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@ten", hoten);
@@ -354,6 +428,9 @@ namespace TTCN_WEB_QLNS
                 cmd.Parameters.AddWithValue("@id", manv);
                 cmd.Parameters.AddWithValue("@idpb", (object)idpb ?? DBNull.Value);
 
+                if (imgPath != null)
+                    cmd.Parameters.AddWithValue("@img", imgPath);
+
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
@@ -361,6 +438,7 @@ namespace TTCN_WEB_QLNS
             gvQuanLyUser.EditIndex = -1;
             LoadDataQuanLyUser();
         }
+
 
 
         protected void gvQuanLyUser_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)

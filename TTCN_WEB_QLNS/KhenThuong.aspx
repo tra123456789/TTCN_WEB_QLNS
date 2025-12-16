@@ -38,7 +38,7 @@
         <h1>Khen thưởng nhân viên</h1>
 
         <div class="breadcrumb">
-            Tổng quan › Khen thưởng
+            Menu › Khen thưởng
         </div>
 
         <br /><br />

@@ -38,37 +38,33 @@
         <h1>BẢO HIỂM XÃ HỘI</h1>
 
         <div class="breadcrumb">
-            Tổng quan › Bảo Hiểm Xã Hội
+            Menu › Bảo Hiểm Xã Hội
         </div>
 
-        <br /><br />
-                <div >
-          <asp:Button ID="btnAddHD" runat="server" Text="➕ Thêm Bảo Hiểm " CssClass="btn" OnClick="btnAddBH_Click" />
+       <asp:Panel ID="pnlAddBaoHiem" runat="server">
+    <asp:Button ID="btnAddHD" runat="server" Text="➕ Thêm Bảo Hiểm "
+        CssClass="btn" OnClick="btnAddBH_Click" />
 
-       <br /><br />
-        <div  class ="cssadd">
-            <div>
-         Mã Nhân Viên :
-        <asp:TextBox ID="txtMaNV" runat="server" OnTextChanged="txtMaNV_TextChanged"></asp:TextBox>
+    <br /><br />
+    <div class="cssadd">
+        <div>
+            Mã Nhân Viên :
+            <asp:TextBox ID="txtMaNV" runat="server"></asp:TextBox>
 
-        Số Bảo Hiểm :
-        <asp:TextBox ID="txtSoBH" runat="server"  OnTextChanged="txtSoBH_TextChanged"></asp:TextBox>
+            Số Bảo Hiểm :
+            <asp:TextBox ID="txtSoBH" runat="server"></asp:TextBox>
 
-        Từ Tháng:
-        <asp:TextBox ID="txtTuThang" runat="server" TextMode="Date"  OnTextChanged="txtTuThang_TextChanged"></asp:TextBox>
+            Từ Tháng:
+            <asp:TextBox ID="txtTuThang" runat="server" TextMode="Date"></asp:TextBox>
 
-        Đến Tháng:
-        <asp:TextBox ID="txtDenThang" runat="server" TextMode="Date"  OnTextChanged="txtDenThang_TextChanged"></asp:TextBox>
+            Đến Tháng:
+            <asp:TextBox ID="txtDenThang" runat="server" TextMode="Date"></asp:TextBox>
 
-        Đơn vị :
-        <asp:TextBox ID="txtDonVi" runat="server" OnTextChanged="txtNoiDung_TextChanged"></asp:TextBox>
-            </div>
-            </div>
-        <br /><br />
-
-   
-    
-</div>
+            Đơn vị :
+            <asp:TextBox ID="txtDonVi" runat="server"></asp:TextBox>
+        </div>
+    </div>
+</asp:Panel>
 
         <!-- Options -->
         <div class="top-options">

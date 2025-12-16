@@ -41,7 +41,7 @@
   
     
      <div class="breadcrumb">
-         Tổng quan › Lương
+         Menu › Lương
      </div>
 
      <br /><br />
