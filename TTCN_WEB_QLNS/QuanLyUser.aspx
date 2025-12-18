@@ -13,30 +13,7 @@
     <br />
 
     <!-- FORM THÊM NHÂN VIÊN -->
-    <asp:Button ID="btnAddUser" runat="server"
-        Text="➕ Thêm Nhân Viên"
-        CssClass="btn"
-        OnClick="btnAddUser_Click" />
-
-    <br /><br />
-
-    Họ Tên:
-    <asp:TextBox ID="txtHoTen" runat="server" />
-
-    Ngày sinh:
-    <asp:TextBox ID="txtNgaySinh" runat="server" TextMode="Date" />
-
-    SĐT:
-    <asp:TextBox ID="txtSDT" runat="server" />
-
-    CCCD:
-    <asp:TextBox ID="txtCCCD" runat="server" />
-
-    Địa chỉ:
-    <asp:TextBox ID="txtDiaChi" runat="server" />
-
-    Hình ảnh:
-    <asp:FileUpload ID="fileAvatar" runat="server" />
+     <a href="Themnhanvien.aspx" class="btn">➕ Thêm Nhân Viên</a>
 
     <br /><br />
 
@@ -105,23 +82,30 @@
     </EditItemTemplate>
 </asp:TemplateField>
 
-                <asp:TemplateField HeaderText="Phòng ban">
+   <asp:BoundField DataField="GioiTinhText" HeaderText="Giới tính" />
+
+
+<asp:TemplateField HeaderText="Bộ phận">
     <ItemTemplate>
-        <%# Eval("TenPB") %>
+        <%# Eval("TenBP") %>
     </ItemTemplate>
     <EditItemTemplate>
-        <asp:DropDownList ID="ddlPB_Grid" runat="server"></asp:DropDownList>
+        <asp:DropDownList ID="ddlBP_Grid" runat="server"></asp:DropDownList>
     </EditItemTemplate>
 </asp:TemplateField>
+
   <asp:TemplateField HeaderText="Thao tác">
     <ItemTemplate>
 
-        <asp:LinkButton ID="LinkButtonEdit"
-            runat="server"
-            CommandName="Edit"
-            Text="Sửa"
-            CssClass="btn btn-sm btn-info" />
 
+        <asp:LinkButton ID="LinkButtonDetail"
+    runat="server"
+    Text="Chi tiết"
+    CssClass="btn btn-sm btn-primary"
+    CommandName="Detail"
+    CommandArgument='<%# Eval("MaNV") %>' />
+
+    
         <asp:LinkButton ID="LinkButtonDelete"
             runat="server"
             CommandName="Delete"
@@ -140,21 +124,8 @@
 
     </ItemTemplate>
 
-    <EditItemTemplate>
-        <asp:LinkButton ID="LinkButtonUpdate"
-            runat="server"
-            CommandName="Update"
-            Text="Cập nhật"
-            CssClass="btn btn-sm btn-success" />
-
-        <asp:LinkButton ID="LinkButtonCancel"
-            runat="server"
-            CommandName="Cancel"
-            Text="Bỏ qua"
-            CssClass="btn btn-sm btn-secondary" />
-    </EditItemTemplate>
-</asp:TemplateField>
-
+    
+      </asp:TemplateField>
     
                  
             </Columns>

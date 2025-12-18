@@ -11,7 +11,7 @@ namespace TTCN_WEB_QLNS
 {
 
 
-    public partial class ThongTinCaNhan
+    public partial class Themnhanvien
     {
 
         /// <summary>
@@ -22,15 +22,6 @@ namespace TTCN_WEB_QLNS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-
-        /// <summary>
-        /// lblWelcome control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblWelcome;
 
         /// <summary>
         /// txtHoTen control.
@@ -51,13 +42,22 @@ namespace TTCN_WEB_QLNS
         protected global::System.Web.UI.WebControls.TextBox txtNgaySinh;
 
         /// <summary>
-        /// ddlGioiTinh control.
+        /// txtSDT control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlGioiTinh;
+        protected global::System.Web.UI.WebControls.TextBox txtSDT;
+
+        /// <summary>
+        /// txtCCCD control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCCCD;
 
         /// <summary>
         /// txtDiaChi control.
@@ -69,6 +69,24 @@ namespace TTCN_WEB_QLNS
         protected global::System.Web.UI.WebControls.TextBox txtDiaChi;
 
         /// <summary>
+        /// fileAvatar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fileAvatar;
+
+        /// <summary>
+        /// rblGioiTinh control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList rblGioiTinh;
+
+        /// <summary>
         /// ddlChucVu control.
         /// </summary>
         /// <remarks>
@@ -76,6 +94,15 @@ namespace TTCN_WEB_QLNS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlChucVu;
+
+        /// <summary>
+        /// ddlTrinhDo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTrinhDo;
 
         /// <summary>
         /// ddlBoPhan control.
@@ -87,42 +114,6 @@ namespace TTCN_WEB_QLNS
         protected global::System.Web.UI.WebControls.DropDownList ddlBoPhan;
 
         /// <summary>
-        /// avatarBox control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl avatarBox;
-
-        /// <summary>
-        /// fuAvatar control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fuAvatar;
-
-        /// <summary>
-        /// btnPreview control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPreview;
-
-        /// <summary>
-        /// ddlTrangThai control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTrangThai;
-
-        /// <summary>
         /// btnSave control.
         /// </summary>
         /// <remarks>
@@ -132,21 +123,12 @@ namespace TTCN_WEB_QLNS
         protected global::System.Web.UI.WebControls.Button btnSave;
 
         /// <summary>
-        /// btnEditUser control.
+        /// hlBack control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnEditUser;
-
-        /// <summary>
-        /// btnBack control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnBack;
+        protected global::System.Web.UI.WebControls.HyperLink hlBack;
     }
 }

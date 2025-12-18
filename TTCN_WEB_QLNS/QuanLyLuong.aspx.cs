@@ -16,11 +16,12 @@ namespace TTCN_WEB_QLNS
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            if (Session["UserName"] == null || Session["IDROLE"] == null)
+            if (Session["UserName"] == null || Session["IDROLE"] == null || Session["MaNV"] == null)
             {
                 Response.Redirect("DangNhap.aspx");
                 return;
             }
+
 
             string role = Session["IDROLE"].ToString();
             if (role == "10" && Session["MaNV"] == null)

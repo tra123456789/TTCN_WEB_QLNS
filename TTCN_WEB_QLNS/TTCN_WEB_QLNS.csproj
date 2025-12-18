@@ -165,6 +165,7 @@
     <Content Include="Content\bootstrap-grid.css.map" />
     <Content Include="ThemKhenThuong.aspx" />
     <Content Include="Themkhenthuong.css" />
+    <Content Include="Themnhanvien.aspx" />
     <Content Include="ThongTinCaNhan.aspx" />
     <Content Include="TongQuan.aspx" />
     <Content Include="UserHome.aspx" />
@@ -318,6 +319,13 @@
     </Compile>
     <Compile Include="ThemKhenThuong.aspx.designer.cs">
       <DependentUpon>ThemKhenThuong.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Themnhanvien.aspx.cs">
+      <DependentUpon>Themnhanvien.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Themnhanvien.aspx.designer.cs">
+      <DependentUpon>Themnhanvien.aspx</DependentUpon>
     </Compile>
     <Compile Include="ThongTinCaNhan.aspx.cs">
       <DependentUpon>ThongTinCaNhan.aspx</DependentUpon>

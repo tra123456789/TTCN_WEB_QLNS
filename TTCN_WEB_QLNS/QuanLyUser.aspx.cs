@@ -57,36 +57,7 @@ namespace TTCN_WEB_QLNS
             }
         }
         //Hàm xử lý Hiển thị lên bảng
-        void LoadSingleUser(string maNV)
-        {
-            string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
-
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                string sql = "SELECT * FROM Nhan_vien WHERE MaNV = @ma";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-
-                cmd.Parameters.AddWithValue("@ma", maNV);
-
-                conn.Open();
-                SqlDataReader r = cmd.ExecuteReader();
-
-                if (r.Read())
-                {
-                    txtHoTen.Text = r["HoTen"].ToString();
-                    txtNgaySinh.Text = Convert.ToDateTime(r["NgaySinh"]).ToString("yyyy-MM-dd");
-                    txtSDT.Text = r["SDT"].ToString();
-                    txtCCCD.Text = r["CCCD"].ToString();
-                    txtDiaChi.Text = r["DiaChi"].ToString();
-
-                    // lưu để biết đang sửa
-                    ViewState["EditingMaNV"] = maNV;
-                }
-            }
-
-            //btnSave.Text = "💾 Cập nhật";
-        }
-
+       
 
 
         private void LoadDataQuanLyUser(bool hienNghi = false)
@@ -96,15 +67,32 @@ namespace TTCN_WEB_QLNS
                 conn.Open();
 
                 string sql = @"
-            SELECT nv.MaNV, nv.HoTen, nv.NgaySinh, nv.SDT, nv.CCCD, nv.DiaChi,
-                   nv.HinhAnh, nv.TrangThai,
-                   nv.IDPB, pb.TenPB
-            FROM Nhan_vien nv
-            LEFT JOIN Phong_ban pb ON nv.IDPB = pb.IDPB
-            WHERE nv.TrangThai = @trangthai";
+        SELECT 
+    nv.MaNV,
+    nv.HoTen,
+    CASE 
+        WHEN nv.GioiTinh = 1 THEN N'Nam'
+        WHEN nv.GioiTinh = 0 THEN N'Nữ'
+        ELSE N'Chưa xác định'
+    END AS GioiTinhText,
+    nv.NgaySinh,
+    nv.SDT,
+    nv.CCCD,
+    nv.DiaChi,
+    nv.HinhAnh,
+    nv.TrangThai,
+    bp.IDBP,
+    bp.TenBP,
+    pb.IDPB,
+    pb.TenPB
+FROM Nhan_vien nv
+LEFT JOIN Bo_phan bp ON nv.IDBP = bp.IDBP
+LEFT JOIN Phong_ban pb ON bp.IDPB = pb.IDPB
+WHERE nv.TrangThai = @trangthai  ";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@trangthai", hienNghi ? 0 : 1);
+                cmd.Parameters.Add("@trangthai", SqlDbType.Int).Value = hienNghi ? 0 : 1;
+
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
@@ -178,135 +166,7 @@ namespace TTCN_WEB_QLNS
 
         }
 
-        protected void btnAddUser_Click(object sender, EventArgs e)
-        {
-            // ============================
-            // VALIDATE RỖNG
-            // ============================
-            if (string.IsNullOrWhiteSpace(txtHoTen.Text) ||
-                string.IsNullOrWhiteSpace(txtNgaySinh.Text) ||
-                string.IsNullOrWhiteSpace(txtSDT.Text) ||
-                string.IsNullOrWhiteSpace(txtCCCD.Text) ||
-                string.IsNullOrWhiteSpace(txtDiaChi.Text))
-            {
-                ScriptManager.RegisterStartupScript(this, GetType(), "err",
-                    "alert('❌ Vui lòng nhập đầy đủ thông tin nhân viên!');", true);
-                return;
-            }
-
-            string hoten = txtHoTen.Text.Trim();
-            string ngaysinh = txtNgaySinh.Text.Trim();
-            string sdt = txtSDT.Text.Trim();
-            string cccd = txtCCCD.Text.Trim();
-            string diachi = txtDiaChi.Text.Trim();
-            string imgPath = "";
-
-            // ============================
-            // VALIDATE SĐT
-            // ============================
-
-            if (!System.Text.RegularExpressions.Regex.IsMatch(sdt, @"^\d{10}$"))
-            {
-                ScriptManager.RegisterStartupScript(this, GetType(), "sdt",
-                    "alert('❌ Số điện thoại phải gồm đúng 10 chữ số!');", true);
-                return;
-            }
-
-            // ============================
-            // VALIDATE CCCD
-            // ============================
-        
-            if (!System.Text.RegularExpressions.Regex.IsMatch(cccd, @"^\d{12}$"))
-            {
-                ScriptManager.RegisterStartupScript(this, GetType(), "cccd",
-                    "alert('❌ CCCD phải gồm đúng 12 chữ số!');", true);
-                return;
-            }
-
-            // ============================
-            // VALIDATE TUỔI >= 18
-            // ============================
-            DateTime ngaySinh;
-            if (!DateTime.TryParse(txtNgaySinh.Text, out ngaySinh))
-            {
-                ScriptManager.RegisterStartupScript(this, GetType(), "ngay",
-                    "alert('❌ Ngày sinh không hợp lệ!');", true);
-                return;
-            }
-
-            int tuoi = DateTime.Now.Year - ngaySinh.Year;
-            if (ngaySinh > DateTime.Now.AddYears(-tuoi)) tuoi--;
-
-            if (tuoi < 18)
-            {
-                ScriptManager.RegisterStartupScript(this, GetType(), "tuoi",
-                    "alert('❌ Nhân viên phải đủ 18 tuổi trở lên!');", true);
-                return;
-            }
-
-                string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
-
-                // Tạo thư mục Images nếu chưa có
-                string folderPath = Server.MapPath("~/Images/");
-                if (!Directory.Exists(folderPath))
-                    Directory.CreateDirectory(folderPath);
-
-                // Lưu ảnh nếu có
-                if (fileAvatar.HasFile)
-                {
-                    string filename = Path.GetFileName(fileAvatar.FileName);
-                    imgPath = "~/Images/" + filename;
-                    fileAvatar.SaveAs(Path.Combine(folderPath, filename));
-                }
-
-                using (SqlConnection conn = new SqlConnection(connStr))
-                {
-                    conn.Open();
-
-                    // 1️⃣ INSERT nhân viên
-                    string sqlNV = @"INSERT INTO Nhan_vien(HoTen, NgaySinh, SDT, CCCD, DiaChi, HinhAnh,TrangThai)
-                         VALUES(@ten, @ngay, @sdt, @cccd, @diachi, @img,1);
-                         SELECT SCOPE_IDENTITY();";
-
-                    SqlCommand cmdNV = new SqlCommand(sqlNV, conn);
-                    cmdNV.Parameters.AddWithValue("@ten", hoten);
-                    cmdNV.Parameters.AddWithValue("@ngay", ngaysinh);
-                    cmdNV.Parameters.AddWithValue("@sdt", sdt);
-                    cmdNV.Parameters.AddWithValue("@cccd", cccd);
-                    cmdNV.Parameters.AddWithValue("@diachi", diachi);
-                    cmdNV.Parameters.AddWithValue("@img", imgPath);
-
-                    // 👉 Lấy mã nhân viên sau khi insert
-                    int maNV = Convert.ToInt32(cmdNV.ExecuteScalar());
-
-                    // 2️⃣ Tạo tài khoản User mặc định
-                    string username = sdt;      // có thể dùng email hoặc CCCD
-                    string password = "123";    // mật khẩu mặc định
-                    int role = 10;               // User
-
-                    string sqlUser = @"INSERT INTO [User](Username, Password, MaNV, IDROLE, IsActive)
-                           VALUES(@u, @p, @manv, @role, 1)";
-
-                    SqlCommand cmdUser = new SqlCommand(sqlUser, conn);
-                    cmdUser.Parameters.AddWithValue("@u", username);
-                    cmdUser.Parameters.AddWithValue("@p", password);
-                    cmdUser.Parameters.AddWithValue("@manv", maNV);
-                    cmdUser.Parameters.AddWithValue("@role", role);
-                   
-
-                cmdUser.ExecuteNonQuery();
-
-                    conn.Close();
-                }
-
-                LoadDataQuanLyUser();
-
-                ScriptManager.RegisterStartupScript(this, GetType(), "ok",
-                    "alert('✔ Thêm nhân viên + tạo tài khoản User thành công!');", true);
-            
-
-
-        }
+       
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
@@ -338,6 +198,13 @@ namespace TTCN_WEB_QLNS
 
                 ScriptManager.RegisterStartupScript(this, GetType(), "ok",
                     "alert('✔ Đã khôi phục nhân viên!');", true);
+            }
+            else if (e.CommandName == "Detail")
+            {
+                string maNV = e.CommandArgument.ToString();
+
+                // Chuyển sang trang chi tiết
+                Response.Redirect("ThongTinCaNhan.aspx?MaNV=" + maNV);
             }
         }
 
@@ -376,21 +243,19 @@ namespace TTCN_WEB_QLNS
             GridViewRow row = gvQuanLyUser.Rows[e.RowIndex];
 
             string hoten = ((TextBox)row.Cells[1].Controls[0]).Text;
-            string ngaysinh = ((TextBox)row.Cells[2].Controls[0]).Text;
+            DateTime ngaysinh = DateTime.Parse(((TextBox)row.Cells[2].Controls[0]).Text);
             string sdt = ((TextBox)row.Cells[3].Controls[0]).Text;
             string cccd = ((TextBox)row.Cells[4].Controls[0]).Text;
             string diachi = ((TextBox)row.Cells[5].Controls[0]).Text;
 
             // ============================
-            // PHÒNG BAN
+            // BỘ PHẬN
             // ============================
-            string idpb = null;
-            DropDownList ddlPB = row.FindControl("ddlPB_Grid") as DropDownList;
-            if (ddlPB != null)
-                idpb = ddlPB.SelectedValue;
+            DropDownList ddlBP = row.FindControl("ddlBP_Grid") as DropDownList;
+            string idbp = ddlBP != null ? ddlBP.SelectedValue : null;
 
             // ============================
-            // XỬ LÝ ẢNH
+            // ẢNH
             // ============================
             string imgPath = null;
             FileUpload fu = row.FindControl("fuEditAvatar") as FileUpload;
@@ -408,15 +273,17 @@ namespace TTCN_WEB_QLNS
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
+                conn.Open();
+
                 string sql = @"
-        UPDATE Nhan_vien
-        SET HoTen=@ten,
-            NgaySinh=@ngay,
-            SDT=@sdt,
-            CCCD=@cccd,
-            DiaChi=@diachi,
-            IDPB=@idpb"
-                    + (imgPath != null ? ", HinhAnh=@img" : "") +
+UPDATE Nhan_vien
+SET HoTen=@ten,
+    NgaySinh=@ngay,
+    SDT=@sdt,
+    CCCD=@cccd,
+    DiaChi=@diachi,
+    IDBP=@idbp"
+                + (imgPath != null ? ", HinhAnh=@img" : "") +
                 @" WHERE MaNV=@id";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
@@ -425,18 +292,17 @@ namespace TTCN_WEB_QLNS
                 cmd.Parameters.AddWithValue("@sdt", sdt);
                 cmd.Parameters.AddWithValue("@cccd", cccd);
                 cmd.Parameters.AddWithValue("@diachi", diachi);
+                cmd.Parameters.AddWithValue("@idbp", (object)idbp ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@id", manv);
-                cmd.Parameters.AddWithValue("@idpb", (object)idpb ?? DBNull.Value);
 
                 if (imgPath != null)
                     cmd.Parameters.AddWithValue("@img", imgPath);
 
-                conn.Open();
                 cmd.ExecuteNonQuery();
             }
 
             gvQuanLyUser.EditIndex = -1;
-            LoadDataQuanLyUser();
+            LoadDataQuanLyUser(chkNhanVienNghi.Checked);
         }
 
 
@@ -460,21 +326,19 @@ namespace TTCN_WEB_QLNS
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                // =========================
-                // PHÂN QUYỀN + TRẠNG THÁI
-                // =========================
                 int trangThai = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "TrangThai"));
                 bool dangXemNghi = chkNhanVienNghi.Checked;
 
-                var btnEdit = e.Row.FindControl("LinkButtonEdit") as LinkButton;
+                var btnDetail = e.Row.FindControl("LinkButtonDetail") as LinkButton;
                 var btnDelete = e.Row.FindControl("LinkButtonDelete") as LinkButton;
                 var btnRestore = e.Row.FindControl("LinkButtonRestore") as LinkButton;
 
                 if (dangXemNghi && trangThai == 0)
                 {
-                    if (btnEdit != null) btnEdit.Visible = false;
                     if (btnDelete != null) btnDelete.Visible = false;
+                    if (btnDetail != null) btnDetail.Visible = false; // ⬅ tuỳ chọn
                     if (btnRestore != null) btnRestore.Visible = true;
+
                     e.Row.ForeColor = System.Drawing.Color.Gray;
                 }
                 else
@@ -483,34 +347,33 @@ namespace TTCN_WEB_QLNS
                 }
 
                 // =========================
-                // 🔥 BIND DROPDOWN PHÒNG BAN
+                // BIND DROPDOWN PHÒNG BAN KHI EDIT
                 // =========================
                 if ((e.Row.RowState & DataControlRowState.Edit) > 0)
                 {
-                    DropDownList ddlPB = e.Row.FindControl("ddlPB_Grid") as DropDownList;
-                    if (ddlPB != null)
+                    DropDownList ddlBP = e.Row.FindControl("ddlBP_Grid") as DropDownList;
+                    if (ddlBP != null)
                     {
                         using (SqlConnection conn = new SqlConnection(connStr))
                         {
                             SqlDataAdapter da = new SqlDataAdapter(
-                                "SELECT IDPB, TenPB FROM Phong_ban", conn);
+                                "SELECT IDBP, TenBP FROM Bo_phan", conn);
                             DataTable dt = new DataTable();
                             da.Fill(dt);
 
-                            ddlPB.DataSource = dt;
-                            ddlPB.DataTextField = "TenPB";
-                            ddlPB.DataValueField = "IDPB";
-                            ddlPB.DataBind();
+                            ddlBP.DataSource = dt;
+                            ddlBP.DataTextField = "TenBP";
+                            ddlBP.DataValueField = "IDBP";
+                            ddlBP.DataBind();
                         }
 
-                        // chọn sẵn phòng ban hiện tại
-                        object idpb = DataBinder.Eval(e.Row.DataItem, "IDPB");
-                        if (idpb != DBNull.Value)
-                            ddlPB.SelectedValue = idpb.ToString();
+                        ddlBP.SelectedValue = DataBinder.Eval(e.Row.DataItem, "IDBP").ToString();
                     }
+
                 }
             }
         }
+
 
 
 

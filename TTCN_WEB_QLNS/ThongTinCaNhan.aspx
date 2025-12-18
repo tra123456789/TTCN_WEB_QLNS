@@ -63,107 +63,108 @@
         .welcome{
             float: right;
         }
+    .auto-style1 {
+        height: 38px;
+    }
 </style>
 </head>
 <body>
     <form id="form1" runat="server">
           <div class="card">
-            <h2>Thông tin nhân viên</h2>
-            <div class ="welcome">
-                <asp:Label ID="lblWelcome" runat="server" CssClass="font-medium text-sm"></asp:Label>
-   </div>
+     <h3>Thông tin nhân viên</h3>
+               <div class="welcome">
+     <asp:Label ID="lblWelcome" runat="server" />
+ </div>
+<table class="info">
 
-            <table class="info">
-                <tr>
-                    <td class="label">Mã NV:</td>
-                    <td><asp:Label ID="lblMaNV" runat="server" Text="-" /></td>
-                </tr>
-                <tr>
-                    <td class="label">Họ và tên:</td>
-                    <td><asp:Label ID="lblHoTen" runat="server" Text="-" /></td>
-                </tr>
-                <tr>
-                    <td class="label">Ngày sinh:</td>
-                    <td><asp:Label ID="lblNgaySinh" runat="server" Text="-" /></td>
-                </tr>
-                <tr>
-                    <td class="label">Giới tính:</td>
-                    <td><asp:Label ID="lblGioiTinh" runat="server" Text="-" /></td>
-                </tr>
-                <tr>
-                    <td class="label">Địa chỉ:</td>
-                    <td><asp:Label ID="lblDiaChi" runat="server" Text="-" /></td>
-                </tr>
-                <tr>
-                    <td class="label">Chức vụ:</td>
-                    <td><asp:Label ID="lblChucVu" runat="server" Text="-" /></td>
-                </tr>
-                <tr>
-                    <td class="label">Phòng ban:</td>
-                    <td><asp:Label ID="lblPhongBan" runat="server" Text="-" /></td>
-                </tr>
-                <tr>
-                    <td class="label">Số bảo hiểm:</td>
-                    <td><asp:Label ID="lblSoBH" runat="server" Text="-" /></td>
-                </tr>
-            </table>
-              <asp:Panel ID="pnlEdit" runat="server" Visible="false">
-    <hr />
-    <h3>Chỉnh sửa thông tin cá nhân</h3>
-    <p class="note">Bạn chỉ có thể chỉnh sửa trong thời gian được phép</p>
+<tr>
+    <td class="label">Họ tên:</td>
+    <td><asp:TextBox ID="txtHoTen" runat="server" /></td>
+</tr>
 
-    <table class="info">
-        <tr>
-            <td class="label">Họ và tên:</td>
-            <td>
-                <asp:TextBox ID="txtEditHoTen" runat="server" Width="100%" />
-            </td>
-        </tr>
+<tr>
+    <td class="label">Ngày sinh:</td>
+    <td><asp:TextBox ID="txtNgaySinh" runat="server" TextMode="Date" />
+  
 
-        <tr>
-            <td class="label">Ngày sinh:</td>
-            <td>
-                <asp:TextBox ID="txtEditNgaySinh" runat="server" TextMode="Date" />
-            </td>
-        </tr>
+      </td>
+</tr>
 
-        <tr>
-            <td class="label">Giới tính:</td>
-            <td>
-                <asp:DropDownList ID="ddlEditGioiTinh" runat="server">
-                    <asp:ListItem Value="true">Nam</asp:ListItem>
-                    <asp:ListItem Value="false">Nữ</asp:ListItem>
-                </asp:DropDownList>
-            </td>
-        </tr>
+<tr>
+    <td class="label" style="height: 38px">Giới tính:</td>
+    <td class="auto-style1">
+        <asp:DropDownList ID="ddlGioiTinh" runat="server">
+            <asp:ListItem Value="true">Nam</asp:ListItem>
+            <asp:ListItem Value="false">Nữ</asp:ListItem>
+        </asp:DropDownList>
+    </td>
+</tr>
 
-        <tr>
-            <td class="label">Địa chỉ:</td>
-            <td>
-                <asp:TextBox ID="txtEditDiaChi" runat="server" Width="100%" />
-            </td>
-        </tr>
-    </table>
+<tr>
+    <td class="label">Địa chỉ:</td>
+    <td><asp:TextBox ID="txtDiaChi" runat="server" /></td>
+</tr>
 
-    <div class="actions">
-        <asp:Button ID="btnSaveEdit" runat="server"
-            Text="💾 Lưu thay đổi"
-            CssClass="btn btn-back"
-            OnClick="btnSaveEdit_Click" />
-    </div>
-</asp:Panel>
+<tr>
+    <td class="label">Chức vụ:</td>
+    <td><asp:DropDownList ID="ddlChucVu" runat="server" /></td>
+</tr>
+
+<tr>
+    <td class="label" style="height: 38px">Bộ phận:</td>
+    <td class="auto-style1"><asp:DropDownList ID="ddlBoPhan" runat="server" /></td>
+</tr>
+ <tr> 
+        <td class="label">Hình ảnh:</td>
+        <td>
+            <div id="avatarBox" runat="server"
+                 style="width:150px;height:150px;
+                 border-radius:50%;
+                 background-size:cover;
+                 background-position:center;
+                 border:1px solid #ccc">
+            </div>
+
+            <asp:FileUpload ID="fuAvatar" runat="server" />
+            <asp:Button ID="btnPreview" runat="server"
+                Text="Xem ảnh"
+                OnClick="btnPreview_Click" />
+        </td>
+    </tr> 
+<tr>
+    <td class="label">Trạng thái:</td>
+    <td>
+        <asp:DropDownList ID="ddlTrangThai" runat="server">
+            <asp:ListItem Value="1">Đang làm</asp:ListItem>
+            <asp:ListItem Value="0">Đã nghỉ</asp:ListItem>
+        </asp:DropDownList>
+    </td>
+</tr>
+   
+</table>
+               
+                <div style="width:180px; text-align:center">
+      </div>
+<asp:Button ID="btnSave" runat="server"
+    Text="💾 Lưu thay đổi"
+    CssClass="btn btn-back"
+    OnClick="btnSave_Click" 
+    Visible="false"/>
 
 
-            <div class="actions">
-               <asp:Button ID="btnEdit" runat="server"
+             
+              <asp:Button ID="btnEditUser" runat="server"
     Text="✏ Chỉnh sửa thông tin"
     CssClass="btn btn-back"
-    OnClick="btnEdit_Click"
+    OnClick="btnEditUser_Click"
     Visible="false" />
 
-                <asp:HyperLink ID="hlBack" runat="server" NavigateUrl="UserHome.aspx" CssClass="btn btn-back" Height="22px">← Quay về Trang Chủ</asp:HyperLink>
-            </div>
-            </div>
+              <asp:Button ID="btnBack" runat="server"
+    Text="← Quay về Trang Chủ"
+    CssClass="btn btn-back"
+    OnClick="btnBack_Click" />
+       </div>
+            
     </form>
   </body>
 </html>
