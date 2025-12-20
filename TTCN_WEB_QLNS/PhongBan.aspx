@@ -31,6 +31,9 @@
 
             Địa chỉ:
             <asp:TextBox ID="txtDiaChi" runat="server" />
+            Lương cơ bản:
+<asp:TextBox ID="txtLuongCoBan" runat="server" />
+
         </div>
 
         <br />
@@ -65,7 +68,7 @@
             OnRowEditing="gvPhongBan_RowEditing"
             OnRowUpdating="gvPhongBan_RowUpdating"
             OnRowDeleting="gvPhongBan_RowDeleting"
-            OnRowCancelingEdit="gvPhongBan_RowCancelingEdit">
+            OnRowCancelingEdit="gvPhongBan_RowCancelingEdit" OnRowCommand="gvPhongBan_RowCommand">
 
             <Columns>
 
@@ -92,32 +95,60 @@
                             Text='<%# Bind("DiaChi") %>' />
                     </EditItemTemplate>
                 </asp:TemplateField>
+                <asp:TemplateField HeaderText="Lương cơ bản">
+    <ItemTemplate>
+        <%# Eval("LuongCoBan", "{0:N0}") %>
+    </ItemTemplate>
+    <EditItemTemplate>
+        <asp:TextBox ID="txtLuongCoBan" runat="server"
+            Text='<%# Bind("LuongCoBan") %>' />
+    </EditItemTemplate>
+</asp:TemplateField>
 
                 <asp:TemplateField HeaderText="Thao tác">
                     <ItemTemplate>
+                      
+
                         <asp:LinkButton runat="server"
                             CommandName="Edit"
                             Text="Sửa"
-                            CssClass="btn btn-sm btn-info" />
+                            CssClass="btn btn-sm btn-warning" />
 
                         <asp:LinkButton runat="server"
                             CommandName="Delete"
                             Text="Xóa"
                             CssClass="btn btn-sm btn-danger"
                             OnClientClick="return confirm('Xóa phòng ban này?');" />
+
+                                <asp:LinkButton runat="server"
+                                Text="Xem nhân viên"
+                                CssClass="btn btn-sm btn-info"
+                                CommandArgument='<%# Eval("IDPB") %>'
+                                OnClick="btnXemNhanVien_Click" />
+                        <asp:LinkButton runat="server"
+                            Text="➕ Thêm bộ phận"
+                            CssClass="btn btn-sm btn-success"
+                            CommandName="AddBoPhan"
+                            CommandArgument='<%# Eval("IDPB") %>' />
+
                     </ItemTemplate>
+                     <EditItemTemplate>
 
-                    <EditItemTemplate>
-                        <asp:LinkButton runat="server"
-                            CommandName="Update"
-                            Text="Cập nhật"
-                            CssClass="btn btn-sm btn-success" />
 
-                        <asp:LinkButton runat="server"
-                            CommandName="Cancel"
-                            Text="Bỏ qua"
-                            CssClass="btn btn-sm btn-secondary" />
-                    </EditItemTemplate>
+
+        <!-- LƯU -->
+        <asp:LinkButton runat="server"
+            CommandName="Update"
+            Text="Lưu"
+            CssClass="btn btn-sm btn-success" />
+
+        <!-- HỦY -->
+        <asp:LinkButton runat="server"
+            CommandName="Cancel"
+            Text="Hủy"
+            CssClass="btn btn-sm btn-secondary" />
+
+    </EditItemTemplate>
                 </asp:TemplateField>
 
             </Columns>

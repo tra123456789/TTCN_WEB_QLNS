@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="ThemBoPhan.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
@@ -175,6 +176,7 @@
     <Content Include="fonts\TIMESBD.TTF" />
     <Content Include="fonts\TIMESBI.TTF" />
     <Content Include="fonts\TIMESI.TTF" />
+    <Content Include="XemDSNVPB.aspx" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -218,6 +220,13 @@
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="ThemBoPhan.aspx.cs">
+      <DependentUpon>ThemBoPhan.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ThemBoPhan.aspx.designer.cs">
+      <DependentUpon>ThemBoPhan.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -368,6 +377,13 @@
     </Compile>
     <Compile Include="QuanLyUser.aspx.designer.cs">
       <DependentUpon>QuanLyUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="XemDSNVPB.aspx.cs">
+      <DependentUpon>XemDSNVPB.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="XemDSNVPB.aspx.designer.cs">
+      <DependentUpon>XemDSNVPB.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

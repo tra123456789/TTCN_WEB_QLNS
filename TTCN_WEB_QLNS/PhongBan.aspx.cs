@@ -128,38 +128,43 @@ namespace TTCN_WEB_QLNS
 
         protected void gvPhongBan_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
-            
-                string IDPB = gvPhongBan.DataKeys[e.RowIndex].Value.ToString();
+            string idPB = gvPhongBan.DataKeys[e.RowIndex].Value.ToString();
+            GridViewRow row = gvPhongBan.Rows[e.RowIndex];
 
-                GridViewRow row = gvPhongBan.Rows[e.RowIndex];
+            string tenpb = ((TextBox)row.FindControl("txtTenPB")).Text;
+            string sdt = ((TextBox)row.FindControl("txtSDT")).Text;
+            string diachi = ((TextBox)row.FindControl("txtDiaChi")).Text;
+            decimal luongCoBan = decimal.Parse(
+                ((TextBox)row.FindControl("txtLuongCoBan")).Text);
 
-                string tenpb = ((TextBox)row.FindControl("txtTenPB")).Text;
-                string sdt = ((TextBox)row.FindControl("txtSDT")).Text;
-                string diachi = ((TextBox)row.FindControl("txtDiaChi")).Text;
+            string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
 
-                string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string sql = @"
+            UPDATE Phong_ban
+            SET TenPB = @TenPB,
+                SDT = @SDT,
+                DiaChi = @DiaChi,
+                LuongCoBan = @LuongCoBan
+            WHERE IDPB = @IDPB";
 
-                using (SqlConnection conn = new SqlConnection(connStr))
-                {
-                    string sql = @"UPDATE Phong_ban
-                       SET TenPB=@tenpb, SDT=@sdt, DiaChi=@diachi
-                       WHERE IDPB=@id";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@TenPB", tenpb);
+                cmd.Parameters.AddWithValue("@SDT", sdt);
+                cmd.Parameters.AddWithValue("@DiaChi", diachi);
+                cmd.Parameters.AddWithValue("@LuongCoBan", luongCoBan);
+                cmd.Parameters.AddWithValue("@IDPB", idPB);
 
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@tenpb", tenpb);
-                    cmd.Parameters.AddWithValue("@sdt", sdt);
-                    cmd.Parameters.AddWithValue("@diachi", diachi);
-                    cmd.Parameters.AddWithValue("@id", IDPB);
-
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                }
-
-                gvPhongBan.EditIndex = -1;
-                LoadDataPhongBan();
+                conn.Open();
+                cmd.ExecuteNonQuery();
             }
 
-        
+            gvPhongBan.EditIndex = -1;
+            LoadDataPhongBan();
+        }
+
+
 
         protected void gvPhongBan_RowEditing(object sender, GridViewEditEventArgs e)
         {
@@ -169,22 +174,40 @@ namespace TTCN_WEB_QLNS
 
         protected void gvPhongBan_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            string IDPB = gvPhongBan.DataKeys[e.RowIndex].Value.ToString();
-
+            string idPB = gvPhongBan.DataKeys[e.RowIndex].Value.ToString();
             string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string sql = "DELETE FROM Phong_ban WHERE IDPB=@id";
-
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@id", IDPB);
-
                 conn.Open();
-                cmd.ExecuteNonQuery();
+
+                // 1️⃣ Kiểm tra còn bộ phận không
+                string checkSql = "SELECT COUNT(*) FROM Bo_phan WHERE IDPB = @id";
+                SqlCommand checkCmd = new SqlCommand(checkSql, conn);
+                checkCmd.Parameters.AddWithValue("@id", idPB);
+
+                int count = (int)checkCmd.ExecuteScalar();
+
+                if (count > 0)
+                {
+                    // ⚠️ Còn dữ liệu → không cho xóa
+                    ScriptManager.RegisterStartupScript(
+                        this, GetType(), "alert",
+                        "alert('Không thể xóa phòng ban vì vẫn còn bộ phận / nhân viên!');",
+                        true);
+                    return;
+                }
+
+                // 2️⃣ Không còn dữ liệu → cho xóa
+                string deleteSql = "DELETE FROM Phong_ban WHERE IDPB = @id";
+                SqlCommand deleteCmd = new SqlCommand(deleteSql, conn);
+                deleteCmd.Parameters.AddWithValue("@id", idPB);
+                deleteCmd.ExecuteNonQuery();
             }
 
             LoadDataPhongBan();
         }
+
 
         protected void gvPhongBan_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
@@ -207,7 +230,7 @@ namespace TTCN_WEB_QLNS
                 string tenpb = txtTenPB.Text;
                 string sdt = txtSDT.Text.Trim();
                 string diachi = txtDiaChi.Text.Trim();
-
+                decimal luongCoBan = decimal.Parse(txtLuongCoBan.Text);
 
                 //// 🔥 Tạo thư mục Images nếu chưa có
                 //string folderPath = Server.MapPath("~/Images/");
@@ -226,17 +249,15 @@ namespace TTCN_WEB_QLNS
                 //}
 
                 // 🔥 Câu lệnh INSERT
-                string sql = @"INSERT INTO Phong_ban(TenPB, SDT, DiaChi)
-                       VALUES(@tenpb,@sdt, @diachi)";
+                string sql = @"
+                INSERT INTO Phong_ban(TenPB, SDT, DiaChi, LuongCoBan)
+                VALUES(@tenpb, @sdt, @diachi, @luong)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
-
                 cmd.Parameters.AddWithValue("@tenpb", tenpb);
-               
                 cmd.Parameters.AddWithValue("@sdt", sdt);
-            
                 cmd.Parameters.AddWithValue("@diachi", diachi);
-                
+                cmd.Parameters.AddWithValue("@luong", luongCoBan);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -261,10 +282,30 @@ namespace TTCN_WEB_QLNS
         {
 
         }
+        protected void btnXemNhanVien_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+            string idPB = btn.CommandArgument;
+
+            Response.Redirect("XemDSNVPB.aspx?IDPB=" + idPB);
+        }
+
         protected void lnkLogout_Click(object sender, EventArgs e)
         {
             Session.Clear();
             Response.Redirect("DangNhap.aspx");
         }
+
+
+
+        protected void gvPhongBan_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "AddBoPhan")
+            {
+                string idPB = e.CommandArgument.ToString();
+                Response.Redirect("ThemBoPhan.aspx?IDPB=" + idPB);
+            }
+        }
+
     }
 }

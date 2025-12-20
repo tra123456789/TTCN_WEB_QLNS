@@ -51,6 +51,15 @@ namespace TTCN_WEB_QLNS
         protected global::System.Web.UI.WebControls.TextBox txtDiaChi;
 
         /// <summary>
+        /// txtLuongCoBan control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtLuongCoBan;
+
+        /// <summary>
         /// ddlPageSize control.
         /// </summary>
         /// <remarks>
