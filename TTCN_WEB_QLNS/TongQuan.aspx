@@ -33,7 +33,7 @@
       <!-- Bảng lương -->
       <div class="col-md-3">
           <div class="card-dashboard bg-blue">
-              <p>Hệ số bảng lương</p>
+              <p>Số bảng lương</p>
               <p class="value"><asp:Label ID="lblSalary" runat="server" Text="0"></asp:Label></p>
        <asp:LinkButton ID="btnbluong" runat="server" CssClass="btn-detail" OnClick="btnbluong_Click">Xem chi tiết</asp:LinkButton>
 </div>

@@ -15,47 +15,85 @@ namespace TTCN_WEB_QLNS
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["UserName"] == null || Session["IDROLE"] == null || Session["MaNV"] == null)
+            string role = Session["IDROLE"] as string;
+
+            if (Session["UserName"] == null || role == null)
             {
                 Response.Redirect("DangNhap.aspx");
                 return;
             }
-            //lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
 
+            // 🔒 User thường mới cần MaNV
+            if (role == "10" && Session["MaNV"] == null)
+            {
+                Response.Redirect("DangNhap.aspx");
+                return;
+            }
             if (!IsPostBack)
             {
-                LoadDropdown();
-                string role = Session["IDROLE"].ToString();
+                //    LoadDropdown();
 
-                if (role == "10")
-                {
 
-                }
-                //else
-                //{
-                //    menuThongTinNV.Visible = false;
-                //}    
+                //    ddlThang.SelectedValue = DateTime.Now.Month.ToString();
+                //    ddlNam.SelectedValue = DateTime.Now.Year.ToString();
 
+                //    // load luôn bảng tháng hiện tại
+                //    btnLoad_Click(null, null);
+                InitPage();
             }
         }
+        void LoadThangNam()
+        {
+            // ===== THÁNG =====
+            ddlThang.Items.Clear();
+            for (int i = 1; i <= 12; i++)
+            {
+                ddlThang.Items.Add(new ListItem(i.ToString(), i.ToString()));
+            }
+
+            // ===== NĂM =====
+            ddlNam.Items.Clear();
+            int namHT = DateTime.Now.Year;
+            for (int y = namHT - 3; y <= namHT + 1; y++)
+            {
+                ddlNam.Items.Add(new ListItem(y.ToString(), y.ToString()));
+            }
+        }
+
+        bool IsUser()
+        {
+            return Session["IDROLE"].ToString() == "10";
+        }
+
+        int? GetMaNVLogin()
+        {
+            if (IsUser())
+                return int.Parse(Session["MaNV"].ToString());
+
+            return null; // admin
+        }
+
         // ====================================
         // LOAD DROPDOWN (Tháng, năm, nhân viên)
         // ====================================
         private void LoadDropdown()
         {
-            // Tháng
-            for (int i = 1; i <= 12; i++)
-                ddlThang.Items.Add(i.ToString());
-
-            // Năm
-            for (int y = DateTime.Now.Year - 5; y <= DateTime.Now.Year + 1; y++)
-                ddlNam.Items.Add(y.ToString());
-
-            // Nhân viên
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT MaNV, HoTen FROM Nhan_vien", conn);
+                SqlDataAdapter da;
+
+                if (IsUser())
+                {
+                    da = new SqlDataAdapter(
+                        "SELECT MaNV, HoTen FROM Nhan_vien WHERE MaNV=@MaNV", conn);
+                    da.SelectCommand.Parameters.AddWithValue("@MaNV", GetMaNVLogin());
+                }
+                else
+                {
+                    da = new SqlDataAdapter(
+                        "SELECT MaNV, HoTen FROM Nhan_vien", conn);
+                }
 
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -64,6 +102,35 @@ namespace TTCN_WEB_QLNS
                 ddlNhanVien.DataTextField = "HoTen";
                 ddlNhanVien.DataValueField = "MaNV";
                 ddlNhanVien.DataBind();
+            }
+
+            // đảm bảo có SelectedValue
+            if (ddlNhanVien.Items.Count > 0)
+                ddlNhanVien.SelectedIndex = 0;
+
+            if (IsUser())
+                ddlNhanVien.Enabled = false;
+            
+        }
+
+        void InitPage()
+        {
+            LoadThangNam();     // 🔴 BẮT BUỘC
+            LoadDropdown();     // nhân viên
+
+            ddlThang.SelectedValue = DateTime.Now.Month.ToString();
+            ddlNam.SelectedValue = DateTime.Now.Year.ToString();
+
+            ApplyUIByRole();
+        }
+
+
+        void ApplyUIByRole()
+        {
+            if (IsUser())
+            {
+                btnSave.Visible = false;
+                btnTinhCong.Visible = false;
             }
         }
 
@@ -114,60 +181,91 @@ namespace TTCN_WEB_QLNS
 
         // ====================================
         // LƯU CHẤM CÔNG
+
         // ====================================
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            try
+            int maNV = int.Parse(ddlNhanVien.SelectedValue);
+            if (Session["IDROLE"].ToString() == "10")
             {
+                ScriptManager.RegisterStartupScript(this, GetType(),
+                    "no", "alert('Bạn không có quyền chỉnh sửa chấm công');", true);
+                return;
+            }
+
+
+            foreach (GridViewRow row in gvChamCong.Rows)
+            {
+                DateTime ngay = Convert.ToDateTime(
+         gvChamCong.DataKeys[row.RowIndex].Value
+     );
+
+                DropDownList ddlCong = (DropDownList)row.FindControl("ddlCong");
+                TextBox txtGhiChu = (TextBox)row.FindControl("txtGhiChu");
+
+                if (ddlCong == null) continue;
+                string sql = @"
+IF EXISTS (SELECT 1 FROM Bangcong_nhanvien_chitiet WHERE MaNV=@MaNV AND Ngay=@Ngay)
+    UPDATE Bangcong_nhanvien_chitiet
+    SET Cong=@Cong, GhiChu=@GhiChu, Update_date=GETDATE()
+    WHERE MaNV=@MaNV AND Ngay=@Ngay
+ELSE
+    INSERT INTO Bangcong_nhanvien_chitiet(MaNV, Ngay, Cong, GhiChu, Create_date)
+    VALUES(@MaNV, @Ngay, @Cong, @GhiChu, GETDATE())";
+
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    conn.Open();
-
-                    int maKyCong = int.Parse(ddlThang.SelectedValue);
-                    int maNV = int.Parse(ddlNhanVien.SelectedValue);
-
-                    foreach (GridViewRow row in gvChamCong.Rows)
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
-                        string strNgay = row.Cells[0].Text + "/" + ddlNam.SelectedValue;
-                        DateTime ngay = DateTime.ParseExact(strNgay, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        cmd.Parameters.AddWithValue("@MaNV", maNV);
+                        cmd.Parameters.AddWithValue("@Ngay", ngay);
+                        cmd.Parameters.AddWithValue("@Cong", ddlCong.SelectedValue);
+                        cmd.Parameters.AddWithValue("@GhiChu", txtGhiChu.Text);
 
-                        TextBox txtVao = row.FindControl("txtGioVao") as TextBox;
-                        TextBox txtRa = row.FindControl("txtGioRa") as TextBox;
-                        TextBox txtNote = row.FindControl("txtGhiChu") as TextBox;
-
-                        double congNgay = double.Parse(row.Cells[4].Text.Trim());
-
-                        SaveRow(conn, maKyCong, maNV, ngay,
-                            row.Cells[1].Text,
-                            txtVao.Text.Trim(),
-                            txtRa.Text.Trim(),
-                            congNgay,
-                            txtNote.Text.Trim());
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
                     }
                 }
 
-                ScriptManager.RegisterStartupScript(this, GetType(), "ok",
-                    "alert('✔ Chấm công đã được lưu!');", true);
+
             }
-            catch (Exception ex)
-            {
-                Response.Write("Lỗi: " + ex.Message);
-            }
+
+            ScriptManager.RegisterStartupScript(this, GetType(),
+                "ok", "alert('Lưu chấm công thành công');", true);
+            LoadChamCong(
+     int.Parse(ddlThang.SelectedValue),
+     int.Parse(ddlNam.SelectedValue),
+     int.Parse(ddlNhanVien.SelectedValue)
+ );
+
         }
+
 
         // ====================================
         // TÍNH CÔNG
         // ====================================
         protected void btnTinhCong_Click(object sender, EventArgs e)
         {
+            double tong = 0;
+
             foreach (GridViewRow row in gvChamCong.Rows)
             {
-                TextBox vao = row.FindControl("txtGioVao") as TextBox;
-                TextBox ra = row.FindControl("txtGioRa") as TextBox;
+                DropDownList ddl = row.FindControl("ddlCong") as DropDownList;
+                if (ddl == null) continue;
 
-                row.Cells[4].Text = TinhCongNgay(vao.Text, ra.Text).ToString();
+                if (double.TryParse(
+                        ddl.SelectedValue,
+                        NumberStyles.Any,
+                        CultureInfo.InvariantCulture,
+                        out double cong))
+                {
+                    tong += cong;
+                }
             }
+
+            lblTongCong.Text = tong.ToString("0.##");
         }
+
 
         private double TinhCongNgay(string vaoStr, string raStr)
         {
@@ -182,47 +280,109 @@ namespace TTCN_WEB_QLNS
             return 0;
         }
 
+      
+
         // ====================================
-        // TẠO BẢNG CHẤM CÔNG
+        // LOAD GRID
         // ====================================
-        private DataTable TaoBangChamCong(int thang, int nam)
+        DataTable TaoDuLieuThangMoi(int thang, int nam)
         {
             DataTable dt = new DataTable();
-            dt.Columns.Add("Ngay", typeof(string));
-            dt.Columns.Add("Thu", typeof(string));
-            dt.Columns.Add("GioVao", typeof(string));
-            dt.Columns.Add("GioRa", typeof(string));
-            dt.Columns.Add("CongNgay", typeof(string));
-            dt.Columns.Add("GhiChu", typeof(string));
+            dt.Columns.Add("Ngay", typeof(DateTime));
+            dt.Columns.Add("Thu");
+            dt.Columns.Add("Cong");
+            dt.Columns.Add("GhiChu");
 
-            int days = DateTime.DaysInMonth(nam, thang);
+            int soNgay = DateTime.DaysInMonth(nam, thang);
 
-            for (int d = 1; d <= days; d++)
+            for (int d = 1; d <= soNgay; d++)
             {
                 DateTime ngay = new DateTime(nam, thang, d);
-                dt.Rows.Add(
-                    ngay.ToString("dd/MM"),
-                    ngay.ToString("dddd", new CultureInfo("vi-VN")),
-                    "",
-                    "",
-                    "0",
-                    ""
-                );
+                DataRow row = dt.NewRow();
+                row["Ngay"] = ngay;
+                row["Thu"] = ngay.DayOfWeek.ToString();
+                row["Cong"] = 0;
+                row["GhiChu"] = "";
+                dt.Rows.Add(row);
             }
 
             return dt;
         }
 
-        // ====================================
-        // LOAD GRID
-        // ====================================
+        void LoadChamCong(int thang, int nam, int maNV)
+        {
+            // 1️⃣ TẠO ĐỦ NGÀY TRƯỚC
+            DataTable dt = TaoDuLieuThangMoi(thang, nam);
+
+            // 2️⃣ LẤY DỮ LIỆU DB
+            string sql = @"
+        SELECT Ngay, Cong, GhiChu
+        FROM Bangcong_nhanvien_chitiet
+        WHERE MaNV = @MaNV
+          AND MONTH(Ngay) = @Thang
+          AND YEAR(Ngay) = @Nam";
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MaNV", maNV);
+                cmd.Parameters.AddWithValue("@Thang", thang);
+                cmd.Parameters.AddWithValue("@Nam", nam);
+
+                DataTable dtDB = new DataTable();
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                {
+                    da.Fill(dtDB);
+                }
+
+                // 3️⃣ GHÉP DỮ LIỆU DB VÀO BẢNG ĐẦY ĐỦ NGÀY
+                foreach (DataRow r in dtDB.Rows)
+                {
+                    DateTime ngay = Convert.ToDateTime(r["Ngay"]);
+
+                    DataRow[] rows = dt.Select($"Ngay = #{ngay:MM/dd/yyyy}#");
+                    if (rows.Length > 0)
+                    {
+                        rows[0]["Cong"] = r["Cong"];
+                        rows[0]["GhiChu"] = r["GhiChu"];
+                    }
+                }
+            }
+            double tongCong = 0;
+
+            foreach (DataRow r in dt.Rows)
+            {
+                tongCong += Convert.ToDouble(r["Cong"]);
+            }
+
+            // bind GridView
+            gvChamCong.DataSource = dt;
+            gvChamCong.DataBind();
+
+            // hiển thị tổng công
+            lblTongCong.Text = tongCong.ToString("0.##");
+
+            gvChamCong.DataSource = dt;
+            gvChamCong.DataBind();
+
+        }
+
+
         protected void btnLoad_Click(object sender, EventArgs e)
         {
-            gvChamCong.DataSource = TaoBangChamCong(
-                int.Parse(ddlThang.SelectedValue),
-                int.Parse(ddlNam.SelectedValue));
-            gvChamCong.DataBind();
+            if (!int.TryParse(ddlThang.SelectedValue, out int thang))
+                return;
+
+            if (!int.TryParse(ddlNam.SelectedValue, out int nam))
+                return;
+
+            int maNV = IsUser()
+                ? GetMaNVLogin().Value
+                : int.Parse(ddlNhanVien.SelectedValue);
+
+            LoadChamCong(thang, nam, maNV);
         }
+
 
         protected void ddlThang_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -249,14 +409,30 @@ namespace TTCN_WEB_QLNS
 
         }
 
-        protected void gvChamCong_SelectedIndexChanged(object sender, EventArgs e)
-        {
 
-        }
         protected void lnkLogout_Click(object sender, EventArgs e)
         {
             Session.Clear();
             Response.Redirect("DangNhap.aspx");
         }
+
+        protected void gvChamCong_SelectedIndexChanged1(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void gvChamCong_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow && IsUser())
+            {
+                DropDownList ddlCong = (DropDownList)e.Row.FindControl("ddlCong");
+                TextBox txtGhiChu = (TextBox)e.Row.FindControl("txtGhiChu");
+
+                if (ddlCong != null) ddlCong.Enabled = false;
+                if (txtGhiChu != null) txtGhiChu.ReadOnly = true;
+            }
+        }
+
+
     }
 }
