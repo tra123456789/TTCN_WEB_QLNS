@@ -134,116 +134,104 @@ namespace TTCN_WEB_QLNS
             }
         }
 
-        // ====================================
-        // SAVE 1 DÒNG CHẤM CÔNG
-        // ====================================
-        private void SaveRow(SqlConnection conn, int maKyCong, int maNV, DateTime ngay, string thu,
-            string gioVao, string gioRa, double cong, string ghiChu)
-        {
-            string sqlCheck = @"
-                SELECT COUNT(*) 
-                FROM Bangcong_nhanvien_chitiet
-                WHERE MaKyCong = @MaKyCong AND MaNV = @MaNV AND Ngay = @Ngay";
-
-            using (SqlCommand check = new SqlCommand(sqlCheck, conn))
-            {
-                BuildParam(check, maKyCong, maNV, ngay, thu, gioVao, gioRa, cong, ghiChu);
-
-                int count = (int)check.ExecuteScalar();
-                if (count > 0) return; // đã có → bỏ qua
-            }
-
-            string sqlInsert = @"
-                INSERT INTO Bangcong_nhanvien_chitiet
-                (MaKyCong, MaNV, Ngay, Thu, GioVao, GioRa, CongNgayLe, GhiChu)
-                VALUES
-                (@MaKyCong, @MaNV, @Ngay, @Thu, @GioVao, @GioRa, @CongNgay, @GhiChu)";
-
-            using (SqlCommand cmd = new SqlCommand(sqlInsert, conn))
-            {
-                BuildParam(cmd, maKyCong, maNV, ngay, thu, gioVao, gioRa, cong, ghiChu);
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        private void BuildParam(SqlCommand cmd, int maKyCong, int maNV, DateTime ngay, string thu,
-            string gioVao, string gioRa, double cong, string ghiChu)
-        {
-            cmd.Parameters.AddWithValue("@MaKyCong", maKyCong);
-            cmd.Parameters.AddWithValue("@MaNV", maNV);
-            cmd.Parameters.AddWithValue("@Ngay", ngay);
-            cmd.Parameters.AddWithValue("@Thu", thu);
-            cmd.Parameters.AddWithValue("@GioVao", gioVao);
-            cmd.Parameters.AddWithValue("@GioRa", gioRa);
-            cmd.Parameters.AddWithValue("@CongNgay", cong);
-            cmd.Parameters.AddWithValue("@GhiChu", ghiChu);
-        }
+        
+   
 
         // ====================================
         // LƯU CHẤM CÔNG
-
-        // ====================================
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            int maNV = int.Parse(ddlNhanVien.SelectedValue);
-            if (Session["IDROLE"].ToString() == "10")
+            string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+
+            // ⚠️ MaNV của bạn là sinh tự động → thường là STRING
+            string maNV = ddlNhanVien.SelectedValue;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
             {
-                ScriptManager.RegisterStartupScript(this, GetType(),
-                    "no", "alert('Bạn không có quyền chỉnh sửa chấm công');", true);
-                return;
-            }
+                conn.Open();
 
-
-            foreach (GridViewRow row in gvChamCong.Rows)
-            {
-                DateTime ngay = Convert.ToDateTime(
-         gvChamCong.DataKeys[row.RowIndex].Value
-     );
-
-                DropDownList ddlCong = (DropDownList)row.FindControl("ddlCong");
-                TextBox txtGhiChu = (TextBox)row.FindControl("txtGhiChu");
-
-                if (ddlCong == null) continue;
-                string sql = @"
-IF EXISTS (SELECT 1 FROM Bangcong_nhanvien_chitiet WHERE MaNV=@MaNV AND Ngay=@Ngay)
-    UPDATE Bangcong_nhanvien_chitiet
-    SET Cong=@Cong, GhiChu=@GhiChu, Update_date=GETDATE()
-    WHERE MaNV=@MaNV AND Ngay=@Ngay
-ELSE
-    INSERT INTO Bangcong_nhanvien_chitiet(MaNV, Ngay, Cong, GhiChu, Create_date)
-    VALUES(@MaNV, @Ngay, @Cong, @GhiChu, GETDATE())";
-
-                using (SqlConnection conn = new SqlConnection(connStr))
+                foreach (GridViewRow row in gvChamCong.Rows)
                 {
-                    using (SqlCommand cmd = new SqlCommand(sql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@MaNV", maNV);
-                        cmd.Parameters.AddWithValue("@Ngay", ngay);
-                        cmd.Parameters.AddWithValue("@Cong", ddlCong.SelectedValue);
-                        cmd.Parameters.AddWithValue("@GhiChu", txtGhiChu.Text);
+                    // 1️⃣ Lấy NGÀY từ DataKey
+                    DateTime ngay = Convert.ToDateTime(gvChamCong.DataKeys[row.RowIndex].Value);
 
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                    }
+                    // 2️⃣ Lấy công
+                    DropDownList ddl = row.FindControl("ddlCong") as DropDownList;
+                    if (ddl == null) continue;
+
+                    double cong = double.Parse(
+                        ddl.SelectedValue,
+                        CultureInfo.InvariantCulture
+                    );
+
+                    // 3️⃣ Ghi chú
+                    TextBox txtGhiChu = row.FindControl("txtGhiChu") as TextBox;
+                    string ghiChu = txtGhiChu?.Text ?? "";
+                    
+
+                    System.Diagnostics.Debug.WriteLine(
+                        $"ROW {row.RowIndex} DATEKEY = {ngay:yyyy-MM-dd HH:mm:ss}"
+                    );
+
+                    // 4️⃣ LƯU VÀO DB
+                    SaveChamCong(conn, maNV, ngay, cong, ghiChu);
                 }
 
-
             }
 
-            ScriptManager.RegisterStartupScript(this, GetType(),
-                "ok", "alert('Lưu chấm công thành công');", true);
-            LoadChamCong(
-     int.Parse(ddlThang.SelectedValue),
-     int.Parse(ddlNam.SelectedValue),
-     int.Parse(ddlNhanVien.SelectedValue)
- );
-
+            ScriptManager.RegisterStartupScript(
+                this, GetType(), "ok",
+                "alert('Lưu chấm công thành công!');", true);
         }
+
 
 
         // ====================================
         // TÍNH CÔNG
         // ====================================
+        private void SaveChamCong(
+    SqlConnection conn,
+    string maNV,
+    DateTime ngay,
+    double cong,
+    string ghiChu)
+        {
+            string sql = @"
+IF EXISTS (
+    SELECT 1
+    FROM Bangcong_nhanvien_chitiet
+    WHERE MaNV = @MaNV
+      AND CAST(Ngay AS DATE) = CAST(@Ngay AS DATE)
+)
+BEGIN
+    UPDATE Bangcong_nhanvien_chitiet
+    SET Cong = @Cong,
+        GhiChu = @GhiChu
+    WHERE MaNV = @MaNV
+      AND CAST(Ngay AS DATE) = CAST(@Ngay AS DATE)
+END
+ELSE
+BEGIN
+    INSERT INTO Bangcong_nhanvien_chitiet
+    (MaNV, Ngay, Cong, GhiChu)
+    VALUES
+    (@MaNV, @Ngay, @Cong, @GhiChu)
+END";
+
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MaNV", maNV);
+                cmd.Parameters.AddWithValue("@Ngay", ngay.Date); // 👈 RẤT QUAN TRỌNG
+                cmd.Parameters.AddWithValue("@Cong", cong);
+                cmd.Parameters.AddWithValue("@GhiChu", ghiChu ?? "");
+                cmd.ExecuteNonQuery();
+            }
+            System.Diagnostics.Debug.WriteLine(
+    $"SAVE: {maNV} - {ngay:yyyy-MM-dd} - {cong}"
+);
+
+        }
+
         protected void btnTinhCong_Click(object sender, EventArgs e)
         {
             double tong = 0;
@@ -433,6 +421,50 @@ ELSE
             }
         }
 
+        protected void btnTongHopCong_Click(object sender, EventArgs e)
+        {
+            int thang = int.Parse(ddlThang.SelectedValue);
+            int nam = int.Parse(ddlNam.SelectedValue);
+
+            string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+
+                // ❌ Không cho tổng hợp lại
+                SqlCommand check = new SqlCommand(@"
+            SELECT COUNT(*) FROM BangCongThang
+            WHERE Thang = @Thang AND Nam = @Nam", conn);
+
+                check.Parameters.AddWithValue("@Thang", thang);
+                check.Parameters.AddWithValue("@Nam", nam);
+
+                if ((int)check.ExecuteScalar() > 0)
+                {
+                    ScriptManager.RegisterStartupScript(
+                        this, GetType(), "x",
+                        "alert('Tháng này đã tổng hợp công!');", true);
+                    return;
+                }
+
+                SqlCommand cmd = new SqlCommand(@"
+            INSERT INTO BangCongThang (MaNV, Thang, Nam, TongCong)
+            SELECT MaNV, @Thang, @Nam, SUM(Cong)
+            FROM Bangcong_nhanvien_chitiet
+            WHERE MONTH(Ngay) = @Thang AND YEAR(Ngay) = @Nam
+            GROUP BY MaNV", conn);
+
+                cmd.Parameters.AddWithValue("@Thang", thang);
+                cmd.Parameters.AddWithValue("@Nam", nam);
+
+                cmd.ExecuteNonQuery();
+            }
+
+            ScriptManager.RegisterStartupScript(
+                this, GetType(), "ok",
+                "alert('Tổng hợp công tháng thành công!');", true);
+        }
 
     }
 }

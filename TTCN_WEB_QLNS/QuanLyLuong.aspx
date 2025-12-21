@@ -14,50 +14,31 @@
             Menu › Lương
         </div>
         
-  <br /><br />
-        <!-- Nhân viên:
-<asp:DropDownList ID="ddlNhanVien" runat="server" CssClass="input"></asp:DropDownList>
--->
-Mã nhân viên:
-<asp:TextBox ID="txtMaNV" runat="server" />
-Ngày công:
-<asp:TextBox ID="txtNgayCong" runat="server" />
 
-Không phép:
-<asp:TextBox ID="txtKhongPhep" runat="server" />
-
-Ngày lễ:
-<asp:TextBox ID="txtNgayLe" runat="server" />
-
-Ngày CN:
-<asp:TextBox ID="txtNgayCN" runat="server" />
-
-<br /><br />
-
-<asp:Button ID="Button1" runat="server"
-    Text="➕ Thêm lương nhân viên"
-    CssClass="btn"
-    OnClick="btnAddLuong_Click" />
-
-  <br />
 
         <br />
 
-        <asp:Button ID="btnDS" runat="server"
-            Text="➕ Danh sách nhận lương"
-            CssClass="btn"
-            OnClick="btnDS_Click" />
+       <asp:Button ID="btnTinhLuong" runat="server"
+    Text="🧮 Tính lương tháng"
+    CssClass="btn btn-success"
+    OnClick="btnTinhLuong_Click" />
 
-        <asp:Button ID="btncaculator" runat="server"
-            Text="➕ Tính Lương"
-            CssClass="btn"
-            OnClick="btncaculator_Click" />
+<asp:Button ID="btnExportExcel" runat="server"
+    Text="📥 Xuất Excel bảng lương"
+    CssClass="btn"
+    OnClick="btnExportExcel_Click" />
+
+        <asp:Button ID="btnChotLuong" runat="server"
+    Text="🔒 Chốt lương tháng"
+    CssClass="btn btn-danger"
+    OnClick="btnChotLuong_Click"
+    OnClientClick="return confirm('Chốt lương sẽ KHÔNG thể sửa lại. Bạn chắc chắn?');" />
 
         <br /><br />
 
         <!-- top options -->
         <div class="top-options">
-            Hiển thị
+            Hiển thị:
             <asp:DropDownList ID="ddlPageSize" runat="server"
                 AutoPostBack="true"
                 OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
@@ -66,7 +47,21 @@ Ngày CN:
                 <asp:ListItem>20</asp:ListItem>
             </asp:DropDownList>
 
-            <div class="search-box">
+            <br />
+            <br />
+            Tháng:
+            <asp:DropDownList ID="ddlThang" runat="server" 
+            AutoPostBack="true"
+    OnSelectedIndexChanged="ddlThang_SelectedIndexChanged" />
+            Năm:
+            <asp:DropDownList ID="ddlNam" runat="server" 
+            AutoPostBack="true"
+    OnSelectedIndexChanged="ddlThang_SelectedIndexChanged" />
+            <br />
+
+            <br />
+
+                <div class="search-box">
                 Tìm kiếm:
                 <asp:TextBox ID="txtSearch" runat="server"
                     AutoPostBack="true"
@@ -76,107 +71,64 @@ Ngày CN:
 
         <!-- GRID -->
         <asp:GridView ID="gvLuong" runat="server"
-            AutoGenerateColumns="False"
-            CssClass="table"
-            AllowPaging="True"
-            DataKeyNames="ID"
-            OnPageIndexChanging="gvLuong_PageIndexChanging"
-            OnRowEditing="gvLuong_RowEditing"
-            OnRowUpdating="gvLuong_RowUpdating"
-            OnRowDeleting="gvLuong_RowDeleting"
-            OnRowCancelingEdit="gvLuong_RowCancelingEdit"
-            OnRowDataBound="gvLuong_RowDataBound">
+    AutoGenerateColumns="False"
+    CssClass="table"
+    AllowPaging="True"
+    PageSize="10" OnSelectedIndexChanged="gvLuong_SelectedIndexChanged">
 
-              <Columns>
-        <asp:TemplateField HeaderText="Mã Nhân Viên">
-            <ItemTemplate>
-                <%# Eval("MaNV") %>
-            </ItemTemplate>
-               <EditItemTemplate>
-       <asp:TextBox ID="txtMaNV" runat="server" Text='<%# Eval("MaNV") %>' />
-   </EditItemTemplate>
-        </asp:TemplateField>
+    <Columns>
 
-        <asp:TemplateField HeaderText="Họ Tên">
-            <ItemTemplate>
-                <%# Eval("HoTen") %>
-            </ItemTemplate>
-               <EditItemTemplate>
-       <asp:TextBox ID="txtHoTen" runat="server" Text='<%# Eval("HoTen") %>' />
-   </EditItemTemplate>
-        </asp:TemplateField>
+      
+        <asp:BoundField DataField="MaNV" HeaderText="Mã NV" />
 
-        <asp:TemplateField HeaderText="Ngày Công">
-    <ItemTemplate>
-        <%# Eval("TongNgayCong") %>
-    </ItemTemplate>
-    <EditItemTemplate>
-        <asp:TextBox ID="txtNgayCong" runat="server" Text='<%# Eval("TongNgayCong") %>' />
-    </EditItemTemplate>
-</asp:TemplateField>
+        
+        <asp:BoundField DataField="HoTen" HeaderText="Họ tên" />
 
+       
+        <asp:BoundField DataField="TenPB" HeaderText="Phòng ban" />
 
-        <asp:TemplateField HeaderText="Không Phép">
-            <ItemTemplate>
-                <%# Eval("KhongPhep") %>
-            </ItemTemplate>
-               <EditItemTemplate>
-       <asp:TextBox ID="txtKhongPhep" runat="server" Text='<%# Eval("KhongPhep") %>' />
-   </EditItemTemplate>
-        </asp:TemplateField>
+        
+        <asp:BoundField DataField="LuongCoBan"
+            HeaderText="Lương cơ bản"
+            DataFormatString="{0:N0}" />
 
-        <asp:TemplateField HeaderText="Ngày Lễ">
-            <ItemTemplate>
-                <%# Eval("NgayLe") %>
-            </ItemTemplate>
-               <EditItemTemplate>
-       <asp:TextBox ID="txtNgayLe" runat="server" Text='<%# Eval("NgayLe") %>' />
-   </EditItemTemplate>
-        </asp:TemplateField>
+      
+        <asp:BoundField DataField="TongNgayCong"
+            HeaderText="Ngày công" />
 
-        <asp:TemplateField HeaderText="Ngày Chủ Nhật">
-            <ItemTemplate>
-                <%# Eval("NgayCN") %>
+       
+        <asp:BoundField DataField="TongThuong"
+            HeaderText="Thưởng"
+            DataFormatString="{0:N0}" />
 
-            </ItemTemplate>
-               <EditItemTemplate>
-       <asp:TextBox ID="txtNgayCN" runat="server" Text='<%# Eval("NgayCN") %>' />
-   </EditItemTemplate>
-        </asp:TemplateField>
+       
+        <asp:BoundField DataField="TongPhat"
+            HeaderText="Phạt"
+            DataFormatString="{0:N0}" />
 
-      <asp:TemplateField HeaderText="Thực Lãnh">
-    <ItemTemplate>
-        <%# Eval("ThucLanh", "{0:N0}") %>
-    </ItemTemplate>
-</asp:TemplateField>
-               <asp:TemplateField HeaderText="Thao tác">
-    <ItemTemplate>
-        <asp:Button ID="btnExportExcel" runat="server" 
-    Text="📥 Xuất danh sách Excel"
-    CssClass="btn"
-    OnClick="btnExportExcel_Click" />
+        
+        <asp:BoundField DataField="BHXH"
+            HeaderText="BHXH (8%)"
+            DataFormatString="{0:N0}" />
 
+    
+        <asp:BoundField DataField="BHYT"
+            HeaderText="BHYT (1.5%)"
+            DataFormatString="{0:N0}" />
 
-        <%-- Nút Sửa (Edit) --%>
-        <asp:LinkButton ID="BtnEdit" runat="server" CommandName="Edit" Text="Sửa" CssClass="btn btn-sm btn-info" />
+       
+        <asp:BoundField DataField="BHTN"
+            HeaderText="BHTN (1%)"
+            DataFormatString="{0:N0}" />
 
-        <%-- Nút Xóa (Delete) có thêm OnClientClick xác nhận --%>
-        <asp:LinkButton ID="BtnDelete" runat="server" CommandName="Delete" Text="Xóa" CssClass="btn btn-sm btn-danger"
-            OnClientClick="return confirm('Bạn chắc chắn muốn xóa nhân viên này không?');" />
-    </ItemTemplate>
-    <EditItemTemplate>
-        <%-- Nút Cập nhật (Update) --%>
-        <asp:LinkButton ID="btnUpdate" runat="server" CommandName="Update" Text="Cập nhật" CssClass="btn btn-sm btn-success" />
+      
+        <asp:BoundField DataField="ThucLanh"
+            HeaderText="Thực lãnh"
+            DataFormatString="{0:N0}" />
 
-        <%-- Nút Bỏ qua (Cancel) --%>
-        <asp:LinkButton ID="BtnCancel" runat="server" CommandName="Cancel" Text="Bỏ Qua" CssClass="btn btn-sm btn-secondary" />
+    </Columns>
+</asp:GridView>
 
-    </EditItemTemplate>
-</asp:TemplateField> 
-
-            </Columns>
-
-        </asp:GridView>
 
     </div>
 

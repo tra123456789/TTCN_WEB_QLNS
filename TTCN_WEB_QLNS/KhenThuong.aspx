@@ -26,6 +26,24 @@
 
         <!-- Options -->
         <div class="top-options">
+            <div class="top-options">
+
+    Tháng:
+    <asp:DropDownList ID="ddlThang" runat="server"
+        AutoPostBack="true"
+        OnSelectedIndexChanged="FilterChanged" />
+
+    Năm:
+    <asp:DropDownList ID="ddlNam" runat="server"
+        AutoPostBack="true"
+        OnSelectedIndexChanged="FilterChanged" />
+                <asp:Button ID="btnExportExcel" runat="server"
+    Text="📥 Xuất Excel"
+    CssClass="btn"
+    OnClick="btnExportExcel_Click" />
+
+</div>
+
             Hiển thị
             <asp:DropDownList ID="ddlPageSize" runat="server"
                 AutoPostBack="true"

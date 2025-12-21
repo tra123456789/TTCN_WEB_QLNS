@@ -92,6 +92,8 @@
         <asp:Button ID="btnTinhCong" runat="server" Text="Tính công" OnClick="btnTinhCong_Click" />
         <asp:Button ID="btnSave" runat="server" Text="Lưu dữ liệu" OnClick="btnSave_Click" style="height: 26px" />
           
+             <asp:Button ID="btnTongHopCong" runat="server" OnClick="btnTongHopCong_Click" Text="📊 Tổng hợp công tháng" />
+          
     </div>
 
  </asp:Content>
