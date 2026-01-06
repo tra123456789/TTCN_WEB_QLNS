@@ -47,98 +47,37 @@ namespace TTCN_WEB_QLNS
         }
         string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
 
-        void Loaddata(string maNV)
-        {
-            string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
-
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                string sql = "SELECT * FROM Hop_dong WHERE MaNV = @ma";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-
-                cmd.Parameters.AddWithValue("@ma", maNV);
-
-                conn.Open();
-                SqlDataReader r = cmd.ExecuteReader();
-
-                if (r.Read())
-                {
-                    // Load dữ liệu lên TextBox
-                    txtNgayBatDau.Text = Convert.ToDateTime(r["NgayBatDau"]).ToString("yyyy-MM-dd");
-                    txtNgayKetThuc.Text = Convert.ToDateTime(r["NgayKetThuc"]).ToString("yyyy-MM-dd");
-                    txtNgayKi.Text = Convert.ToDateTime(r["NgayKi"]).ToString("yyyy-MM-dd");
-
-                    txtNoiDung.Text = r["NoiDung"].ToString();
-                    txtLanKy.Text = r["LanKy"].ToString();
-                    txtThoiHan.Text = r["ThoiHan"].ToString();
-                    txtHeSoLuong.Text = r["HeSoLuong"].ToString();
-                    txtMaNV.Text = r["MaNV"].ToString();
-
-                    // Đánh dấu đang sửa
-                    ViewState["EditingMANV"] = maNV;
-                }
-            }
-
-            //btnSave.Text = "💾 Cập nhật";
-        }
-
+   
      
 
         private void LoadDataQuanLyHD()
     {
-        string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
-
+     
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
-            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Hop_dong", conn);
+                SqlDataAdapter da = new SqlDataAdapter(@"
+    SELECT 
+        SoHD,
+        MaNV,
+        NgayBatDau,
+        NgayKetThuc,
+        NgayKi,
+        NoiDung,
+        LanKy,
+        ThoiHan,
+        LuongCoBan
+    FROM Hop_dong
+", conn);
 
-            DataTable dt = new DataTable();
+                DataTable dt = new DataTable();
             da.Fill(dt);
 
             gvQuanLyHD.DataSource = dt;
             gvQuanLyHD.DataBind();
         }
     }
-    protected void btnAddHD_Click(object sender, EventArgs e)
-        {
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                
-                string ngaybatdau = txtNgayBatDau.Text.Trim();
-                string ngayketthuc = txtNgayKetThuc.Text.Trim();
-                string ngayki = txtNgayKi.Text.Trim();
-                string noidung = txtNoiDung.Text.Trim();
-                string lanky = txtLanKy.Text.Trim();
-                string thoihan = txtThoiHan.Text.Trim();
-                string hesoluong = txtHeSoLuong.Text.Trim();
-                string manv = txtMaNV.Text.Trim();
-
-
-                // 🔥 Câu lệnh INSERT
-                string sql = @"INSERT INTO Hop_dong(MaNV, NgayBatDau, NgayKetThuc, NgayKi, NoiDung, LanKy, ThoiHan, HeSoLuong)
-                       VALUES(@manv,@ngaybatdau,@ngayketthuc,@ngayki, @noidung, @lanky, @thoihan, @hesoluong)";
-
-                SqlCommand cmd = new SqlCommand(sql, conn);
-
-               
-                cmd.Parameters.AddWithValue("@ngaybatdau", ngaybatdau);
-                cmd.Parameters.AddWithValue("@ngayketthuc", ngayketthuc);
-                cmd.Parameters.AddWithValue("@ngayki", ngayki);
-                cmd.Parameters.AddWithValue("@noidung", noidung);
-                cmd.Parameters.AddWithValue("@lanky", lanky);
-                cmd.Parameters.AddWithValue("@thoihan", thoihan);
-                cmd.Parameters.AddWithValue("@hesoluong", hesoluong);
-                cmd.Parameters.AddWithValue("@manv", manv);
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                conn.Close();
-            }
-
-            LoadDataQuanLyHD(); 
-
-        }
+   
 
         protected void txtNgayBatDau_TextChanged(object sender, EventArgs e)
         {
@@ -247,7 +186,7 @@ namespace TTCN_WEB_QLNS
             string noidung = ((TextBox)row.FindControl("txtGV_NoiDung")).Text.Trim();
             string lanky = ((TextBox)row.FindControl("txtGV_LanKy")).Text.Trim();
             string thoihan = ((TextBox)row.FindControl("txtGV_ThoiHan")).Text.Trim();
-            string hesoluong = ((TextBox)row.FindControl("txtGV_HeSoLuong")).Text.Trim();
+            string luong = ((TextBox)row.FindControl("txtGV_LuongCoBan")).Text.Trim();
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
@@ -260,7 +199,7 @@ namespace TTCN_WEB_QLNS
                         NoiDung=@noidung,
                         LanKy=@lanky,
                         ThoiHan=@thoihan,
-                        HeSoLuong=@hesoluong
+                       LuongCoBan=@luong
                        WHERE SoHD=@soHD";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
@@ -271,7 +210,7 @@ namespace TTCN_WEB_QLNS
                 cmd.Parameters.AddWithValue("@noidung", noidung);
                 cmd.Parameters.AddWithValue("@lanky", lanky);
                 cmd.Parameters.AddWithValue("@thoihan", thoihan);
-                cmd.Parameters.AddWithValue("@hesoluong", hesoluong);
+                cmd.Parameters.AddWithValue("@luong", luong);
                 cmd.Parameters.AddWithValue("@soHD", soHD);
 
                 cmd.ExecuteNonQuery();
@@ -304,9 +243,23 @@ namespace TTCN_WEB_QLNS
             Session.Clear();
             Response.Redirect("DangNhap.aspx");
         }
+        private void AddPara(Document doc, string text, Font font, int align = Element.ALIGN_LEFT)
+        {
+            Paragraph p = new Paragraph(text, font);
+            p.Alignment = align;
+            p.SpacingAfter = 5f;
+            doc.Add(p);
+        }
+
         private void ExportHopDongPDF(string soHD)
         {
-            string hoTen = "", maNV = "", noiDung = "", heSoLuong = "";
+            string hoTen = "", maNV = "";
+            string luongCoBan = "";
+            string chucVu = "", boPhan = "";
+            string diaChi = "", cccd = "";
+
+            DateTime ngaySinh = DateTime.MinValue;
+
             DateTime ngayBatDau = DateTime.MinValue;
             DateTime ngayKetThuc = DateTime.MinValue;
             DateTime ngayKy = DateTime.MinValue;
@@ -315,11 +268,30 @@ namespace TTCN_WEB_QLNS
                 ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString))
             {
                 string sql = @"
-        SELECT hd.SoHD, hd.NgayBatDau, hd.NgayKetThuc, hd.NgayKi,
-               hd.NoiDung, hd.HeSoLuong, nv.HoTen, nv.MaNV
-        FROM Hop_dong hd
-        JOIN Nhan_vien nv ON hd.MaNV = nv.MaNV
-        WHERE hd.SoHD = @soHD";
+     SELECT 
+    hd.SoHD,
+    hd.NgayBatDau,
+    hd.NgayKetThuc,
+    hd.NgayKi,
+    hd.NoiDung,
+    hd.LuongCoBan,
+    nv.HoTen,
+    nv.MaNV,
+    nv.NgaySinh,
+    nv.DiaChi,
+    nv.CCCD,
+
+    cv.TenCV  AS ChucVu,
+    bp.TenBP  AS BoPhan
+
+FROM Hop_dong hd
+JOIN Nhan_vien nv ON hd.MaNV = nv.MaNV
+LEFT JOIN Chuc_vu cv ON nv.IDCV = cv.IDCV
+LEFT JOIN Bo_phan bp ON nv.IDBP = bp.IDBP
+
+WHERE hd.SoHD = @soHD
+
+";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@soHD", soHD);
@@ -331,22 +303,25 @@ namespace TTCN_WEB_QLNS
                 {
                     hoTen = dr["HoTen"].ToString();
                     maNV = dr["MaNV"].ToString();
-                    noiDung = dr["NoiDung"].ToString();
-                    heSoLuong = dr["HeSoLuong"].ToString();
+                    diaChi = dr["DiaChi"].ToString();
+                    cccd = dr["CCCD"].ToString();
+                    luongCoBan = dr["LuongCoBan"].ToString();
+                    chucVu = dr["ChucVu"].ToString();
+                    boPhan = dr["BoPhan"].ToString();
+
+                    if (dr["NgaySinh"] != DBNull.Value)
+                        ngaySinh = Convert.ToDateTime(dr["NgaySinh"]);
 
                     if (dr["NgayBatDau"] != DBNull.Value)
                         ngayBatDau = Convert.ToDateTime(dr["NgayBatDau"]);
+
                     if (dr["NgayKetThuc"] != DBNull.Value)
                         ngayKetThuc = Convert.ToDateTime(dr["NgayKetThuc"]);
+
                     if (dr["NgayKi"] != DBNull.Value)
                         ngayKy = Convert.ToDateTime(dr["NgayKi"]);
                 }
-                else
-                {
-                    ScriptManager.RegisterStartupScript(this, GetType(), "err",
-                        "alert('Không tìm thấy hợp đồng');", true);
-                    return;
-                }
+
             }
 
             Response.ContentType = "application/pdf";
@@ -359,28 +334,96 @@ namespace TTCN_WEB_QLNS
 
             string fontPath = Server.MapPath("~/fonts/TIMES.ttf");
             BaseFont bf = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            Font titleFont = new Font(bf, 16, Font.BOLD);
+
+            Font titleFont = new Font(bf, 14, Font.BOLD);
+            Font boldFont = new Font(bf, 12, Font.BOLD);
             Font normalFont = new Font(bf, 12);
 
-            Paragraph title = new Paragraph("HỢP ĐỒNG LAO ĐỘNG\n\n", titleFont);
-            title.Alignment = Element.ALIGN_CENTER;
-            doc.Add(title);
+            // ===== QUỐC HIỆU =====
+            AddPara(doc, "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM", boldFont, Element.ALIGN_CENTER);
+            AddPara(doc, "Độc lập – Tự do – Hạnh phúc\n", boldFont, Element.ALIGN_CENTER);
 
-            doc.Add(new Paragraph($"Số hợp đồng: {soHD}", normalFont));
-            doc.Add(new Paragraph($"Họ tên nhân viên: {hoTen}", normalFont));
-            doc.Add(new Paragraph($"Mã nhân viên: {maNV}", normalFont));
-            doc.Add(new Paragraph($"Ngày ký: {ngayKy:dd/MM/yyyy}", normalFont));
-            doc.Add(new Paragraph($"Thời hạn: {ngayBatDau:dd/MM/yyyy} - {ngayKetThuc:dd/MM/yyyy}", normalFont));
-            doc.Add(new Paragraph($"Hệ số lương: {heSoLuong}", normalFont));
+            string ngayKyText =
+      $"………, ngày {ngayKy:dd} tháng {ngayKy:MM} năm {ngayKy:yyyy}";
 
-            doc.Add(new Paragraph("\nNội dung hợp đồng:\n", normalFont));
-            doc.Add(new Paragraph(noiDung, normalFont));
+            AddPara(doc, ngayKyText, normalFont, Element.ALIGN_CENTER);
 
-            doc.Add(new Paragraph("\n\nĐẠI DIỆN CÔNG TY", normalFont));
-            doc.Add(new Paragraph("(Ký và ghi rõ họ tên)", normalFont));
+            // ===== TIÊU ĐỀ =====
+            AddPara(doc, "HỢP ĐỒNG LAO ĐỘNG", titleFont, Element.ALIGN_CENTER);
+            AddPara(doc, $"Số: {soHD}/HĐLĐ\n", normalFont, Element.ALIGN_CENTER);
+
+            // ===== MỞ ĐẦU =====
+            AddPara(doc,
+  $@"Hôm nay, ngày {ngayKy:dd} tháng {ngayKy:MM} năm {ngayKy:yyyy},
+tại ………………………………………",
+  normalFont);
+
+         
+
+            // ===== BÊN A =====
+            AddPara(doc, "\nBÊN A:", boldFont);
+            AddPara(doc, "Tên đơn vị: …………………………………………………………………………………", normalFont);
+            AddPara(doc, "Đại diện Ông/Bà: …………………………………………………………………………", normalFont);
+            AddPara(doc, "Chức vụ: ……………………………………………………………………………………", normalFont);
+            AddPara(doc, "Địa chỉ: ……………………………………………………………………………………", normalFont);
+            AddPara(doc, "Điện thoại: …………………………………………………………………………………", normalFont);
+
+            // ===== BÊN B =====
+            AddPara(doc, "\nBÊN B:", boldFont);
+            AddPara(doc, $"Ông/Bà: {hoTen}", normalFont);
+            AddPara(doc, $"Mã nhân viên: {maNV}", normalFont);
+            AddPara(doc, $"Ngày sinh: {ngaySinh:dd/MM/yyyy}", normalFont);
+            AddPara(doc, "Quốc tịch: Việt Nam", normalFont);
+            AddPara(doc, $"Chức vụ: {chucVu}", normalFont);
+            AddPara(doc, $"Địa chỉ thường trú: {diaChi}", normalFont);
+            AddPara(doc, $"Số CMTND/CCCD: {cccd}", normalFont);
+
+
+            // ===== ĐIỀU 1 =====
+            AddPara(doc, "\nĐiều 1: Điều khoản chung", boldFont);
+            AddPara(doc, "Loại HĐLĐ: …………………………………………………………………………………", normalFont);
+            AddPara(doc, $"Thời hạn HĐLĐ từ ngày {ngayBatDau:dd/MM/yyyy} đến ngày {ngayKetThuc:dd/MM/yyyy}", normalFont);
+            AddPara(doc, "Địa điểm làm việc: …………………………………………………………………………", normalFont);
+            AddPara(doc, $"Bộ phận: {boPhan}", normalFont);
+
+            AddPara(doc,
+            @"Nhiệm vụ công việc:
+– Thực hiện công việc theo sự phân công của Ban Giám đốc.
+– Phối hợp với các phòng ban để hoàn thành công việc.
+– Thực hiện các nhiệm vụ khác theo yêu cầu của Công ty.", normalFont);
+
+            // ===== ĐIỀU 2 =====
+            AddPara(doc, "\nĐiều 2: Chế độ làm việc", boldFont);
+            AddPara(doc,
+            @"Thời gian làm việc:
+– Sáng: 08h00 – 12h00
+– Chiều: 13h30 – 17h30
+– Nghỉ chiều Thứ 7 và Chủ nhật.", normalFont);
+
+            // ===== ĐIỀU 3 =====
+            AddPara(doc, "\nĐiều 3: Quyền lợi và nghĩa vụ của người lao động", boldFont);
+            AddPara(doc,
+            $@"Tiền lương:
+- Mức lương cơ bản: {luongCoBan} 
+– Hình thức trả lương: Lương thời gian
+– Tham gia BHXH, BHYT, BHTN theo quy định.", normalFont);
+
+            // ===== ĐIỀU 7 =====
+            AddPara(doc, "\nĐiều 7: Điều khoản thi hành", boldFont);
+            AddPara(doc,
+            @"Hợp đồng này được lập thành 02 bản có giá trị như nhau,
+mỗi bên giữ 01 bản và có hiệu lực kể từ ngày ký.", normalFont);
+
+            // ===== KÝ TÊN =====
+            AddPara(doc, "\n\nNGƯỜI LAO ĐỘNG", boldFont, Element.ALIGN_LEFT);
+            AddPara(doc, "(Ký, ghi rõ họ tên)\n\n", normalFont);
+
+            AddPara(doc, "NGƯỜI SỬ DỤNG LAO ĐỘNG", boldFont, Element.ALIGN_RIGHT);
+            AddPara(doc, "(Ký, ghi rõ họ tên)", normalFont);
 
             doc.Close();
             Response.End();
+
         }
 
         protected void gvQuanLyHD_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -392,5 +435,9 @@ namespace TTCN_WEB_QLNS
             }
         }
 
+        protected void btnAddHD_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ThemHopDong.aspx");
+        }
     }
 }

@@ -15,6 +15,15 @@ namespace TTCN_WEB_QLNS
     {
 
         /// <summary>
+        /// ddlNgay control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlNgay;
+
+        /// <summary>
         /// ddlThang control.
         /// </summary>
         /// <remarks>
@@ -31,6 +40,42 @@ namespace TTCN_WEB_QLNS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlNam;
+
+        /// <summary>
+        /// pnlCong control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlCong;
+
+        /// <summary>
+        /// ddlCongAll control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlCongAll;
+
+        /// <summary>
+        /// btnChamCongAll control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnChamCongAll;
+
+        /// <summary>
+        /// ddlPhongBan control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlPhongBan;
 
         /// <summary>
         /// ddlNhanVien control.
@@ -51,6 +96,24 @@ namespace TTCN_WEB_QLNS
         protected global::System.Web.UI.WebControls.Button btnLoad;
 
         /// <summary>
+        /// rblViewMode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList rblViewMode;
+
+        /// <summary>
+        /// txtSearch control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSearch;
+
+        /// <summary>
         /// gvChamCong control.
         /// </summary>
         /// <remarks>
@@ -69,15 +132,6 @@ namespace TTCN_WEB_QLNS
         protected global::System.Web.UI.WebControls.Label lblTongCong;
 
         /// <summary>
-        /// btnTinhCong control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnTinhCong;
-
-        /// <summary>
         /// btnSave control.
         /// </summary>
         /// <remarks>
@@ -94,5 +148,14 @@ namespace TTCN_WEB_QLNS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnTongHopCong;
+
+        /// <summary>
+        /// btnResetCongThang control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnResetCongThang;
     }
 }

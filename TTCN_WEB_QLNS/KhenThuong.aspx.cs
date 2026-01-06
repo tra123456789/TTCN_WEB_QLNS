@@ -188,10 +188,19 @@ JOIN Nhan_vien nv ON kt.MaNV = nv.MaNV
             int thang = int.Parse(ddlThang.SelectedValue);
             int nam = int.Parse(ddlNam.SelectedValue);
 
-            // 1️⃣ Lấy dữ liệu giống hệt GridView
+            // 1️⃣ Lấy dữ liệu
             DataTable dt = GetKhenThuongTheoThang(thang, nam);
 
-            // 2️⃣ Xuất Excel
+            // 2️⃣ KIỂM TRA: Nếu không có ai được khen thưởng
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                // Hiển thị thông báo bằng Javascript
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert",
+                    $"alert('Trong tháng {thang}/{nam} không có nhân viên nào được khen thưởng!');", true);
+                return; // Dừng hàm, không chạy xuống phần xuất Excel
+            }
+
+            // 3️⃣ Nếu có dữ liệu mới xuất Excel
             ExportToExcel(dt, $"KhenThuong_{thang}_{nam}.xls");
         }
         private DataTable GetKhenThuongTheoThang(int thang, int nam)

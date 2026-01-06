@@ -30,34 +30,45 @@ namespace TTCN_WEB_QLNS
         {
             string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
 
+            // Truy vấn này sẽ lấy hợp đồng có ngày bắt đầu muộn nhất của mỗi nhân viên
             string sql = @"
+        WITH ContractRanking AS (
+            SELECT 
+                MaNV, 
+                LuongCoBan, 
+                HeSoLuong,
+                NgayBatDau,
+                -- Sắp xếp giảm dần theo ngày bắt đầu để lấy hợp đồng mới nhất
+                ROW_NUMBER() OVER (PARTITION BY MaNV ORDER BY NgayBatDau DESC) as RankNum
+            FROM Hop_dong
+        )
         SELECT 
             nv.MaNV,
             nv.HoTen,
             bp.TenBP,
             pb.TenPB,
-            pb.LuongCoBan
+            cr.LuongCoBan,
+            cr.HeSoLuong,
+            (cr.LuongCoBan * ISNULL(cr.HeSoLuong, 1)) AS LuongThucLinh
         FROM Phong_ban pb
         JOIN Bo_phan bp ON bp.IDPB = pb.IDPB
         JOIN Nhan_vien nv ON nv.IDBP = bp.IDBP
+        -- Chỉ Join với những hợp đồng có RankNum = 1 (mới nhất)
+        JOIN ContractRanking cr ON cr.MaNV = nv.MaNV AND cr.RankNum = 1
         WHERE pb.IDPB = @IDPB
-        ORDER BY bp.TenBP, nv.HoTen";
+    ";
 
             using (SqlConnection conn = new SqlConnection(connStr))
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@IDPB", idPB);
-
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
                 if (dt.Rows.Count > 0)
                 {
-                    lblPhongBan.Text =
-                        "Phòng ban: " + dt.Rows[0]["TenPB"]
-                        + " | Lương cơ bản: "
-                        + string.Format("{0:N0}", dt.Rows[0]["LuongCoBan"]);
+                    lblPhongBan.Text = "Phòng ban: " + dt.Rows[0]["TenPB"].ToString();
                 }
 
                 gvNhanVien.DataSource = dt;

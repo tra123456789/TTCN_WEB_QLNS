@@ -17,11 +17,21 @@
 
 
         <br />
+        <asp:DropDownList ID="ddlPhongBan" runat="server" AutoPostBack="false">
+    <asp:ListItem Value="0">-- Tất cả phòng ban --</asp:ListItem>
+</asp:DropDownList>
+
 
        <asp:Button ID="btnTinhLuong" runat="server"
     Text="🧮 Tính lương tháng"
     CssClass="btn btn-success"
     OnClick="btnTinhLuong_Click" />
+        <asp:Button ID="btnResetLuong" runat="server"
+    Text="♻️ Reset lương tháng"
+    CssClass="btn btn-warning"
+    OnClick="btnResetLuong_Click"
+    OnClientClick="return confirm('Reset sẽ XÓA toàn bộ lương tháng này. Bạn chắc chắn?');" ForeColor="White" />
+
 
 <asp:Button ID="btnExportExcel" runat="server"
     Text="📥 Xuất Excel bảng lương"
@@ -74,7 +84,7 @@
     AutoGenerateColumns="False"
     CssClass="table"
     AllowPaging="True"
-    PageSize="10" OnSelectedIndexChanged="gvLuong_SelectedIndexChanged">
+    PageSize="10" OnSelectedIndexChanged="gvLuong_SelectedIndexChanged" OnPageIndexChanging="gvLuong_PageIndexChanging">
 
     <Columns>
 
@@ -96,7 +106,10 @@
         <asp:BoundField DataField="TongNgayCong"
             HeaderText="Ngày công" />
 
-       
+<asp:BoundField DataField="TongPhuCap"
+    HeaderText="Phụ cấp"
+    DataFormatString="{0:N0}" />
+
         <asp:BoundField DataField="TongThuong"
             HeaderText="Thưởng"
             DataFormatString="{0:N0}" />

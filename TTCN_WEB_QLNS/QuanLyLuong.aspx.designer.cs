@@ -15,6 +15,15 @@ namespace TTCN_WEB_QLNS
     {
 
         /// <summary>
+        /// ddlPhongBan control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlPhongBan;
+
+        /// <summary>
         /// btnTinhLuong control.
         /// </summary>
         /// <remarks>
@@ -22,6 +31,15 @@ namespace TTCN_WEB_QLNS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnTinhLuong;
+
+        /// <summary>
+        /// btnResetLuong control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnResetLuong;
 
         /// <summary>
         /// btnExportExcel control.

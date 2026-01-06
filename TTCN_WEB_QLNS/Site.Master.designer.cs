@@ -78,15 +78,6 @@ namespace TTCN_WEB_QLNS
         protected global::System.Web.UI.HtmlControls.HtmlAnchor menuHopDong;
 
         /// <summary>
-        /// menuBaoHiem control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor menuBaoHiem;
-
-        /// <summary>
         /// menuLuong control.
         /// </summary>
         /// <remarks>
@@ -103,6 +94,15 @@ namespace TTCN_WEB_QLNS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlAnchor menuKhenThuong;
+
+        /// <summary>
+        /// menuDoiMatKhau control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor menuDoiMatKhau;
 
         /// <summary>
         /// lnkLogout control.

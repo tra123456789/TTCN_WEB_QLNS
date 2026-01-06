@@ -20,37 +20,34 @@ namespace TTCN_WEB_QLNS
                 return;
             }
 
-            // Nếu ROLE khác User 
-            if (Session["IDROLE"].ToString() != "1")
+            string role = Session["IDROLE"].ToString();
+
+            // Thay vì dùng role != 1, hãy kiểm tra và chuyển hướng đúng trang chủ của từng Role
+            if (role == "11") // HR
             {
-               
+                Response.Redirect("HrHome.aspx");
+                return;
+            }
+            else if (role == "12") // Kế toán
+            {
+                Response.Redirect("KeToanHome.aspx");
+                return;
+            }
+            else if (role == "10") // User
+            {
                 Response.Redirect("UserHome.aspx");
                 return;
             }
 
-            // Nếu ROLE đúng là User → cho vào trang
-            lblWelcome.Text = "Xin chào: " + Session["UserName"].ToString();
-
+            // Nếu là Admin (Role 1) thì mới chạy tiếp các lệnh dưới đây
+            lblWelcome.Text = "Xin chào : " + Session["UserName"];
 
             if (!IsPostBack)
             {
                 LoadDashboard();
-
-                string role = Session["IDROLE"].ToString();
-                if (role == "1")
-                {
-                    //menuThongTinNV.Visible = false;
-                }
             }
-            //if (Session["UserName"] != null)
-            //{
-            //    lblWelcome.Text = "Xin chào, " + Session["UserName"].ToString();
-            //}
-            //else
-            //{
-            //    Response.Redirect("DangNhap.aspx"); // nếu chưa đăng nhập → quay lại login
-            //}
         }
+
         void LoadDashboard()
         {
             string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
@@ -68,18 +65,13 @@ namespace TTCN_WEB_QLNS
                 lblDept.Text = cmd2.ExecuteScalar().ToString();
 
                 // Tổng hệ số/bảng lương
-                SqlCommand cmd3 = new SqlCommand("SELECT COUNT(*) FROM Bang_luong", conn);
-                lblSalary.Text = cmd3.ExecuteScalar().ToString();
-
-                // Tổng khen thưởng
-                SqlCommand cmd4 = new SqlCommand("SELECT COUNT(*) FROM Khenthuong_Kyluat", conn);
-                lblReward.Text = cmd4.ExecuteScalar().ToString();
+              
+              
                 // Hợp Đồng
                 SqlCommand cmd5 = new SqlCommand("SELECT COUNT(*) FROM Hop_dong", conn);
                 lblhd.Text = cmd5.ExecuteScalar().ToString();
                 // Bảo hiểm
-                SqlCommand cmd6 = new SqlCommand("SELECT COUNT(*) FROM Bao_hiem", conn);
-                lblbh.Text = cmd6.ExecuteScalar().ToString();
+              
             }
         }
         protected void btntsnv_Click(object sender, EventArgs e)
@@ -92,23 +84,12 @@ namespace TTCN_WEB_QLNS
             Response.Redirect("PhongBan.aspx");
         }
 
-        protected void btnbluong_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("QuanLyLuong.aspx");
-        }
-        protected void btnkthuong_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("KhenThuong.aspx");
-        }
+    
         protected void btnhd_Click(object sender, EventArgs e)
         {
             Response.Redirect("QuanLyHopDong.aspx");
         }
-        protected void btnbh_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("BaoHiem.aspx");
-        }
-
+      
         protected void lnkLogout_Click(object sender, EventArgs e)
         {
             Session.Clear();

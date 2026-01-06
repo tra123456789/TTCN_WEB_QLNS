@@ -25,38 +25,7 @@
             CssClass="btn"
             OnClick="btnAddHD_Click" />
 
-        <br /><br />
-
-        <!-- FORM ADD -->
-        <div class="cssadd">
-            Mã Nhân Viên:
-            <asp:TextBox ID="txtMaNV" runat="server"></asp:TextBox>
-
-            Ngày Bắt Đầu:
-            <asp:TextBox ID="txtNgayBatDau" runat="server" TextMode="Date"></asp:TextBox>
-
-            Ngày Kết Thúc:
-            <asp:TextBox ID="txtNgayKetThuc" runat="server" TextMode="Date"></asp:TextBox>
-
-            Ngày Ký:
-            <asp:TextBox ID="txtNgayKi" runat="server" TextMode="Date"></asp:TextBox>
-
-            Nội Dung:
-            <asp:TextBox ID="txtNoiDung" runat="server"></asp:TextBox>
-
-            Lần Ký:
-            <asp:TextBox ID="txtLanKy" runat="server"></asp:TextBox>
-
-            Thời Hạn:
-            <asp:TextBox ID="txtThoiHan" runat="server"></asp:TextBox>
-
-            Hệ Số Lương:
-            <asp:TextBox ID="txtHeSoLuong" runat="server"></asp:TextBox>
-        </div>
-
         <br />
-
-        <!-- OPTIONS -->
         <div class="top-options">
             Hiển thị
             <asp:DropDownList ID="ddlPageSize"
@@ -102,26 +71,32 @@
                     </EditItemTemplate>
                 </asp:TemplateField>
 
-                <asp:TemplateField HeaderText="Ngày Bắt Đầu">
-                    <ItemTemplate><%# Eval("NgayBatDau", "{0:dd/MM/yyyy}") %></ItemTemplate>
-                    <EditItemTemplate>
-                        <asp:TextBox ID="txtGV_NgayBatDau" runat="server" Text='<%# Bind("NgayBatDau") %>' />
-                    </EditItemTemplate>
-                </asp:TemplateField>
+                           <asp:TemplateField HeaderText="Ngày Bắt Đầu">
+                <ItemTemplate><%# Eval("NgayBatDau", "{0:dd/MM/yyyy}") %></ItemTemplate>
+                <EditItemTemplate>
+                    <asp:TextBox ID="txtGV_NgayBatDau" runat="server" 
+                        Text='<%# Bind("NgayBatDau", "{0:yyyy-MM-dd}") %>' 
+                        TextMode="Date" CssClass="form-control" />
+                </EditItemTemplate>
+            </asp:TemplateField>
 
-                <asp:TemplateField HeaderText="Ngày Kết Thúc">
-                    <ItemTemplate><%# Eval("NgayKetThuc", "{0:dd/MM/yyyy}") %></ItemTemplate>
-                    <EditItemTemplate>
-                        <asp:TextBox ID="txtGV_NgayKetThuc" runat="server" Text='<%# Bind("NgayKetThuc") %>' />
-                    </EditItemTemplate>
-                </asp:TemplateField>
+            <asp:TemplateField HeaderText="Ngày Kết Thúc">
+                <ItemTemplate><%# Eval("NgayKetThuc", "{0:dd/MM/yyyy}") %></ItemTemplate>
+                <EditItemTemplate>
+                    <asp:TextBox ID="txtGV_NgayKetThuc" runat="server" 
+                        Text='<%# Bind("NgayKetThuc", "{0:yyyy-MM-dd}") %>' 
+                        TextMode="Date" CssClass="form-control" />
+                </EditItemTemplate>
+            </asp:TemplateField>
 
-                <asp:TemplateField HeaderText="Ngày Ký">
-                    <ItemTemplate><%# Eval("NgayKi", "{0:dd/MM/yyyy}") %></ItemTemplate>
-                    <EditItemTemplate>
-                        <asp:TextBox ID="txtGV_NgayKi" runat="server" Text='<%# Bind("NgayKi") %>' />
-                    </EditItemTemplate>
-                </asp:TemplateField>
+            <asp:TemplateField HeaderText="Ngày Ký">
+                <ItemTemplate><%# Eval("NgayKi", "{0:dd/MM/yyyy}") %></ItemTemplate>
+                <EditItemTemplate>
+                    <asp:TextBox ID="txtGV_NgayKi" runat="server" 
+                        Text='<%# Bind("NgayKi", "{0:yyyy-MM-dd}") %>' 
+                        TextMode="Date" CssClass="form-control" />
+                </EditItemTemplate>
+            </asp:TemplateField>
 
                 <asp:TemplateField HeaderText="Nội Dung">
                     <ItemTemplate><%# Eval("NoiDung") %></ItemTemplate>
@@ -144,12 +119,19 @@
                     </EditItemTemplate>
                 </asp:TemplateField>
 
-                <asp:TemplateField HeaderText="Hệ Số Lương">
-                    <ItemTemplate><%# Eval("HeSoLuong") %></ItemTemplate>
-                    <EditItemTemplate>
-                        <asp:TextBox ID="txtGV_HeSoLuong" runat="server" Text='<%# Bind("HeSoLuong") %>' />
-                    </EditItemTemplate>
-                </asp:TemplateField>
+              <asp:TemplateField HeaderText="Lương cơ bản">
+    <ItemTemplate>
+        <%# Eval("LuongCoBan", "{0:N0}") %>
+    </ItemTemplate>
+
+    <EditItemTemplate>
+        <asp:TextBox ID="txtGV_LuongCoBan"
+                     runat="server"
+                     Text='<%# Bind("LuongCoBan") %>'
+                     CssClass="form-control" />
+    </EditItemTemplate>
+</asp:TemplateField>
+
 
                 <asp:TemplateField HeaderText="PDF">
                     <ItemTemplate>

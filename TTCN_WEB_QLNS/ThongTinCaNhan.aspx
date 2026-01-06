@@ -1,10 +1,10 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ThongTinCaNhan.aspx.cs" Inherits="TTCN_WEB_QLNS.ThongTinCaNhan" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true"   MasterPageFile="~/Site.Master" CodeBehind="ThongTinCaNhan.aspx.cs" Inherits="TTCN_WEB_QLNS.ThongTinCaNhan" %>
 
-<!DOCTYPE html>
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-   <title>Chi tiết nhân viên</title>
+    <div class="content">
+
+   
 <style>
   body {
             font-family: Arial, Helvetica, sans-serif;
@@ -63,108 +63,108 @@
         .welcome{
             float: right;
         }
+    .info-container {
+    display: flex;
+    gap: 30px; 
+    align-items: flex-start;
+}
+.column-left {
+    flex: 1;
+}
+.column-right {
+    flex: 1;
+    background: #fdfdfd;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px dashed #ddd;
+}
     .auto-style1 {
-        height: 38px;
+        width: 107px;
     }
 </style>
-</head>
-<body>
-    <form id="form1" runat="server">
-          <div class="card">
-     <h3>Thông tin nhân viên</h3>
-               <div class="welcome">
-     <asp:Label ID="lblWelcome" runat="server" />
- </div>
-<table class="info">
 
-<tr>
-    <td class="label">Họ tên:</td>
-    <td><asp:TextBox ID="txtHoTen" runat="server" /></td>
-</tr>
 
-<tr>
-    <td class="label">Ngày sinh:</td>
-    <td><asp:TextBox ID="txtNgaySinh" runat="server" TextMode="Date" />
-  
+   <div class="card">
+    <h3>Thông tin nhân viên</h3>
+    <div class="welcome">
+        <asp:Label ID="lblWelcome" runat="server" />
+    </div>
 
-      </td>
-</tr>
-
-<tr>
-    <td class="label" style="height: 38px">Giới tính:</td>
-    <td class="auto-style1">
-        <asp:DropDownList ID="ddlGioiTinh" runat="server">
-            <asp:ListItem Value="true">Nam</asp:ListItem>
-            <asp:ListItem Value="false">Nữ</asp:ListItem>
-        </asp:DropDownList>
-    </td>
-</tr>
-
-<tr>
-    <td class="label">Địa chỉ:</td>
-    <td><asp:TextBox ID="txtDiaChi" runat="server" /></td>
-</tr>
-
-<tr>
-    <td class="label">Chức vụ:</td>
-    <td><asp:DropDownList ID="ddlChucVu" runat="server" /></td>
-</tr>
-
-<tr>
-    <td class="label" style="height: 38px">Bộ phận:</td>
-    <td class="auto-style1"><asp:DropDownList ID="ddlBoPhan" runat="server" /></td>
-</tr>
- <tr> 
-        <td class="label">Hình ảnh:</td>
-        <td>
-            <div id="avatarBox" runat="server"
-                 style="width:150px;height:150px;
-                 border-radius:50%;
-                 background-size:cover;
-                 background-position:center;
-                 border:1px solid #ccc">
-            </div>
-
-            <asp:FileUpload ID="fuAvatar" runat="server" />
-            <asp:Button ID="btnPreview" runat="server"
-                Text="Xem ảnh"
-                OnClick="btnPreview_Click" />
-        </td>
-    </tr> 
-<tr>
-    <td class="label">Trạng thái:</td>
-    <td>
-        <asp:DropDownList ID="ddlTrangThai" runat="server">
-            <asp:ListItem Value="1">Đang làm</asp:ListItem>
-            <asp:ListItem Value="0">Đã nghỉ</asp:ListItem>
-        </asp:DropDownList>
-    </td>
-</tr>
+    <div class="info-container">
+        
+        <div class="column-left">
+            <table class="info">
+                <tr>
+                    <td class="label">Họ tên:</td>
+                    <td><asp:TextBox ID="txtHoTen" runat="server" Width="100%" /></td>
+                </tr>
+                <tr>
+                    <td class="label">Ngày sinh:</td>
+                    <td><asp:TextBox ID="txtNgaySinh" runat="server" TextMode="Date" Width="100%" /></td>
+                </tr>
+                <tr>
+                    <td class="label">Giới tính:</td>
+                    <td>
+                        <asp:DropDownList ID="ddlGioiTinh" runat="server" Width="100%">
+                            <asp:ListItem Value="true">Nam</asp:ListItem>
+                            <asp:ListItem Value="false">Nữ</asp:ListItem>
+                        </asp:DropDownList>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Địa chỉ:</td>
+                    <td><asp:TextBox ID="txtDiaChi" runat="server" Width="100%" /></td>
+                </tr>
+                <tr>
+                    <td class="label">Chức vụ:</td>
+                    <td><asp:DropDownList ID="ddlChucVu" runat="server" Width="100%" /></td>
+                </tr>
+                <tr>
+                <td class="label">Trình độ:</td>
+                <td>
+                    <asp:DropDownList ID="ddlTrinhDo" runat="server" Width="100%" CssClass="form-control">
+                    </asp:DropDownList>
+                </td>
+            </tr>
+                <tr>
+                    <td class="label">Bộ phận:</td>
+                    <td><asp:DropDownList ID="ddlBoPhan" runat="server" Width="100%" /></td>
+                </tr>
+                <tr>
+                    <td class="label">Trạng thái:</td>
+                    <td>
+                        <asp:DropDownList ID="ddlTrangThai" runat="server" Width="100%">
+                            <asp:ListItem Value="1">Đang làm</asp:ListItem>
+                            <asp:ListItem Value="0">Đã nghỉ</asp:ListItem>
+                        </asp:DropDownList>
+                    </td>
+                </tr>
+            </table>
+        </div>
+       
+<div id="divPhuCap" runat="server" class="column-right">
+        <h4>Chế độ Phụ cấp</h4>
+        <table class="info">
+            <tr><td class="label">Trách nhiệm:</td><td><asp:TextBox ID="txtPCTrachNhiem" runat="server" Text="0" Width="100%" /></td></tr>
+            <tr><td class="label">Độc hại:</td><td><asp:TextBox ID="txtPCDocHai" runat="server" Text="0" Width="100%" /></td></tr>
+            <tr><td class="label">Khác:</td><td><asp:TextBox ID="txtPCKhac" runat="server" Text="0" Width="100%" /></td></tr>
+        </table>
+        </div> </div>
+                <h4>Hình ảnh đại diện</h4>
+        <div id="avatarBox" runat="server"
+             style="width:120px;height:120px; background-size:cover; background-position:center; border:1px solid #ccc;">
+        </div>
+        <asp:FileUpload ID="fuAvatar" runat="server" Width="24%" />
+        <div style=" margin-top:5px;" class="auto-style1">
+            <asp:Button ID="btnPreview" runat="server" Text="Xem ảnh" OnClick="btnPreview_Click" CssClass="btn" style="font-size:12px;" />
+        </div>
+    
+    <div class="actions">
+        <asp:Button ID="btnSave" runat="server" Text="💾 Lưu thay đổi" CssClass="btn btn-back" OnClick="btnSave_Click" Visible="false"/>
+        <asp:Button ID="btnEditUser" runat="server" Text="✏ Chỉnh sửa" CssClass="btn btn-back" OnClick="btnEditUser_Click" Visible="false" />
+        <asp:Button ID="btnBack" runat="server" Text="← Quay về" CssClass="btn btn-back" OnClick="btnBack_Click" />
+    </div>
+</div>
    
-</table>
-               
-                <div style="width:180px; text-align:center">
       </div>
-<asp:Button ID="btnSave" runat="server"
-    Text="💾 Lưu thay đổi"
-    CssClass="btn btn-back"
-    OnClick="btnSave_Click" 
-    Visible="false"/>
-
-
-             
-              <asp:Button ID="btnEditUser" runat="server"
-    Text="✏ Chỉnh sửa thông tin"
-    CssClass="btn btn-back"
-    OnClick="btnEditUser_Click"
-    Visible="false" />
-
-              <asp:Button ID="btnBack" runat="server"
-    Text="← Quay về Trang Chủ"
-    CssClass="btn btn-back"
-    OnClick="btnBack_Click" />
-       </div>
-            
-    </form>
-  </body>
-</html>
+</asp:Content>

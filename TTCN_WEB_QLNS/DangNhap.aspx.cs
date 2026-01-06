@@ -28,12 +28,12 @@ namespace TTCN_WEB_QLNS
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            string Username = txtUsername.Text.Trim();
-            string Password = txtPassword.Text.Trim();
+            string username = txtUsername.Text.Trim();
+            string password = txtPassword.Text.Trim();
 
-            if (Username == "" || Password == "")
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                lblMessage.Text = "Vui lòng nhập đầy đủ thông tin.";
+                lblMessage.Text = "Vui lòng nhập đầy đủ tài khoản và mật khẩu.";
                 return;
             }
 
@@ -41,49 +41,70 @@ namespace TTCN_WEB_QLNS
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                conn.Open();
-
-                            string sql = @"
-            SELECT u.MaNV, u.IDROLE
+                // THÊM: nv.HoTen vào câu lệnh SELECT
+                string sql = @"
+            SELECT u.MaNV, u.IDROLE, nv.HoTen
             FROM [User] u
             LEFT JOIN Nhan_vien nv ON u.MaNV = nv.MaNV
             WHERE u.Username = @u
               AND u.Password = @p
               AND u.IsActive = 1
               AND (
-                    u.IDROLE IN (1, 12)
+                    u.IDROLE IN (1, 11, 12)
                     OR (u.IDROLE = 10 AND nv.TrangThai = 1)
                   )";
 
-
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@u", Username);
-                cmd.Parameters.AddWithValue("@p", Password);
+                cmd.Parameters.AddWithValue("@u", username);
+                cmd.Parameters.AddWithValue("@p", password);
 
+                conn.Open();
                 SqlDataReader rd = cmd.ExecuteReader();
 
                 if (rd.Read())
                 {
-                    Session["UserName"] = Username;
-                    Session["IDROLE"] = rd["IDROLE"].ToString();
+                    Session["UserName"] = username;
                     Session["MaNV"] = rd["MaNV"].ToString();
+                    Session["IDROLE"] = rd["IDROLE"].ToString();
 
-                    string role = rd["IDROLE"].ToString();
+                    // LƯU HỌ TÊN VÀO SESSION: Nếu HoTen null (như Admin) thì gán chuỗi rỗng
+                    Session["HoTen"] = rd["HoTen"] != DBNull.Value ? rd["HoTen"].ToString() : "";
 
-                    if (role == "1" || role == "12")
-                        Response.Redirect("TongQuan.aspx");
-                    else if (role == "10")
-                        Response.Redirect("UserHome.aspx");
+                    RedirectByRole(rd["IDROLE"].ToString());
                 }
                 else
                 {
-                    lblMessage.Text = "Tài khoản không tồn tại hoặc đã bị khóa.";
+                    lblMessage.Text = "Sai tài khoản, mật khẩu hoặc tài khoản bị khóa.";
                 }
             }
-        
+        }
 
+        void RedirectByRole(string role)
+        {
+            switch (role)
+            {
+                case "1": // Admin
+                    Response.Redirect("TongQuan.aspx");
+                    break;
 
-    }
+                case "11": // HR
+                    Response.Redirect("HrHome.aspx");
+                    break;
+
+                case "12": // Kế toán
+                    Response.Redirect("KeToanHome.aspx");
+                    break;
+
+                case "10": // Nhân viên
+                    Response.Redirect("UserHome.aspx");
+                    break;
+
+                default:
+                    Response.Redirect("DangNhap.aspx");
+                    break;
+            }
+        }
+    
     protected void btnDangKy_Click(object sender, EventArgs e)
         {
             Response.Redirect("DangKy.aspx");

@@ -134,9 +134,7 @@ namespace TTCN_WEB_QLNS
             string tenpb = ((TextBox)row.FindControl("txtTenPB")).Text;
             string sdt = ((TextBox)row.FindControl("txtSDT")).Text;
             string diachi = ((TextBox)row.FindControl("txtDiaChi")).Text;
-            decimal luongCoBan = decimal.Parse(
-                ((TextBox)row.FindControl("txtLuongCoBan")).Text);
-
+          
             string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(connStr))
@@ -145,15 +143,13 @@ namespace TTCN_WEB_QLNS
             UPDATE Phong_ban
             SET TenPB = @TenPB,
                 SDT = @SDT,
-                DiaChi = @DiaChi,
-                LuongCoBan = @LuongCoBan
+                DiaChi = @DiaChi
             WHERE IDPB = @IDPB";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@TenPB", tenpb);
                 cmd.Parameters.AddWithValue("@SDT", sdt);
                 cmd.Parameters.AddWithValue("@DiaChi", diachi);
-                cmd.Parameters.AddWithValue("@LuongCoBan", luongCoBan);
                 cmd.Parameters.AddWithValue("@IDPB", idPB);
 
                 conn.Open();
@@ -230,8 +226,7 @@ namespace TTCN_WEB_QLNS
                 string tenpb = txtTenPB.Text;
                 string sdt = txtSDT.Text.Trim();
                 string diachi = txtDiaChi.Text.Trim();
-                decimal luongCoBan = decimal.Parse(txtLuongCoBan.Text);
-
+              
                 //// 🔥 Tạo thư mục Images nếu chưa có
                 //string folderPath = Server.MapPath("~/Images/");
                 //if (!Directory.Exists(folderPath))
@@ -250,15 +245,14 @@ namespace TTCN_WEB_QLNS
 
                 // 🔥 Câu lệnh INSERT
                 string sql = @"
-                INSERT INTO Phong_ban(TenPB, SDT, DiaChi, LuongCoBan)
-                VALUES(@tenpb, @sdt, @diachi, @luong)";
+                INSERT INTO Phong_ban(TenPB, SDT, DiaChi)
+                VALUES(@tenpb, @sdt, @diachi)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@tenpb", tenpb);
                 cmd.Parameters.AddWithValue("@sdt", sdt);
                 cmd.Parameters.AddWithValue("@diachi", diachi);
-                cmd.Parameters.AddWithValue("@luong", luongCoBan);
-
+             
                 conn.Open();
                 cmd.ExecuteNonQuery();
                 conn.Close();

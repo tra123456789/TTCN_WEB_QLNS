@@ -11,43 +11,52 @@ namespace TTCN_WEB_QLNS
 {
 
 
-    public partial class QuanLyHopDong
+    public partial class TongHopCongThang
     {
 
         /// <summary>
-        /// btnAddHD control.
+        /// ddlThang control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAddHD;
+        protected global::System.Web.UI.WebControls.DropDownList ddlThang;
 
         /// <summary>
-        /// ddlPageSize control.
+        /// ddlNam control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlPageSize;
+        protected global::System.Web.UI.WebControls.DropDownList ddlNam;
 
         /// <summary>
-        /// txtSearch control.
+        /// btnXem control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSearch;
+        protected global::System.Web.UI.WebControls.Button btnXem;
 
         /// <summary>
-        /// gvQuanLyHD control.
+        /// gvTongHopCong control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvQuanLyHD;
+        protected global::System.Web.UI.WebControls.GridView gvTongHopCong;
+
+        /// <summary>
+        /// lblThongBao control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblThongBao;
     }
 }

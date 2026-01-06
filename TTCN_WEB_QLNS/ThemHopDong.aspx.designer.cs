@@ -11,97 +11,97 @@ namespace TTCN_WEB_QLNS
 {
 
 
-    public partial class TongQuan
+    public partial class ThemHopDong
     {
 
         /// <summary>
-        /// lblWelcome control.
+        /// ddlNhanVien control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblWelcome;
+        protected global::System.Web.UI.WebControls.DropDownList ddlNhanVien;
 
         /// <summary>
-        /// lblEmp control.
+        /// txtMaNV control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblEmp;
+        protected global::System.Web.UI.WebControls.TextBox txtMaNV;
 
         /// <summary>
-        /// btntsnv control.
+        /// txtNgayBatDau control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btntsnv;
+        protected global::System.Web.UI.WebControls.TextBox txtNgayBatDau;
 
         /// <summary>
-        /// lblDept control.
+        /// txtNgayKetThuc control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDept;
+        protected global::System.Web.UI.WebControls.TextBox txtNgayKetThuc;
 
         /// <summary>
-        /// btnpban control.
+        /// txtNgayKi control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnpban;
+        protected global::System.Web.UI.WebControls.TextBox txtNgayKi;
 
         /// <summary>
-        /// lblhd control.
+        /// txtNoiDung control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblhd;
+        protected global::System.Web.UI.WebControls.TextBox txtNoiDung;
 
         /// <summary>
-        /// btnhd control.
+        /// txtLanKy control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnhd;
+        protected global::System.Web.UI.WebControls.TextBox txtLanKy;
 
         /// <summary>
-        /// txtMoTu control.
+        /// txtThoiHan control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMoTu;
+        protected global::System.Web.UI.WebControls.TextBox txtThoiHan;
 
         /// <summary>
-        /// txtDongDen control.
+        /// txtLuongCoBan control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDongDen;
+        protected global::System.Web.UI.WebControls.TextBox txtLuongCoBan;
 
         /// <summary>
-        /// btnLuuCauHinh control.
+        /// btnAddHD control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnLuuCauHinh;
+        protected global::System.Web.UI.WebControls.Button btnAddHD;
     }
 }

@@ -23,10 +23,10 @@
         <a id="menuPhongBan" runat="server" href="PhongBan.aspx">Phòng ban</a>
         <a id="menuChamCong" runat="server" href="QuanLyChamCong.aspx">Chấm công</a>
         <a id="menuHopDong" runat="server" href="QuanLyHopDong.aspx">Hợp đồng</a>
-        <a id="menuBaoHiem" runat="server" href="BaoHiem.aspx">Bảo hiểm xã hội</a>
+       
         <a id="menuLuong" runat="server" href="QuanLyLuong.aspx">Lương nhân viên</a>
         <a id="menuKhenThuong" runat="server" href="KhenThuong.aspx">Khen thưởng</a>
-
+        <a id="menuDoiMatKhau" runat="server" href="DoiMatKhau.aspx">Đổi Mật Khẩu</a>
         <asp:LinkButton ID="lnkLogout"
             runat="server"
             CssClass="logout-link"

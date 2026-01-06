@@ -31,9 +31,7 @@
 
             Địa chỉ:
             <asp:TextBox ID="txtDiaChi" runat="server" />
-            Lương cơ bản:
-<asp:TextBox ID="txtLuongCoBan" runat="server" />
-
+           
         </div>
 
         <br />
@@ -95,15 +93,7 @@
                             Text='<%# Bind("DiaChi") %>' />
                     </EditItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Lương cơ bản">
-    <ItemTemplate>
-        <%# Eval("LuongCoBan", "{0:N0}") %>
-    </ItemTemplate>
-    <EditItemTemplate>
-        <asp:TextBox ID="txtLuongCoBan" runat="server"
-            Text='<%# Bind("LuongCoBan") %>' />
-    </EditItemTemplate>
-</asp:TemplateField>
+               
 
                 <asp:TemplateField HeaderText="Thao tác">
                     <ItemTemplate>

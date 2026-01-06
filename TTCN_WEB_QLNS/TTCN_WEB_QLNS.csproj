@@ -103,6 +103,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="DoiMatKhau.aspx" />
+    <Content Include="HrHome.aspx" />
+    <Content Include="KeToanHome.aspx" />
     <Content Include="ThemBoPhan.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -164,10 +167,12 @@
     <Content Include="Content\bootstrap-grid.rtl.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="ThemHopDong.aspx" />
     <Content Include="ThemKhenThuong.aspx" />
     <Content Include="Themkhenthuong.css" />
     <Content Include="Themnhanvien.aspx" />
     <Content Include="ThongTinCaNhan.aspx" />
+    <Content Include="TongHopCongThang.aspx" />
     <Content Include="TongQuan.aspx" />
     <Content Include="UserHome.aspx" />
     <Content Include="WebForm1.aspx" />
@@ -220,6 +225,27 @@
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="DoiMatKhau.aspx.cs">
+      <DependentUpon>DoiMatKhau.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DoiMatKhau.aspx.designer.cs">
+      <DependentUpon>DoiMatKhau.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HrHome.aspx.cs">
+      <DependentUpon>HrHome.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HrHome.aspx.designer.cs">
+      <DependentUpon>HrHome.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="KeToanHome.aspx.cs">
+      <DependentUpon>KeToanHome.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="KeToanHome.aspx.designer.cs">
+      <DependentUpon>KeToanHome.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ThemBoPhan.aspx.cs">
       <DependentUpon>ThemBoPhan.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -322,6 +348,13 @@
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
     </Compile>
+    <Compile Include="ThemHopDong.aspx.cs">
+      <DependentUpon>ThemHopDong.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ThemHopDong.aspx.designer.cs">
+      <DependentUpon>ThemHopDong.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ThemKhenThuong.aspx.cs">
       <DependentUpon>ThemKhenThuong.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -342,6 +375,13 @@
     </Compile>
     <Compile Include="ThongTinCaNhan.aspx.designer.cs">
       <DependentUpon>ThongTinCaNhan.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TongHopCongThang.aspx.cs">
+      <DependentUpon>TongHopCongThang.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TongHopCongThang.aspx.designer.cs">
+      <DependentUpon>TongHopCongThang.aspx</DependentUpon>
     </Compile>
     <Compile Include="TongQuan.aspx.cs">
       <DependentUpon>TongQuan.aspx</DependentUpon>
