@@ -12,6 +12,7 @@ namespace TTCN_WEB_QLNS
 {
     public partial class TongQuan : System.Web.UI.Page
     {
+        string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["UserName"] == null || Session["IDROLE"] == null)
@@ -45,13 +46,13 @@ namespace TTCN_WEB_QLNS
             if (!IsPostBack)
             {
                 LoadDashboard();
+                LoadLienHe();
             }
         }
 
         void LoadDashboard()
         {
-            string connStr = ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString;
-
+      
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
@@ -126,8 +127,7 @@ namespace TTCN_WEB_QLNS
             }
 
             // 4️⃣ Lưu DB
-            using (SqlConnection conn = new SqlConnection(
-                ConfigurationManager.ConnectionStrings["QLNS"].ConnectionString))
+            using (SqlConnection conn = new SqlConnection(connStr))
             {
                 string sql = @"
         IF EXISTS (SELECT 1 FROM CauHinhSuaThongTin)
@@ -149,7 +149,37 @@ namespace TTCN_WEB_QLNS
                 "ok", "alert('✔ Đã cập nhật thời gian cho phép chỉnh sửa');", true);
         }
 
+        private void LoadLienHe()
+        {
+                     using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                // Lấy danh sách, ưu tiên yêu cầu mới chưa xử lý lên trước
+                string sql = "SELECT * FROM LienHe ORDER BY TrangThai DESC, NgayGui DESC";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                gvLienHe.DataSource = dt;
+                gvLienHe.DataBind();
+            }
+        }
+        protected void btnConfirm_Click(object sender, CommandEventArgs e)
+        {
+            string id = e.CommandArgument.ToString();
+     
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                // Cập nhật trạng thái thành 'Đã xử lý'
+                string sql = "UPDATE LienHe SET TrangThai = N'Đã xử lý' WHERE ID = @id";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@id", id);
 
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            // Load lại GridView để cập nhật giao diện
+            LoadLienHe();
+        }
 
     }
 }

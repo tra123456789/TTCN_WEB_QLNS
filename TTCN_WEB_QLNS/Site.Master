@@ -12,11 +12,16 @@
 
 <body>
 <form runat="server">
+    <asp:ScriptManager 
+    ID="ScriptManager1" 
+    runat="server" 
+    EnablePageMethods="true" />
 
     <!-- SIDEBAR -->
     <div class="sidebar">
-        <h2>Menu</h2>
-
+        <a href="Default.aspx" >
+        <h2>Trang Chủ</h2>
+         </a>
         <a id="menuTongQuan" runat="server" href="TongQuan.aspx">Tổng quan</a>
         <a id="menuThongTinNV" runat="server" href="ThongTinCaNhan.aspx">Thông tin cá nhân</a>
         <a id="menuNhanVien" runat="server" href="QuanLyUser.aspx">Nhân viên</a>

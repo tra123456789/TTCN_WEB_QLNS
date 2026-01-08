@@ -73,7 +73,40 @@
             CssClass="btn"
             OnClick="btnLuuCauHinh_Click" />
     </div>
+      <div class="container mt-4">
+    <h2 class="fw-bold mb-4">Danh sách yêu cầu tư vấn</h2>
+    <asp:GridView ID="gvLienHe" runat="server" AutoGenerateColumns="False" 
+        CssClass="table table-hover table-bordered shadow-sm" DataKeyNames="ID">
+        <Columns>
+            <asp:BoundField DataField="ID" HeaderText="ID" />
+            <asp:BoundField DataField="HoTen" HeaderText="Họ Tên" />
+            <asp:BoundField DataField="Email" HeaderText="Email" />
+            <asp:BoundField DataField="NgayGui" HeaderText="Ngày gửi" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
+            <asp:TemplateField HeaderText="Trạng thái">
+                <ItemTemplate>
+                    <span class='badge <%# Eval("TrangThai").ToString() == "Chưa xử lý" ? "bg-warning" : "bg-success" %>'>
+                        <%# Eval("TrangThai") %>
+                    </span>
+                </ItemTemplate>
+            </asp:TemplateField>
+           <asp:TemplateField HeaderText="Thao tác">
+    <ItemTemplate>
+        <a href='mailto:<%# Eval("Email") %>?subject=Phản hồi hỗ trợ từ HR-PRO' class="btn btn-primary btn-sm me-2">
+            <i class="fas fa-reply"></i> Trả lời
+        </a>
 
+        <asp:LinkButton ID="btnConfirm" runat="server" 
+            CommandArgument='<%# Eval("ID") %>' 
+            OnCommand="btnConfirm_Click"
+            CssClass="btn btn-success btn-sm"
+            Visible='<%# Eval("TrangThai").ToString() == "Chưa xử lý" || Eval("TrangThai") == DBNull.Value %>'>
+            <i class="fas fa-check"></i> Xong
+        </asp:LinkButton>
+    </ItemTemplate>
+</asp:TemplateField>
+        </Columns>
+    </asp:GridView>
+</div>
 </div>
     </div>
 </asp:Content>

@@ -23,7 +23,8 @@
             Năm:
             <asp:DropDownList ID="ddlNam" runat="server"   AutoPostBack="true" OnSelectedIndexChanged="ddlNam_SelectedIndexChanged"></asp:DropDownList>
                          <br />
-<asp:Panel ID="pnlCong" runat="server">
+                         <br />
+<asp:Panel ID="pnlCong" runat="server" >
     Công: 
     <asp:DropDownList ID="ddlCongAll" runat="server">
         <asp:ListItem Value="1">1 công</asp:ListItem>
@@ -35,7 +36,7 @@
 </asp:Panel>
 
 <br />
-                         <br />
+                         
 
        Bộ phận:
 <asp:DropDownList ID="ddlPhongBan" runat="server" 

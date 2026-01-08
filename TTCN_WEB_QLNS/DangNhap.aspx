@@ -7,19 +7,22 @@
     <title>Đăng Nhập</title>
     <link href ="Login.css" rel ="stylesheet" type ="text/css"/>
     <style type="text/css">
-        .auto-style1 {
-            width: 350px;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0px 10px 25px rgba(0,0,0,0.15);
-            height: 377px;
-        }
-    </style>
+     .auto-style1 {
+         width: 350px;
+         background: white;
+         padding: 30px;
+         border-radius: 12px;
+         box-shadow: 0px 10px 25px rgba(0,0,0,0.15);
+         height: 377px;
+     }
+ </style>
 </head>
 <body class ="page-login">
     <form id="form1" runat="server">
-        <div class="auto-style1">
+        <div class="auto-style1" style="position: relative;">
+           
+    <a href="Default.aspx" style="position: absolute; top: 10px; right: 15px; text-decoration: none; color: #999; font-size: 20px;">&times;</a>
+
         <h2>Đăng nhập nhân viên</h2>
 
         <label>Tên đăng nhập:</label>

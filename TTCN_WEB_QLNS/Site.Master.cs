@@ -93,7 +93,7 @@ namespace TTCN_WEB_QLNS
         protected void lnkLogout_Click(object sender, EventArgs e)
         {
             Session.Clear();
-            Response.Redirect("DangNhap.aspx");
+            Response.Redirect("Default.aspx");
         }
     }
 }

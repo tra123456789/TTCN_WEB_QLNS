@@ -42,17 +42,10 @@ namespace TTCN_WEB_QLNS
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 // THÊM: nv.HoTen vào câu lệnh SELECT
-                string sql = @"
-            SELECT u.MaNV, u.IDROLE, nv.HoTen
-            FROM [User] u
-            LEFT JOIN Nhan_vien nv ON u.MaNV = nv.MaNV
-            WHERE u.Username = @u
-              AND u.Password = @p
-              AND u.IsActive = 1
-              AND (
-                    u.IDROLE IN (1, 11, 12)
-                    OR (u.IDROLE = 10 AND nv.TrangThai = 1)
-                  )";
+                string sql = @"SELECT u.MaNV, u.IDROLE, nv.HoTen, nv.HinhAnh 
+    FROM [User] u
+    LEFT JOIN Nhan_vien nv ON u.MaNV = nv.MaNV
+    WHERE u.Username = @u AND u.Password = @p AND u.IsActive = 1";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@u", username);
@@ -67,10 +60,24 @@ namespace TTCN_WEB_QLNS
                     Session["MaNV"] = rd["MaNV"].ToString();
                     Session["IDROLE"] = rd["IDROLE"].ToString();
 
-                    // LƯU HỌ TÊN VÀO SESSION: Nếu HoTen null (như Admin) thì gán chuỗi rỗng
-                    Session["HoTen"] = rd["HoTen"] != DBNull.Value ? rd["HoTen"].ToString() : "";
+                    // Nếu rỗng thì hiện tên đăng nhập hoặc "Quản trị viên" thay vì để trống
+                    string hoTen = rd["HoTen"] != DBNull.Value ? rd["HoTen"].ToString() : "";
+                    Session["HoTen"] = string.IsNullOrEmpty(hoTen) ? "Quản trị viên" : hoTen;
 
-                    RedirectByRole(rd["IDROLE"].ToString());
+                    // Xử lý ảnh đại diện
+                    string hinhAnh = rd["HinhAnh"] != DBNull.Value ? rd["HinhAnh"].ToString() : "";
+
+                    if (!string.IsNullOrEmpty(hinhAnh))
+                    {
+                        // Đảm bảo đường dẫn luôn có dấu ~ để ResolveUrl ở trang Default không bị lỗi
+                        Session["Avatar"] = hinhAnh.StartsWith("~") ? hinhAnh : "~/" + hinhAnh.TrimStart('/');
+                    }
+                    else
+                    {
+                        Session["Avatar"] = "~/Images/default-avatar.png";
+                    }
+
+                    Response.Redirect("Default.aspx");
                 }
                 else
                 {
@@ -79,31 +86,7 @@ namespace TTCN_WEB_QLNS
             }
         }
 
-        void RedirectByRole(string role)
-        {
-            switch (role)
-            {
-                case "1": // Admin
-                    Response.Redirect("TongQuan.aspx");
-                    break;
-
-                case "11": // HR
-                    Response.Redirect("HrHome.aspx");
-                    break;
-
-                case "12": // Kế toán
-                    Response.Redirect("KeToanHome.aspx");
-                    break;
-
-                case "10": // Nhân viên
-                    Response.Redirect("UserHome.aspx");
-                    break;
-
-                default:
-                    Response.Redirect("DangNhap.aspx");
-                    break;
-            }
-        }
+       
     
     protected void btnDangKy_Click(object sender, EventArgs e)
         {

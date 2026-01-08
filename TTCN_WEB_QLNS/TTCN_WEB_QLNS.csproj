@@ -58,6 +58,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
@@ -175,13 +176,13 @@
     <Content Include="TongHopCongThang.aspx" />
     <Content Include="TongQuan.aspx" />
     <Content Include="UserHome.aspx" />
-    <Content Include="WebForm1.aspx" />
     <Content Include="QuanLyUser.aspx" />
     <Content Include="fonts\TIMES.TTF" />
     <Content Include="fonts\TIMESBD.TTF" />
     <Content Include="fonts\TIMESBI.TTF" />
     <Content Include="fonts\TIMESI.TTF" />
     <Content Include="XemDSNVPB.aspx" />
+    <Content Include="Public.Master" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -245,6 +246,13 @@
     </Compile>
     <Compile Include="KeToanHome.aspx.designer.cs">
       <DependentUpon>KeToanHome.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Public.Master.cs">
+      <DependentUpon>Public.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Public.Master.designer.cs">
+      <DependentUpon>Public.Master</DependentUpon>
     </Compile>
     <Compile Include="ThemBoPhan.aspx.cs">
       <DependentUpon>ThemBoPhan.aspx</DependentUpon>
@@ -403,13 +411,6 @@
     </Compile>
     <Compile Include="ViewSwitcher.ascx.designer.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="WebForm1.aspx.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="WebForm1.aspx.designer.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
     </Compile>
     <Compile Include="QuanLyUser.aspx.cs">
       <DependentUpon>QuanLyUser.aspx</DependentUpon>
